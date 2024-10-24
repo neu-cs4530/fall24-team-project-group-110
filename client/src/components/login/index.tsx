@@ -1,5 +1,6 @@
 import React from 'react';
 import './index.css';
+import { useNavigate } from 'react-router-dom';
 import useLogin from '../../hooks/useLogin';
 
 /**
@@ -8,6 +9,7 @@ import useLogin from '../../hooks/useLogin';
  */
 const Login = () => {
   const { username, handleSubmit, handleInputChange } = useLogin();
+  const navigate = useNavigate();
 
   return (
     <div className='container'>
@@ -27,6 +29,9 @@ const Login = () => {
           Submit
         </button>
       </form>
+      <button className='register-button' onClick={() => navigate('/register')}>
+        Don&apos;t have an account? Register here!
+      </button>
     </div>
   );
 };
