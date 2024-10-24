@@ -15,6 +15,7 @@ import useLoginContext from './useLoginContext';
 const useRegister = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  // eslint-disable-next-line
   const [error, setError] = useState<string>('');
   const { setUser } = useLoginContext();
   const navigate = useNavigate();
