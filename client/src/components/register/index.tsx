@@ -1,23 +1,23 @@
 import './index.css';
 import { useNavigate } from 'react-router-dom';
-import useLogin from '../../hooks/useLogin';
+import useRegister from '../../hooks/useRegister';
 
 /**
- * Login Component contains a form that allows the user to input their username and password,
- * which is then submitted to the backend for authentication.
- * if login response from the backend is successful, then the username is submitted
+ * Register Component contains a form that allows the user to input their username and password,
+ * which is then submitted to the backend for registration.
+ * if registration response from the backend is successful, then the username is submitted
  * to the application's context through the useLoginContext hook.
  * otherwise, an error message is displayed.
  */
-const Login = () => {
-  const { username, password, error, handleUsernameChange, handlePasswordChange, handleSubmit } =
-    useLogin();
+const Register = () => {
   const navigate = useNavigate();
+  const { username, password, error, handleUsernameChange, handlePasswordChange, handleSubmit } =
+    useRegister();
 
   return (
     <div className='container'>
-      <h2>Welcome to FakeStackOverflow!</h2>
-      <h4>Please enter your username.</h4>
+      <h2>Register Here!</h2>
+      <h4>Please fill out the following fields.</h4>
       <form onSubmit={handleSubmit}>
         <div className='form-fields-container'>
           <input
@@ -39,16 +39,18 @@ const Login = () => {
             id={'passwordInput'}
           />
           <p className='error-text'>{error}</p>
-          <button type='submit' className='login-button'>
-            Submit
-          </button>
+          <div className='form-buttons-container'>
+            <button onClick={() => navigate('/')} className='cancel-button'>
+              Cancel
+            </button>
+            <button type='submit' className='login-button'>
+              Submit
+            </button>
+          </div>
         </div>
       </form>
-      <button className='register-button' onClick={() => navigate('/register')}>
-        Don&apos;t have an account? Register here!
-      </button>
     </div>
   );
 };
 
-export default Login;
+export default Register;

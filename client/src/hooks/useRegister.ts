@@ -12,7 +12,7 @@ import useLoginContext from './useLoginContext';
  * @returns handlePasswordChange - Function to handle changes in the password input field.
  * @returns handleSubmit - Function to handle login submission
  */
-const useLogin = () => {
+const useRegister = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   // eslint-disable-next-line
@@ -21,7 +21,7 @@ const useLogin = () => {
   const navigate = useNavigate();
 
   /**
-   * Function to handle the input change event.
+   * Function to handle the input change event for the username field.
    *
    * @param e - the event object.
    */
@@ -30,7 +30,7 @@ const useLogin = () => {
   };
 
   /**
-   * Function to handle the input change event.
+   * Function to handle the input change event for the password field.
    *
    * @param e - the event object.
    */
@@ -40,19 +40,19 @@ const useLogin = () => {
 
   /**
    * Function to handle the form submission event.
-   * This function will call the backend to authenticate the user.
-   * If the authentication is successful, the user will be set in the context
+   * This function will call the backend to register the user.
+   * If the registration is successful, the user will be set in the context
    * and navigated to the home page.
-   * If the authentication fails, an error message will be displayed.
+   * If the registration fails, an error message will be displayed.
    *
    * @param event - the form event object.
    */
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // TODO: need to call api to login user
+    // TODO: need to call api to register user
     // if successful, set user in context and navigate to home
     // else, set error message
-    // setError('Error while logging in');
+    // setError('Error while registering user');
     setUser({ username });
     navigate('/home');
   };
@@ -60,4 +60,4 @@ const useLogin = () => {
   return { username, password, error, handleUsernameChange, handlePasswordChange, handleSubmit };
 };
 
-export default useLogin;
+export default useRegister;
