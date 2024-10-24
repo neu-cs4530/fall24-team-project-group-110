@@ -3,12 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import useRegister from '../../hooks/useRegister';
 
 /**
- * Login Component contains a form that allows the user to input their username, which is then submitted
+ * Register Component contains a form that allows the user to input their username and password,
+ * which is then submitted to the backend for registration.
+ * if registration response from the backend is successful, then the username is submitted
  * to the application's context through the useLoginContext hook.
+ * otherwise, an error message is displayed.
  */
 const Register = () => {
   const navigate = useNavigate();
-  const { username, password, handleUsernameChange, handlePasswordChange, handleSubmit } =
+  const { username, password, error, handleUsernameChange, handlePasswordChange, handleSubmit } =
     useRegister();
 
   return (
@@ -35,6 +38,7 @@ const Register = () => {
             className='input-text'
             id={'passwordInput'}
           />
+          <p className='error-text'>{error}</p>
           <div className='form-buttons-container'>
             <button onClick={() => navigate('/')} className='cancel-button'>
               Cancel

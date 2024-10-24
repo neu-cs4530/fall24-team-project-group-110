@@ -6,11 +6,16 @@ import useLoginContext from './useLoginContext';
  * Custom hook to handle login input and submission.
  *
  * @returns username - The current value of the username input.
- * @returns handleInputChange - Function to handle changes in the input field.
+ * @returns password - The current value of the password input.
+ * @returns error - The current error message.
+ * @returns handleUsernameChange - Function to handle changes in the username input field.
+ * @returns handlePasswordChange - Function to handle changes in the password input field.
  * @returns handleSubmit - Function to handle login submission
  */
 const useLogin = () => {
   const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
   const { setUser } = useLoginContext();
   const navigate = useNavigate();
 
@@ -19,22 +24,39 @@ const useLogin = () => {
    *
    * @param e - the event object.
    */
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
   };
 
   /**
+   * Function to handle the input change event.
+   *
+   * @param e - the event object.
+   */
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+
+  /**
    * Function to handle the form submission event.
+   * This function will call the backend to authenticate the user.
+   * If the authentication is successful, the user will be set in the context
+   * and navigated to the home page.
+   * If the authentication fails, an error message will be displayed.
    *
    * @param event - the form event object.
    */
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // TODO: need to call api to login user
+    // if successful, set user in context and navigate to home
+    // else, set error message
+    // setError('Error while logging in');
     setUser({ username });
     navigate('/home');
   };
 
-  return { username, handleInputChange, handleSubmit };
+  return { username, password, error, handleUsernameChange, handlePasswordChange, handleSubmit };
 };
 
 export default useLogin;

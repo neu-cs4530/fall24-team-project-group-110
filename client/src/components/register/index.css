@@ -80,3 +80,7 @@
 .cancel-button:active {
   background-color: #b71c1c;
 }
+
+.error-text {
+  color: red;
+}
