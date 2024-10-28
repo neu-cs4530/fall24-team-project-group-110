@@ -26,7 +26,8 @@ const questionSchema: Schema = new Schema(
     tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
     answers: [{ type: Schema.Types.ObjectId, ref: 'Answer' }],
     askedBy: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: 'User',
     },
     askDateTime: {
       type: Date,

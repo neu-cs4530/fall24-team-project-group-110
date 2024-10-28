@@ -149,6 +149,22 @@ export interface Comment {
   commentDateTime: Date;
 }
 
+export interface User {
+  _id?: ObjectId;
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  bio: string;
+  picture: string;
+  comments: Comment[];
+  questions: Question[];
+  answers: Answer[];
+  followers: User[];
+  following: User[];
+}
+
 /**
  * Interface extending the request body when adding a comment to a question or an answer, which contains:
  * - id - The unique identifier of the question or answer being commented on.
