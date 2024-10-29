@@ -215,7 +215,7 @@ export type UserResponse = User | { error: string };
  * - type - The type of the updated item, either 'question' or 'answer'.
  */
 export interface CommentUpdatePayload {
-  result: AnswerResponse | QuestionResponse | UserResponse | null;
+  result: AnswerResponse | QuestionResponse | null;
   type: 'question' | 'answer';
 }
 
