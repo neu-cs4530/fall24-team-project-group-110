@@ -1,14 +1,14 @@
 import express, { Response } from 'express';
-import { User, AddUserRequest, FakeSOSocket } from '../types';
-import { saveUser } from '../models/application';
+import { User, AddUserRequest, FakeSOSocket, EditUserRequest } from '../types';
+import { saveUser, updateUserProfile } from '../models/application';
 
 const userController = (socket: FakeSOSocket) => {
   const router = express.Router();
 
   /**
-   * Checks if the provided answer request contains the required fields.
+   * Checks if the provided user request contains the required fields.
    *
-   * @param req The request object containing the answer data.
+   * @param req The request object containing the user data.
    *
    * @returns `true` if the request is valid, otherwise `false`.
    */
@@ -20,7 +20,7 @@ const userController = (socket: FakeSOSocket) => {
     !!req.body.comments;
 
   /**
-   * Validates the comment object to ensure it is not empty.
+   * Validates the user object to ensure it is not empty.
    *
    * @param user The user to validate.
    *
@@ -75,7 +75,35 @@ const userController = (socket: FakeSOSocket) => {
     }
   };
 
+  /**
+   * Updates a user in the database. If there is an error, the HTTP response's status is updated.
+   *
+   * @param req The EditUserRequest object containing the user ID and the new user data.
+   * @param res The HTTP response object used to send back the result of the operation.
+   *
+   * @returns A Promise that resolves to void.
+   */
+  const updateUser = async (req: EditUserRequest, res: Response): Promise<void> => {
+    const { qid, newUserData } = req.body;
+    try {
+      const result = await updateUserProfile(qid, newUserData);
+
+      if ('error' in result) {
+        throw new Error(result.error);
+      }
+
+      res.json(result);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        res.status(500).send(`Error when updating user: ${err.message}`);
+      } else {
+        res.status(500).send(`Error when updating user`);
+      }
+    }
+  };
+
   router.post('/addUser', addUser);
+  router.put('/updateUser', updateUser);
 
   return router;
 };

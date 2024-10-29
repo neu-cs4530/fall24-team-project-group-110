@@ -181,8 +181,24 @@ export interface User {
   following: User[];
 }
 
+/**
+ * Interface for the request body when adding a new user.
+ * - body - The user being added
+ */
 export interface AddUserRequest extends Request {
   body: User;
+}
+
+/**
+ * Interface extending the request body when editing a user, which contains:
+ * - qid - The unique identifier of the user being edited
+ * - newUserData - The new user fields that has been edited
+ */
+export interface EditUserRequest extends Request {
+  body: {
+    qid: string,
+    newUserData: Partial<User>,
+  }
 }
 
 /**

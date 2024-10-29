@@ -1,6 +1,8 @@
 import { ObjectId } from 'mongodb';
 import Tags from '../models/tags';
 import QuestionModel from '../models/questions';
+import AnswerModel from '../models/answers';
+import UserModel from '../models/users';
 import {
   addTag,
   getQuestionsByOrder,
@@ -15,10 +17,11 @@ import {
   saveComment,
   addComment,
   addVoteToQuestion,
+  saveUser,
+  updateUserProfile,
 } from '../models/application';
-import { Answer, Question, Tag, Comment } from '../types';
+import { Answer, Question, Tag, Comment, User } from '../types';
 import { T1_DESC, T2_DESC, T3_DESC } from '../data/posts_strings';
-import AnswerModel from '../models/answers';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mockingoose = require('mockingoose');
@@ -134,6 +137,22 @@ const QUESTIONS: Question[] = [
     comments: [],
   },
 ];
+
+const user1: User = {
+  _id: new ObjectId('65e9b716ff0e892116b2de19'),
+  username: 'testUser',
+  firstName: 'Test',
+  lastName: 'User',
+  email: 'testuser@example.com',
+  password: 'password123',
+  bio: 'Test user bio',
+  picture: 'http://example.com/picture.jpg',
+  comments: [],
+  questions: [],
+  answers: [],
+  followers: [],
+  following: [],
+};
 
 describe('application module', () => {
   beforeEach(() => {
@@ -881,6 +900,107 @@ describe('application module', () => {
           expect(err).toBeInstanceOf(Error);
           if (err instanceof Error) expect(err.message).toBe('Invalid comment');
         }
+      });
+    });
+  });
+
+  describe('User model', () => {
+    describe('saveUser', () => {
+      test('saveUser should return the saved user', async () => {
+        const result = (await saveUser(user1)) as User;
+
+        expect(result._id).toBeDefined();
+        expect(result.username).toEqual(user1.username);
+        expect(result.firstName).toEqual(user1.firstName);
+        expect(result.lastName).toEqual(user1.lastName);
+        expect(result.email).toEqual(user1.email);
+        expect(result.password).toEqual(user1.password);
+        expect(result.bio).toEqual(user1.bio);
+        expect(result.picture).toEqual(user1.picture);
+        expect(result.comments).toEqual([]);
+        expect(result.questions).toEqual([]);
+        expect(result.answers).toEqual([]);
+        expect(result.followers).toEqual([]);
+        expect(result.following).toEqual([]);
+      });
+    });
+
+    describe('updateUserProfile', () => {
+      test('updateUserProfile should return the updated user profile', async () => {
+        const newUserData = {
+          firstname: 'Mark',
+          email: 'mark@gmail.com',
+        };
+        const newUser = { ...user1 };
+        newUser.firstName = 'Mark';
+        newUser.email = 'mark@gmail.com';
+        mockingoose(UserModel).toReturn(newUser, 'findOneAndUpdate');
+
+        const result = (await updateUserProfile(
+          user1._id?.toString() as string,
+          newUserData,
+        )) as User;
+
+        expect(result.firstName).toEqual('Mark');
+        expect(result.lastName).toEqual('User');
+        expect(result.email).toEqual('mark@gmail.com');
+      });
+
+      test('updateUserProfile should return the original user when no new user data is given', async () => {
+        const emptyUserData = {};
+        mockingoose(UserModel).toReturn(user1, 'findOneAndUpdate');
+
+        const result = (await updateUserProfile(
+          user1._id?.toString() as string,
+          emptyUserData,
+        )) as User;
+
+        expect(result._id).toBeDefined();
+        expect(result.username).toEqual(user1.username);
+        expect(result.firstName).toEqual(user1.firstName);
+        expect(result.lastName).toEqual(user1.lastName);
+        expect(result.email).toEqual(user1.email);
+        expect(result.password).toEqual(user1.password);
+        expect(result.bio).toEqual(user1.bio);
+        expect(result.picture).toEqual(user1.picture);
+        expect(result.comments).toEqual([]);
+        expect(result.questions).toEqual([]);
+        expect(result.answers).toEqual([]);
+        expect(result.followers).toEqual([]);
+        expect(result.following).toEqual([]);
+      });
+
+      test('updateUserProfile should return an object with error if findOneAndUpdate throws an error', async () => {
+        const newUserData = {
+          firstname: 'Mark',
+          email: 'mark@gmail.com',
+        };
+        mockingoose(UserModel).toReturn(
+          new Error('Error from findOneAndUpdate'),
+          'findOneAndUpdate',
+        );
+
+        const result = (await updateUserProfile(
+          user1._id?.toString() as string,
+          newUserData,
+        )) as User;
+
+        expect(result).toEqual({ error: 'Error when updating user: Error from findOneAndUpdate' });
+      });
+
+      test('updateUserProfile should return an object with error if findOneAndUpdate returns null', async () => {
+        const newUserData = {
+          firstname: 'Mark',
+          email: 'mark@gmail.com',
+        };
+        mockingoose(UserModel).toReturn(null, 'findOneAndUpdate');
+
+        const result = (await updateUserProfile(
+          user1._id?.toString() as string,
+          newUserData,
+        )) as User;
+
+        expect(result).toEqual({ error: 'Error when updating user: Failed to update user' });
       });
     });
   });
