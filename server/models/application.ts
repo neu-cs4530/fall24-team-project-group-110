@@ -274,13 +274,13 @@ export const filterQuestionsBySearch = (qlist: Question[], search: string): Ques
  * @param {string | undefined} id - The ID of the question or answer to fetch.
  * @param {'question' | 'answer' | 'user'} type - Specifies whether to fetch a question or an answer.
  *
- * @returns {Promise<QuestionResponse | AnswerResponse | UserResponse>} - Promise that resolves to the
+ * @returns {Promise<QuestionResponse | AnswerResponse>} - Promise that resolves to the
  *          populated question or answer, or an error message if the operation fails
  */
 export const populateDocument = async (
   id: string | undefined,
   type: 'question' | 'answer' | 'user',
-): Promise<QuestionResponse | AnswerResponse | UserResponse> => {
+): Promise<QuestionResponse | AnswerResponse> => {
   try {
     if (!id) {
       throw new Error('Provided question ID is undefined.');
