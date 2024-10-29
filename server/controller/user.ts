@@ -1,6 +1,6 @@
 import express, { Response } from 'express';
 import { User, AddUserRequest, FakeSOSocket } from '../types';
-import { populateDocument, saveUser } from '../models/application';
+import { saveUser } from '../models/application';
 
 const userController = (socket: FakeSOSocket) => {
   const router = express.Router();
@@ -65,7 +65,6 @@ const userController = (socket: FakeSOSocket) => {
         throw new Error(result.error);
       }
 
-      socket.emit('userUpdate', result);
       res.json(result);
     } catch (err: unknown) {
       if (err instanceof Error) {
