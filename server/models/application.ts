@@ -9,11 +9,14 @@ import {
   Question,
   QuestionResponse,
   Tag,
+  User,
+  UserResponse,
 } from '../types';
 import AnswerModel from './answers';
 import QuestionModel from './questions';
 import TagModel from './tags';
 import CommentModel from './comments';
+import UserModel from './users';
 
 /**
  * Parses tags from a search string.
@@ -269,15 +272,15 @@ export const filterQuestionsBySearch = (qlist: Question[], search: string): Ques
  * Fetches and populates a question or answer document based on the provided ID and type.
  *
  * @param {string | undefined} id - The ID of the question or answer to fetch.
- * @param {'question' | 'answer'} type - Specifies whether to fetch a question or an answer.
+ * @param {'question' | 'answer' | 'user'} type - Specifies whether to fetch a question or an answer.
  *
- * @returns {Promise<QuestionResponse | AnswerResponse>} - Promise that resolves to the
+ * @returns {Promise<QuestionResponse | AnswerResponse | UserResponse>} - Promise that resolves to the
  *          populated question or answer, or an error message if the operation fails
  */
 export const populateDocument = async (
   id: string | undefined,
-  type: 'question' | 'answer',
-): Promise<QuestionResponse | AnswerResponse> => {
+  type: 'question' | 'answer' | 'user',
+): Promise<QuestionResponse | AnswerResponse | UserResponse> => {
   try {
     if (!id) {
       throw new Error('Provided question ID is undefined.');
@@ -300,6 +303,12 @@ export const populateDocument = async (
       ]);
     } else if (type === 'answer') {
       result = await AnswerModel.findOne({ _id: id }).populate([
+        { path: 'comments', model: CommentModel },
+      ]);
+    } else if (type === 'user') {
+      result = await UserModel.findOne({ _id: id }).populate([
+        { path: 'answers', model: AnswerModel },
+        { path: 'questions', model: QuestionModel },
         { path: 'comments', model: CommentModel },
       ]);
     }
@@ -390,6 +399,20 @@ export const saveAnswer = async (answer: Answer): Promise<AnswerResponse> => {
 export const saveComment = async (comment: Comment): Promise<CommentResponse> => {
   try {
     const result = await CommentModel.create(comment);
+    return result;
+  } catch (error) {
+    return { error: 'Error when saving a comment' };
+  }
+};
+
+/**
+ * Saves a new user to the database.
+ * @param {User} user - the user to save
+ * @returns {Promise<UserResponse>} - the saved user or an error message if the save failed
+ */
+export const saveUser = async (user: User): Promise<UserResponse> => {
+  try {
+    const result = await UserModel.create(user);
     return result;
   } catch (error) {
     return { error: 'Error when saving a comment' };
