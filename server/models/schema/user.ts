@@ -44,7 +44,7 @@ const userSchema: Schema = new Schema(
     comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
     questions: [{ type: Schema.Types.ObjectId, ref: 'Question' }],
     answers: [{ type: Schema.Types.ObjectId, ref: 'Answer' }],
-    follwers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   },
   { collection: 'User' },

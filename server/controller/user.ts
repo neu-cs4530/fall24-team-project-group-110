@@ -27,12 +27,17 @@ const userController = (socket: FakeSOSocket) => {
    * @returns `true` if the user is valid, otherwise `false`.
    */
   const isUserValid = (user: User): boolean =>
-    user._id !== undefined &&
     user.firstName !== '' &&
     user.lastName !== '' &&
     user.questions !== undefined &&
     user.answers !== undefined &&
-    user.comments !== undefined;
+    user.comments !== undefined &&
+    user.email !== undefined &&
+    user.password !== undefined &&
+    user.username !== undefined &&
+    user.bio !== undefined &&
+    user.picture !== undefined &&
+    user.email.includes('@');
 
   /**
    * Adds a new user to the database. The user is first validated and then saved.
@@ -60,14 +65,7 @@ const userController = (socket: FakeSOSocket) => {
         throw new Error(result.error);
       }
 
-      // Populates the fields of the user that was added, and emits the new object
-      const populatedUser = await populateDocument(result._id?.toString(), 'user');
-
-      if (populatedUser && 'error' in populatedUser) {
-        throw new Error(populatedUser.error);
-      }
-
-      socket.emit('userUpdate', populatedUser as User);
+      socket.emit('userUpdate', result);
       res.json(result);
     } catch (err: unknown) {
       if (err instanceof Error) {

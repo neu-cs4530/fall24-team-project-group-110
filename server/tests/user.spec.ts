@@ -12,15 +12,20 @@ afterAll(async () => {
 });
 
 describe('POST /addUser', () => {
-  const createMockUser = (userId: mongoose.Types.ObjectId) => ({
-    _id: userId,
+  const createMockUser = () => ({
+    _id: new mongoose.Types.ObjectId('65e9b58910afe6e94fc6e6fe'),
     username: 'testUser',
     firstName: 'Test',
     lastName: 'User',
     email: 'testuser@example.com',
-    password: 'securepassword123',
+    password: 'password123',
     bio: 'Test user bio',
     picture: 'http://example.com/picture.jpg',
+    comments: [],
+    questions: [],
+    answers: [],
+    followers: [],
+    following: [],
   });
 
   const setupMockReqBody = () => ({
@@ -31,6 +36,11 @@ describe('POST /addUser', () => {
     password: 'securepassword123',
     bio: 'Test user bio',
     picture: 'http://example.com/picture.jpg',
+    comments: [],
+    questions: [],
+    answers: [],
+    followers: [],
+    following: [],
   });
 
   const assertErrorResponse = async (
@@ -48,8 +58,7 @@ describe('POST /addUser', () => {
   });
 
   it('should add a new user successfully', async () => {
-    const validUid = new mongoose.Types.ObjectId();
-    const mockUser = createMockUser(validUid);
+    const mockUser = createMockUser();
 
     saveUserSpy.mockResolvedValueOnce(mockUser as User);
 
@@ -57,19 +66,25 @@ describe('POST /addUser', () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
-      _id: validUid.toString(),
+      _id: '65e9b58910afe6e94fc6e6fe',
       username: 'testUser',
       firstName: 'Test',
       lastName: 'User',
+      password: 'password123',
       email: 'testuser@example.com',
       bio: 'Test user bio',
       picture: 'http://example.com/picture.jpg',
+      comments: [],
+      questions: [],
+      answers: [],
+      followers: [],
+      following: [],
     });
   });
 
   it('should return bad request error if required fields are missing', async () => {
     const mockReqBody = { username: 'testUser' }; // Missing other required fields
-    await assertErrorResponse(mockReqBody, 400, 'Invalid request');
+    await assertErrorResponse(mockReqBody, 400, 'Invalid user request');
   });
 
   it('should return bad request error if email format is invalid', async () => {
@@ -77,7 +92,7 @@ describe('POST /addUser', () => {
       ...setupMockReqBody(),
       email: 'invalidEmailFormat',
     };
-    await assertErrorResponse(mockReqBody, 400, 'Invalid email format');
+    await assertErrorResponse(mockReqBody, 400, 'Invalid user');
   });
 
   it('should return database error in response if saveUser method throws an error', async () => {
@@ -86,19 +101,6 @@ describe('POST /addUser', () => {
     const response = await supertest(app).post('/user/addUser').send(setupMockReqBody());
 
     expect(response.status).toBe(500);
-    expect(response.text).toBe('Error when adding user: Error when saving a user');
-  });
-
-  it('should return database error in response if populateDocument method throws an error', async () => {
-    const validUid = new mongoose.Types.ObjectId();
-    const mockUser = createMockUser(validUid);
-
-    saveUserSpy.mockResolvedValueOnce(mockUser as User);
-    popDocSpy.mockRejectedValueOnce(new Error('Error when populating document'));
-
-    const response = await supertest(app).post('/user/addUser').send(setupMockReqBody());
-
-    expect(response.status).toBe(500);
-    expect(response.text).toBe('Error when adding user: Error when populating document');
+    expect(response.text).toBe('Error when saving user: Error when saving a user');
   });
 });
