@@ -2,7 +2,7 @@ import { Schema } from 'mongoose';
 /**
  * Mongoose schema for the Answer collection.
  *
- * This schema defines the structure for storing answers in the database.
+ * This schema defines the structure for storing users in the database.
  * Each user includes the following fields:
  * - `username`: A string of a user choosen username.
  * - `firstName`: User's first name
