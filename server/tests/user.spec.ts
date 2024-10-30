@@ -5,7 +5,6 @@ import * as util from '../models/application';
 import { User } from '../types';
 
 const saveUserSpy = jest.spyOn(util, 'saveUser');
-const popDocSpy = jest.spyOn(util, 'populateDocument');
 
 afterAll(async () => {
   await mongoose.disconnect(); // Ensure mongoose is disconnected after all tests
