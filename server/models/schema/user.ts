@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
 /**
- * Mongoose schema for the Answer collection.
+ * Mongoose schema for the User collection.
  *
  * This schema defines the structure for storing users in the database.
  * Each user includes the following fields:
