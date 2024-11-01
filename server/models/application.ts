@@ -9,11 +9,14 @@ import {
   Question,
   QuestionResponse,
   Tag,
+  User,
+  UserResponse,
 } from '../types';
 import AnswerModel from './answers';
 import QuestionModel from './questions';
 import TagModel from './tags';
 import CommentModel from './comments';
+import UserModel from './users';
 
 /**
  * Parses tags from a search string.
@@ -397,6 +400,21 @@ export const saveComment = async (comment: Comment): Promise<CommentResponse> =>
 };
 
 /**
+ * Saves a new user to the database.
+ *
+ * @param {User} user - The user to save
+ * @returns {Promise<UserResponse>} - The saved user, or an error message if the save failed
+ */
+export const saveUser = async (user: User): Promise<UserResponse> => {
+  try {
+    const result = await UserModel.create(user);
+    return result;
+  } catch (error) {
+    return { error: 'Error when saving a user' };
+  }
+};
+
+/**
  * Processes a list of tags by removing duplicates, checking for existing tags in the database,
  * and adding non-existing tags. Returns an array of the existing or newly added tags.
  * If an error occurs during the process, it is logged, and an empty array is returned.
@@ -640,5 +658,68 @@ export const getTagCountMap = async (): Promise<Map<string, number> | null | { e
     return tmap;
   } catch (error) {
     return { error: 'Error when construction tag map' };
+  }
+};
+
+/**
+ * Updates the user based on the new data.
+ *
+ * @param qid The ID of the current user.
+ * @param newUserData User data that has been changed.
+ * @returns {Promise<UserResponse>} - The edited user, or an error message if the update failed
+ */
+export const updateUserProfile = async (
+  qid: string,
+  newUserData: Partial<User>,
+): Promise<UserResponse> => {
+  try {
+    const result = await UserModel.findOneAndUpdate(
+      { _id: qid },
+      { $set: newUserData },
+      { new: true },
+    );
+
+    if (result == null) {
+      throw new Error('Failed to update user');
+    }
+    return result;
+  } catch (error) {
+    return { error: `Error when updating user: ${(error as Error).message}` };
+  }
+};
+
+/** TODO: Other user following must be changed accordingly */
+/**
+ * Adds follower to user.
+ *
+ * @param qid The ID of the current user.
+ * @param user The user being followed.
+ * @returns {Promise<UserResponse>} - The new user, or an error message if the update failed
+ */
+export const addFollowToUser = async (qid: string, user: User): Promise<UserResponse> => {
+  try {
+    // if (!user || !user.username || !user.email) {
+    //   throw new Error('Invalid user');
+    // }
+
+    const result = await UserModel.findOneAndUpdate(
+      { _id: qid },
+      {
+        $cond: [
+          { $in: [user._id, '$followees'] },
+          { $filter: { input: '$followees', as: 'f', cond: { $ne: ['$$f', user._id] } } },
+          { $concatArrays: ['$followees', [user._id]] },
+        ],
+      },
+      { new: true },
+    );
+
+    if (result == null) {
+      throw new Error('Failed to follow user');
+    }
+
+    return result;
+  } catch (error) {
+    return { error: `Error when following: ${(error as Error).message}` };
   }
 };
