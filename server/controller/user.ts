@@ -1,23 +1,10 @@
 import express, { Response } from 'express';
 import { User, AddUserRequest, FakeSOSocket, EditUserRequest } from '../types';
 import { saveUser, updateUserProfile } from '../models/application';
+import bcrypt from 'bcryptjs'
 
 const userController = (socket: FakeSOSocket) => {
   const router = express.Router();
-
-  /**
-   * Checks if the provided user request contains the required fields.
-   *
-   * @param req The request object containing the user data.
-   *
-   * @returns `true` if the request is valid, otherwise `false`.
-   */
-  const isRequestValid = (req: AddUserRequest): boolean =>
-    !!req.body.firstName &&
-    !!req.body.lastName &&
-    !!req.body.questions &&
-    !!req.body.answers &&
-    !!req.body.comments;
 
   /**
    * Validates the user object to ensure it is not empty.
@@ -27,17 +14,13 @@ const userController = (socket: FakeSOSocket) => {
    * @returns `true` if the user is valid, otherwise `false`.
    */
   const isUserValid = (user: User): boolean =>
-    user.firstName !== '' &&
-    user.lastName !== '' &&
-    user.questions !== undefined &&
-    user.answers !== undefined &&
-    user.comments !== undefined &&
-    user.email !== undefined &&
-    user.password !== undefined &&
-    user.username !== undefined &&
-    user.bio !== undefined &&
-    user.picture !== undefined &&
-    user.email.includes('@');
+    user.firstName !== undefined && user.firstName !== '' &&
+    user.lastName !== undefined && user.lastName !== '' &&
+    user.email !== undefined && user.email !== '' && user.email.includes('@') &&
+    user.password !== undefined && user.password !== '' &&
+    user.username !== undefined && user.username !== '' &&
+    user.bio !== undefined && user.bio !== '' &&
+    user.picture !== undefined && user.picture !== '';
 
   /**
    * Adds a new user to the database. The user is first validated and then saved.
@@ -48,23 +31,30 @@ const userController = (socket: FakeSOSocket) => {
    * @returns A Promise that resolves to void.
    */
   const addUser = async (req: AddUserRequest, res: Response): Promise<void> => {
-    if (!isRequestValid(req)) {
-      res.status(400).send('Invalid user request');
-      return;
-    }
-
     if (!isUserValid(req.body)) {
       res.status(400).send('Invalid user');
       return;
     }
 
-    const user: User = req.body;
+    const hashedPassword = bcrypt.hashSync(req.body.password, 10);
+
+    // add default values for new user and hashed password
+    const user: User = {
+      ...req.body,
+      password: hashedPassword,
+      comments: [],
+      questions: [],
+      answers: [],
+      followers: [],
+      following: [],
+    }
     try {
       const result = await saveUser(user);
       if ('error' in result) {
         throw new Error(result.error);
       }
 
+      req.session.username = user.username;
       res.json(result);
     } catch (err: unknown) {
       if (err instanceof Error) {

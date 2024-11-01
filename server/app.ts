@@ -8,6 +8,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import { Server } from 'socket.io';
 import * as http from 'http';
+import session from 'express-session';
 
 import answerController from './controller/answer';
 import questionController from './controller/question';
@@ -15,6 +16,7 @@ import tagController from './controller/tag';
 import commentController from './controller/comment';
 import { FakeSOSocket } from './types';
 import userController from './controller/user';
+import authController from './controller/auth';
 
 dotenv.config();
 
@@ -64,11 +66,46 @@ app.use(
 
 app.use(express.json());
 
+declare module 'express-session' {
+  interface SessionData {
+    username?: string;
+  }
+}
+
+app.use(session({
+  secret: 'fakeso',
+  cookie: {
+    // 60 minutes
+    maxAge: 1000 * 60 * 60,
+  },
+  resave: false,
+  saveUninitialized: false,
+}));
+
+// authentication middleware that excludes unprotected routes
+app.use((req: Request, res: Response, next) => {
+  const unprotectedRoutes = new Set([
+    '/user/addUser',
+    '/auth/login',
+  ])
+
+  if (unprotectedRoutes.has(req.path)) {
+    return next();
+  }
+
+  if (!req.session.username) {
+    return res.status(401).send('unauthorized');
+  }
+
+  next();
+});
+
 app.get('/', (req: Request, res: Response) => {
   res.send('hello world');
   res.end();
 });
 
+app.use('/auth', authController());
 app.use('/question', questionController(socket));
 app.use('/tag', tagController());
 app.use('/answer', answerController(socket));
