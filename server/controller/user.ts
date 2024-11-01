@@ -1,7 +1,7 @@
 import express, { Response } from 'express';
+import bcrypt from 'bcryptjs';
 import { User, AddUserRequest, FakeSOSocket, EditUserRequest } from '../types';
 import { saveUser, updateUserProfile } from '../models/application';
-import bcrypt from 'bcryptjs'
 
 const userController = (socket: FakeSOSocket) => {
   const router = express.Router();
@@ -14,13 +14,21 @@ const userController = (socket: FakeSOSocket) => {
    * @returns `true` if the user is valid, otherwise `false`.
    */
   const isUserValid = (user: User): boolean =>
-    user.firstName !== undefined && user.firstName !== '' &&
-    user.lastName !== undefined && user.lastName !== '' &&
-    user.email !== undefined && user.email !== '' && user.email.includes('@') &&
-    user.password !== undefined && user.password !== '' &&
-    user.username !== undefined && user.username !== '' &&
-    user.bio !== undefined && user.bio !== '' &&
-    user.picture !== undefined && user.picture !== '';
+    user.firstName !== undefined &&
+    user.firstName !== '' &&
+    user.lastName !== undefined &&
+    user.lastName !== '' &&
+    user.email !== undefined &&
+    user.email !== '' &&
+    user.email.includes('@') &&
+    user.password !== undefined &&
+    user.password !== '' &&
+    user.username !== undefined &&
+    user.username !== '' &&
+    user.bio !== undefined &&
+    user.bio !== '' &&
+    user.picture !== undefined &&
+    user.picture !== '';
 
   /**
    * Adds a new user to the database. The user is first validated and then saved.
@@ -47,7 +55,7 @@ const userController = (socket: FakeSOSocket) => {
       answers: [],
       followers: [],
       following: [],
-    }
+    };
     try {
       const result = await saveUser(user);
       if ('error' in result) {

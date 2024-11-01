@@ -1,13 +1,12 @@
 import express, { Response } from 'express';
+import bcrypt from 'bcryptjs';
 import { LoginRequest } from '../types';
 import { getUserByUsername } from '../models/application';
-import bcrypt from 'bcryptjs';
 
 const authController = () => {
   const router = express.Router();
 
-  const isRequestValid = (req: LoginRequest): boolean =>
-    !!req.body.username && !!req.body.password;
+  const isRequestValid = (req: LoginRequest): boolean => !!req.body.username && !!req.body.password;
 
   const login = async (req: LoginRequest, res: Response): Promise<void> => {
     if (!isRequestValid(req)) {
@@ -34,19 +33,19 @@ const authController = () => {
   };
 
   const logout = (req: LoginRequest, res: Response): void => {
-    req.session.destroy((err) => {
+    req.session.destroy(err => {
       if (err) {
         res.status(500).send('Error when logging out');
       } else {
         res.sendStatus(204);
       }
     });
-  }
+  };
 
   router.post('/login', login);
   router.post('/logout', logout);
 
   return router;
-}
+};
 
 export default authController;
