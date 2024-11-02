@@ -14,21 +14,10 @@ const userController = (socket: FakeSOSocket) => {
    * @returns `true` if the user is valid, otherwise `false`.
    */
   const isUserValid = (user: User): boolean =>
-    user.firstName !== undefined &&
-    user.firstName !== '' &&
-    user.lastName !== undefined &&
-    user.lastName !== '' &&
-    user.email !== undefined &&
-    user.email !== '' &&
-    user.email.includes('@') &&
     user.password !== undefined &&
     user.password !== '' &&
     user.username !== undefined &&
-    user.username !== '' &&
-    user.bio !== undefined &&
-    user.bio !== '' &&
-    user.picture !== undefined &&
-    user.picture !== '';
+    user.username !== '';
 
   /**
    * Adds a new user to the database. The user is first validated and then saved.
@@ -50,6 +39,11 @@ const userController = (socket: FakeSOSocket) => {
     const user: User = {
       ...req.body,
       password: hashedPassword,
+      firstName: '',
+      lastName: '',
+      email: '',
+      bio: '',
+      picture: '',
       comments: [],
       questions: [],
       answers: [],
@@ -83,6 +77,11 @@ const userController = (socket: FakeSOSocket) => {
    */
   const updateUser = async (req: EditUserRequest, res: Response): Promise<void> => {
     const { qid, newUserData } = req.body;
+
+    if (newUserData.password) {
+      newUserData.password = bcrypt.hashSync(newUserData.password, 10);
+    }
+  
     try {
       const result = await updateUserProfile(qid, newUserData);
 

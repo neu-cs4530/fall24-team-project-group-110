@@ -11,3 +11,11 @@
   font-size: 32px;
   font-weight: 800;
 }
+
+.logout-button {
+  background: #ff0000;
+  color: #ffffff;
+  padding: 5px;
+  cursor: pointer;
+  border: 1px solid #000000;
+}
