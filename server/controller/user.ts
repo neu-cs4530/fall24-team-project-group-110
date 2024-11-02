@@ -135,7 +135,7 @@ const userController = (socket: FakeSOSocket) => {
 
     const errors = validateFields(newUserData);
     if (Object.keys(errors.error).length > 0) {
-      res.status(400).send(errors);
+      res.status(400).json(errors);
       return;
     }
 
