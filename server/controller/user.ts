@@ -81,7 +81,7 @@ const userController = (socket: FakeSOSocket) => {
     if (newUserData.password) {
       newUserData.password = bcrypt.hashSync(newUserData.password, 10);
     }
-  
+
     try {
       const result = await updateUserProfile(qid, newUserData);
 
