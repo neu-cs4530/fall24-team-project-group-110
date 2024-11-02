@@ -18,14 +18,14 @@ const userController = (socket: FakeSOSocket) => {
     user.password !== '' &&
     user.username !== undefined &&
     user.username !== '';
-  
+
   /**
    * An object containing the invalid fields of a user and basic error messages.
    */
   interface InvalidUserFields {
     error: {
       [key: string]: string;
-    }
+    };
   }
 
   /**
@@ -67,7 +67,7 @@ const userController = (socket: FakeSOSocket) => {
     }
 
     return errors;
-  }
+  };
 
   /**
    * Adds a new user to the database. The user is first validated and then saved.

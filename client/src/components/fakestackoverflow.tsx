@@ -41,8 +41,8 @@ const FakeStackOverflow = ({ socket }: { socket: FakeSOSocket | null }) => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const result = await validate();
-        setUser(result);
+        const validatedUser = await validate();
+        setUser(validatedUser);
         setLoading(false);
         navigate('/home');
       } catch (e) {
@@ -51,7 +51,7 @@ const FakeStackOverflow = ({ socket }: { socket: FakeSOSocket | null }) => {
     };
 
     checkSession();
-  }, []);
+  }, [navigate]);
 
   return !loading ? (
     <LoginContext.Provider value={{ setUser }}>

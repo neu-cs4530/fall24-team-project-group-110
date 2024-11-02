@@ -1,11 +1,9 @@
-import mongoose from "mongoose";
-import request from "supertest";
-import { app } from "../app";
-import * as util from "../models/application";
-import bcrypt from "bcryptjs";
-import express, { Express, Request, Response } from "express";
-import session from "express-session";
-import authController from "../controller/auth";
+import mongoose from 'mongoose';
+import request from 'supertest';
+import bcrypt from 'bcryptjs';
+import * as util from '../models/application';
+import { app } from '../app';
+
 declare module 'express-session' {
   interface SessionData {
     username?: string;
@@ -23,8 +21,8 @@ describe('POST /login', () => {
 
   it('should return 400 if username is not provided', async () => {
     const mockReqBody = {
-      password: 'password'
-    }
+      password: 'password',
+    };
 
     const response = await request(app).post('/auth/login').send(mockReqBody);
 
@@ -33,8 +31,8 @@ describe('POST /login', () => {
 
   it('should return 400 if password is not provided', async () => {
     const mockReqBody = {
-      username: 'username'
-    }
+      username: 'username',
+    };
 
     const response = await request(app).post('/auth/login').send(mockReqBody);
 
@@ -44,8 +42,8 @@ describe('POST /login', () => {
   it('should return 500 if an error is returned from getUserByUsername', async () => {
     const mockReqBody = {
       username: 'username',
-      password: 'password'
-    }
+      password: 'password',
+    };
 
     jest.spyOn(util, 'getUserByUsername').mockResolvedValueOnce({ error: 'error' });
 
@@ -57,7 +55,7 @@ describe('POST /login', () => {
   it('should return 500 if an error occurs during bcrypt.compareSync', async () => {
     const mockReqBody = {
       username: 'username',
-      password: 'password'
+      password: 'password',
     };
 
     const mockUser = {
@@ -87,7 +85,7 @@ describe('POST /login', () => {
   it('should return 200 if login is successful', async () => {
     const mockReqBody = {
       username: 'username',
-      password: 'password'
+      password: 'password',
     };
 
     const mockUser = {

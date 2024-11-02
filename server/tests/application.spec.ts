@@ -1026,7 +1026,7 @@ describe('application module', () => {
         if ('error' in result) {
           expect(false).toBeTruthy();
         } else {
-          expect(result).toEqual(user1); 
+          expect(result).toEqual(user1);
         }
       });
     });

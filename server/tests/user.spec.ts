@@ -182,7 +182,7 @@ describe('POST /addUser', () => {
     it('should return 400 error if newUserData fields are invalid', async () => {
       const mockReqBody = {
         qid: createMockUser()._id,
-        newUserData: { 
+        newUserData: {
           username: '',
           firstName: '',
           lastName: '',
@@ -201,9 +201,9 @@ describe('POST /addUser', () => {
           email: 'Email cannot be empty and must contain an @ symbol',
           password: 'Password cannot be empty',
           bio: 'Bio cannot be empty',
-          picture: 'Picture cannot be empty'
+          picture: 'Picture cannot be empty',
         },
-      }
+      };
 
       const response = await supertest(app).put('/user/updateUser').send(mockReqBody);
 
