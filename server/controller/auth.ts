@@ -36,8 +36,7 @@ const authController = () => {
       }
 
       if (!bcrypt.compareSync(req.body.password, result.password)) {
-        res.status(401).send('invalid username or password');
-        return;
+        throw new Error('invalid username or password');
       }
 
       req.session.username = req.body.username;

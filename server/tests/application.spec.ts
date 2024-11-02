@@ -19,6 +19,7 @@ import {
   addVoteToQuestion,
   saveUser,
   updateUserProfile,
+  getUserByUsername,
 } from '../models/application';
 import { Answer, Question, Tag, Comment, User } from '../types';
 import { T1_DESC, T2_DESC, T3_DESC } from '../data/posts_strings';
@@ -1001,6 +1002,32 @@ describe('application module', () => {
         )) as User;
 
         expect(result).toEqual({ error: 'Error when updating user: Failed to update user' });
+      });
+    });
+
+    describe('getUserByUsername', () => {
+      test('getUserByUsername should return an error if findOne returns null', async () => {
+        mockingoose(UserModel).toReturn(null, 'findOne');
+
+        const result = await getUserByUsername(user1.username);
+
+        if ('error' in result) {
+          expect(true).toBeTruthy();
+        } else {
+          expect(false).toBeTruthy();
+        }
+      });
+
+      test('getUserByUsername should return the user with the given username', async () => {
+        mockingoose(UserModel).toReturn(user1, 'findOne');
+
+        const result = await getUserByUsername(user1.username);
+
+        if ('error' in result) {
+          expect(false).toBeTruthy();
+        } else {
+          expect(result).toEqual(user1); 
+        }
       });
     });
   });

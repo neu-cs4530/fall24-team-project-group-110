@@ -732,7 +732,7 @@ export const getUserByUsername = async (username: string): Promise<UserResponse>
       throw new Error('User does not exist');
     }
 
-    return result;
+    return result.toObject();
   } catch (error) {
     return { error: 'Error when fetching user' };
   }

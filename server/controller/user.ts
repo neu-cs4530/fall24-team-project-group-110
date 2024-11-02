@@ -18,6 +18,56 @@ const userController = (socket: FakeSOSocket) => {
     user.password !== '' &&
     user.username !== undefined &&
     user.username !== '';
+  
+  /**
+   * An object containing the invalid fields of a user and basic error messages.
+   */
+  interface InvalidUserFields {
+    error: {
+      [key: string]: string;
+    }
+  }
+
+  /**
+   * Validates the user object to ensure all fields are valid.
+   *
+   * @param user The user to validate.
+   *
+   * @returns An object containing the invalid fields.
+   */
+  const validateFields = (user: Partial<User>): InvalidUserFields => {
+    const errors: InvalidUserFields = { error: {} };
+
+    if (user.username !== undefined && user.username === '') {
+      errors.error.username = 'Username cannot be empty';
+    }
+
+    if (user.firstName !== undefined && user.firstName === '') {
+      errors.error.firstName = 'Password cannot be empty';
+    }
+
+    if (user.lastName !== undefined && user.lastName === '') {
+      errors.error.lastName = 'Last name cannot be empty';
+    }
+
+    if (user.email !== undefined && user.email === '' && !user.email.includes('@')) {
+      errors.error.email = 'Email cannot be empty and must contain an @ symbol';
+    }
+
+    if (user.password !== undefined && user.password === '') {
+      errors.error.password = 'Password cannot be empty';
+    }
+
+    if (user.bio !== undefined && user.bio === '') {
+      errors.error.bio = 'Bio cannot be empty';
+    }
+
+    if (user.picture !== undefined && user.picture === '') {
+      errors.error.picture = 'Picture cannot be empty';
+    }
+
+    return errors;
+  }
 
   /**
    * Adds a new user to the database. The user is first validated and then saved.
@@ -77,6 +127,17 @@ const userController = (socket: FakeSOSocket) => {
    */
   const updateUser = async (req: EditUserRequest, res: Response): Promise<void> => {
     const { qid, newUserData } = req.body;
+
+    if (!qid || !newUserData) {
+      res.status(400).send('Invalid request');
+      return;
+    }
+
+    const errors = validateFields(newUserData);
+    if (Object.keys(errors.error).length > 0) {
+      res.status(400).send(errors);
+      return;
+    }
 
     if (newUserData.password) {
       newUserData.password = bcrypt.hashSync(newUserData.password, 10);
