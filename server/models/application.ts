@@ -726,7 +726,7 @@ export const addFollowToUser = async (qid: string, user: User): Promise<UserResp
 
 /**
  * Gets a user by their username.
- * 
+ *
  * @param username The username of the user to fetch.
  * @returns {Promise<UserResponse>} - The user, or an error message if the fetch failed
  */
