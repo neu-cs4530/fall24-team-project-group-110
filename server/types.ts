@@ -226,6 +226,11 @@ export type CommentResponse = Comment | { error: string };
 export type UserResponse = User | { error: string };
 
 /**
+ * Type representing the possible responses for a User-related operation involving a list of users.
+ */
+export type UserListResponse = User[] | { error: string };
+
+/**
  * Interface representing the payload for a comment update event, which contains:
  * - result - The updated question or answer.
  * - type - The type of the updated item, either 'question' or 'answer'.
@@ -268,3 +273,57 @@ export interface ServerToClientEvents {
   commentUpdate: (comment: CommentUpdatePayload) => void;
   userUpdate: (user: UserResponse) => void;
 }
+
+/**
+ * Interface extending the request body when adding a new conversation, which contains:
+ * - body - The conversation being added.
+ */
+export interface AddConversationRequest extends Request {
+  body: Conversation;
+}
+
+/**
+ * Interface extending the request body when adding a new message, which contains:
+ * - body - The message being added.
+ */
+export interface AddMessageRequest extends Request {
+  body: Message;
+}
+
+/**
+ * Interface representing a message document, which contains:
+ * - _id - The unique identifier for the message. Optional field.
+ * - conversationId - The unique identifier for the conversation the message belongs to.
+ * - sender - The username of the user who sent the message.
+ * - text - The content of the message.
+ * - sentAt - The date and time when the message was sent.
+ */
+export interface Message {
+  _id?: ObjectId;
+  conversationId: string;
+  sender: string;
+  text: string;
+  sentAt: Date;
+}
+
+/**
+ * Interface representing a conversation document, which contains:
+ * - _id - The unique identifier for the conversation. Optional field.
+ * - participants - An array of usernames of the users participating in the conversation.
+ * - updatedAt - The date and time when the conversation was last updated.
+ */
+export interface Conversation {
+  _id?: ObjectId;
+  participants: string[];
+  updatedAt: Date;
+}
+
+/**
+ * Type representing the possible responses for a Conversation-related operation.
+ */
+export type ConversationResponse = Conversation | { error: string };
+
+/**
+ * Type representing the possible responses for a Message-related operation.
+ */
+export type MessageResponse = Message | { error: string };

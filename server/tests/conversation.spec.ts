@@ -1,0 +1,130 @@
+import mongoose from "mongoose";
+import supertest from "supertest";
+import { app } from "../app";
+import * as util from "../models/application";
+import { Conversation, User } from "../types";
+import { ObjectId } from "mongodb";
+
+const user1: User = {
+  _id: new ObjectId('65e9b716ff0e892116b2de19'),
+  username: 'testUser',
+  firstName: 'Test',
+  lastName: 'User',
+  email: 'testuser@example.com',
+  password: 'password123',
+  bio: 'Test user bio',
+  picture: 'http://example.com/picture.jpg',
+  comments: [],
+  questions: [],
+  answers: [],
+  followers: [],
+  following: [],
+};
+
+const user2: User = {
+  _id: new ObjectId('65e9b716ff0e892116b2de12'),
+  username: 'testUser2',
+  firstName: 'Test',
+  lastName: 'User',
+  email: 'testuser@example.com',
+  password: 'password123',
+  bio: 'Test user bio',
+  picture: 'http://example.com/picture.jpg',
+  comments: [],
+  questions: [],
+  answers: [],
+  followers: [],
+  following: [],
+};
+
+describe("POST /addConversation", () => {
+  afterEach(async () => {
+    jest.restoreAllMocks();
+    await mongoose.connection.close();
+  });
+
+  afterAll(async () => {
+    await mongoose.disconnect();
+  });
+
+  test('should return 200 and the created conversation if the response is successful', async () => {
+    const mockConversation: Conversation = {
+      _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
+      participants: ['testUser', 'testUser2'],
+      updatedAt: new Date(),
+    }
+
+    jest.spyOn(util, 'getUsersByUsernames').mockResolvedValue([user1, user2]);
+    jest.spyOn(util, 'saveConversation').mockResolvedValue(mockConversation);
+
+    const response = await supertest(app).post('/conversation/addConversation').send(mockConversation);
+
+    response.body.updatedAt = new Date(response.body.updatedAt);
+    response.body._id = new ObjectId(String(response.body._id));
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(mockConversation);
+  });
+
+  test('should return 400 if the request body is empty', async () => {
+    const input = {};
+
+    const response = await supertest(app).post('/conversation/addConversation').send(input);
+
+    expect(response.status).toBe(400);
+  });
+
+  test('should return 400 if there are less than 2 participants', async () => {
+    const mockConversation: Conversation = {
+      _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
+      participants: ['testUser'],
+      updatedAt: new Date(),
+    }
+
+    const response = await supertest(app).post('/conversation/addConversation').send(mockConversation);
+
+    expect(response.status).toBe(400);
+  });
+
+  test('should return 404 if an error is returned by getUsersByUsernames', async () => {
+    const mockConversation: Conversation = {
+      _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
+      participants: ['testUser', 'testUser2'],
+      updatedAt: new Date(),
+    }
+
+    jest.spyOn(util, 'getConversationById').mockResolvedValueOnce({ error: 'Error' });
+
+    const response = await supertest(app).post('/conversation/addConversation').send(mockConversation);
+
+    expect(response.status).toBe(404);
+  });
+
+  test('should return 404 if less than 2 users are returned', async () => {
+    const mockConversation: Conversation = {
+      _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
+      participants: ['testUser', 'testUser2'],
+      updatedAt: new Date(),
+    }
+
+    jest.spyOn(util, 'getUsersByUsernames').mockResolvedValueOnce([user1]);
+
+    const response = await supertest(app).post('/conversation/addConversation').send(mockConversation);
+
+    expect(response.status).toBe(404);
+  });
+
+  test('should return 500 if an error is returned by saveConversation', async () => {
+    const mockConversation: Conversation = {
+      _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
+      participants: ['testUser', 'testUser2'],
+      updatedAt: new Date(),
+    }
+
+    jest.spyOn(util, 'getUsersByUsernames').mockResolvedValueOnce([user1, user2]);
+    jest.spyOn(util, 'saveConversation').mockResolvedValueOnce({ error: 'Error' });
+
+    const response = await supertest(app).post('/conversation/addConversation').send(mockConversation);
+
+    expect(response.status).toBe(500);
+  });
+});

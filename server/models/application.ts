@@ -5,11 +5,16 @@ import {
   AnswerResponse,
   Comment,
   CommentResponse,
+  Conversation,
+  ConversationResponse,
+  Message,
+  MessageResponse,
   OrderType,
   Question,
   QuestionResponse,
   Tag,
   User,
+  UserListResponse,
   UserResponse,
 } from '../types';
 import AnswerModel from './answers';
@@ -17,6 +22,8 @@ import QuestionModel from './questions';
 import TagModel from './tags';
 import CommentModel from './comments';
 import UserModel from './users';
+import ConversationModel from './conversation';
+import MessageModel from './message';
 
 /**
  * Parses tags from a search string.
@@ -723,3 +730,67 @@ export const addFollowToUser = async (qid: string, user: User): Promise<UserResp
     return { error: `Error when following: ${(error as Error).message}` };
   }
 };
+
+/**
+ * Gets a list of users based on the provided usernames.
+ * 
+ * @param usernames The usernames of the users to fetch.
+ * @returns {Promise<UserListResponse>} - The list of users, or an error message if the fetch failed
+ */
+export const getUsersByUsernames = async (usernames: string[]): Promise<UserListResponse> => {
+  try {
+    const users = await UserModel.find({ username: { $in: usernames } });
+    return users.map(user => user.toObject());
+  } catch (error) {
+    return { error: 'Error when fetching users' };
+  }
+}
+
+/**
+ * Adds a new conversation to the database.
+ * 
+ * @param conversation The conversation to save
+ * @returns {Promise<ConversationResponse>} - The saved conversation, or an error message if the save failed
+ */
+export const saveConversation = async (conversation: Conversation): Promise<ConversationResponse> => {
+  try {
+    const result = await ConversationModel.create(conversation);
+    return result.toObject();
+  } catch (error) {
+    return { error: 'Error when saving a conversation' };
+  }
+}
+
+/**
+ * Adds a new message to a conversation in the database. The message request is validated and then saved.
+ * 
+ * @param message The message to save
+ * @returns {Promise<MessageResponse>} - The saved message, or an error message if the save failed
+ */
+export const saveMessage = async (message: Message): Promise<MessageResponse> => {
+  try {
+    const result = await MessageModel.create(message);
+    return result.toObject();
+  } catch (error) {
+    return { error: 'Error when saving a message' };
+  }
+}
+
+/**
+ * Gets a conversation by its ID.
+ * 
+ * @param id The ID of the conversation to fetch
+ * @returns {Promise<ConversationResponse>} - The fetched conversation, or an error message if the fetch failed
+ */
+export const getConversationById = async (id: string): Promise<ConversationResponse> => {
+  try {
+    const result = await ConversationModel.findOne({ _id: id });
+    if (!result) {
+      throw new Error('Conversation not found');
+    }
+
+    return result.toObject();
+  } catch (error) {
+    return { error: 'Error when fetching conversation' };
+  }
+}
