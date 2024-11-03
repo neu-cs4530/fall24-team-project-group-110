@@ -27,7 +27,7 @@ const conversationController = () => {
         res.status(404).send('Users not found');
         return;
       }
-      
+
       const result = await saveConversation(req.body);
       if ('error' in result) {
         throw new Error(result.error);

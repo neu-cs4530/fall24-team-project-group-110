@@ -8,12 +8,12 @@ const messageController = () => {
   interface InvalidMessageFields {
     error: {
       [key: string]: string;
-    }
+    };
   }
 
   /**
    * Validates the fields of a message object.
-   * 
+   *
    * @param message The message object to validate.
    * @returns An object containing the invalid fields and their corresponding error messages.
    */
@@ -33,7 +33,7 @@ const messageController = () => {
     }
 
     return errors;
-  }
+  };
 
   /**
    * Adds a new message to a conversation in the database. The message request is validated and then saved.
@@ -77,6 +77,6 @@ const messageController = () => {
   router.post('/addMessage', addMessage);
 
   return router;
-}
+};
 
 export default messageController;

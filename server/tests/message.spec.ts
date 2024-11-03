@@ -1,11 +1,11 @@
-import mongoose from "mongoose";
-import supertest from "supertest";
-import { app } from "../app";
-import * as util from "../models/application";
-import { Conversation, Message } from "../types";
-import { ObjectId } from "mongodb";
+import mongoose from 'mongoose';
+import supertest from 'supertest';
+import { ObjectId } from 'mongodb';
+import { app } from '../app';
+import * as util from '../models/application';
+import { Conversation, Message } from '../types';
 
-describe("POST /addMessage", () => {
+describe('POST /addMessage', () => {
   afterEach(async () => {
     jest.restoreAllMocks();
     await mongoose.connection.close();
@@ -29,7 +29,7 @@ describe("POST /addMessage", () => {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
       participants: ['testUser', 'anotherUser'],
       updatedAt: now,
-    }
+    };
 
     jest.spyOn(util, 'getConversationById').mockResolvedValue(mockConversation);
     jest.spyOn(util, 'saveMessage').mockResolvedValue(mockMessage);
@@ -95,7 +95,7 @@ describe("POST /addMessage", () => {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
       participants: ['testUser', 'anotherUser'],
       updatedAt: now,
-    }
+    };
 
     jest.spyOn(util, 'getConversationById').mockResolvedValueOnce(mockConversation);
 

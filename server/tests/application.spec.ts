@@ -180,7 +180,7 @@ const conv1: Conversation = {
   _id: new ObjectId('65e9b716ff0e892116b2de19'),
   participants: ['user1', 'user2'],
   updatedAt: new Date('2023-11-20T09:24:00'),
-}
+};
 
 const msg1: Message = {
   _id: new ObjectId('65e9b716ff0e892116b2de19'),
@@ -188,7 +188,7 @@ const msg1: Message = {
   sender: 'user1',
   text: 'Hello!',
   sentAt: new Date('2023-11-20T09:24:00'),
-}
+};
 
 describe('application module', () => {
   beforeEach(() => {

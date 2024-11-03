@@ -1,9 +1,9 @@
-import mongoose from "mongoose";
-import supertest from "supertest";
-import { app } from "../app";
-import * as util from "../models/application";
-import { Conversation, User } from "../types";
-import { ObjectId } from "mongodb";
+import mongoose from 'mongoose';
+import supertest from 'supertest';
+import { ObjectId } from 'mongodb';
+import { app } from '../app';
+import * as util from '../models/application';
+import { Conversation, User } from '../types';
 
 const user1: User = {
   _id: new ObjectId('65e9b716ff0e892116b2de19'),
@@ -37,7 +37,7 @@ const user2: User = {
   following: [],
 };
 
-describe("POST /addConversation", () => {
+describe('POST /addConversation', () => {
   afterEach(async () => {
     jest.restoreAllMocks();
     await mongoose.connection.close();
@@ -52,12 +52,14 @@ describe("POST /addConversation", () => {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
       participants: ['testUser', 'testUser2'],
       updatedAt: new Date(),
-    }
+    };
 
     jest.spyOn(util, 'getUsersByUsernames').mockResolvedValue([user1, user2]);
     jest.spyOn(util, 'saveConversation').mockResolvedValue(mockConversation);
 
-    const response = await supertest(app).post('/conversation/addConversation').send(mockConversation);
+    const response = await supertest(app)
+      .post('/conversation/addConversation')
+      .send(mockConversation);
 
     response.body.updatedAt = new Date(response.body.updatedAt);
     response.body._id = new ObjectId(String(response.body._id));
@@ -78,9 +80,11 @@ describe("POST /addConversation", () => {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
       participants: ['testUser'],
       updatedAt: new Date(),
-    }
+    };
 
-    const response = await supertest(app).post('/conversation/addConversation').send(mockConversation);
+    const response = await supertest(app)
+      .post('/conversation/addConversation')
+      .send(mockConversation);
 
     expect(response.status).toBe(400);
   });
@@ -90,11 +94,13 @@ describe("POST /addConversation", () => {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
       participants: ['testUser', 'testUser2'],
       updatedAt: new Date(),
-    }
+    };
 
     jest.spyOn(util, 'getConversationById').mockResolvedValueOnce({ error: 'Error' });
 
-    const response = await supertest(app).post('/conversation/addConversation').send(mockConversation);
+    const response = await supertest(app)
+      .post('/conversation/addConversation')
+      .send(mockConversation);
 
     expect(response.status).toBe(404);
   });
@@ -104,11 +110,13 @@ describe("POST /addConversation", () => {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
       participants: ['testUser', 'testUser2'],
       updatedAt: new Date(),
-    }
+    };
 
     jest.spyOn(util, 'getUsersByUsernames').mockResolvedValueOnce([user1]);
 
-    const response = await supertest(app).post('/conversation/addConversation').send(mockConversation);
+    const response = await supertest(app)
+      .post('/conversation/addConversation')
+      .send(mockConversation);
 
     expect(response.status).toBe(404);
   });
@@ -118,12 +126,14 @@ describe("POST /addConversation", () => {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
       participants: ['testUser', 'testUser2'],
       updatedAt: new Date(),
-    }
+    };
 
     jest.spyOn(util, 'getUsersByUsernames').mockResolvedValueOnce([user1, user2]);
     jest.spyOn(util, 'saveConversation').mockResolvedValueOnce({ error: 'Error' });
 
-    const response = await supertest(app).post('/conversation/addConversation').send(mockConversation);
+    const response = await supertest(app)
+      .post('/conversation/addConversation')
+      .send(mockConversation);
 
     expect(response.status).toBe(500);
   });
