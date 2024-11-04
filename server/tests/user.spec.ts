@@ -147,6 +147,7 @@ describe('POST /addUser', () => {
         answers: [],
         followers: [],
         following: [],
+        notifications: [],
       });
     });
 
