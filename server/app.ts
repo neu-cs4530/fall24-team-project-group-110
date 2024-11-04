@@ -9,6 +9,11 @@ import cors from 'cors';
 import { Server } from 'socket.io';
 import * as http from 'http';
 import session from 'express-session';
+declare module 'express-session' {
+  interface SessionData {
+    username?: string;
+  }
+}
 
 import answerController from './controller/answer';
 import questionController from './controller/question';
@@ -19,6 +24,7 @@ import userController from './controller/user';
 import conversationController from './controller/conversation';
 import messageController from './controller/message';
 import authController from './controller/auth';
+import { checkConversationAccess } from './models/application';
 
 dotenv.config();
 
@@ -35,6 +41,16 @@ const server = http.createServer(app);
 const socket: FakeSOSocket = new Server(server, {
   cors: { origin: '*' },
 });
+const sessionMiddleware = session({
+  secret: 'fakeso',
+  cookie: {
+    // 60 minutes
+    maxAge: 1000 * 60 * 60,
+  },
+  resave: false,
+  saveUninitialized: false,
+});
+socket.engine.use(sessionMiddleware);
 
 function startServer() {
   server.listen(port, () => {
@@ -44,6 +60,22 @@ function startServer() {
 
 socket.on('connection', socket => {
   console.log('A user connected ->', socket.id);
+
+  const req = socket.request as Request;
+  const session = req.session;
+
+  socket.on('joinConversation', async (conversationId: string) => {
+    if (session.username) {
+      const access = await checkConversationAccess(session.username, conversationId);
+      if (access) {
+        socket.join(conversationId);
+      }
+    }
+  });
+
+  socket.on('leaveConversation', (conversationId: string) => {
+    socket.leave(conversationId);
+  });
 
   socket.on('disconnect', () => {
     console.log('User disconnected');
@@ -67,22 +99,7 @@ app.use(
 );
 
 app.use(express.json());
-
-declare module 'express-session' {
-  interface SessionData {
-    username?: string;
-  }
-}
-
-app.use(session({
-  secret: 'fakeso',
-  cookie: {
-    // 60 minutes
-    maxAge: 1000 * 60 * 60,
-  },
-  resave: false,
-  saveUninitialized: false,
-}));
+app.use(sessionMiddleware);
 
 // authentication middleware that excludes unprotected routes
 // only include in development and production modes so that tests can run
@@ -119,7 +136,7 @@ app.use('/answer', answerController(socket));
 app.use('/comment', commentController(socket));
 app.use('/user', userController(socket));
 app.use('/conversation', conversationController());
-app.use('/message', messageController());
+app.use('/message', messageController(socket));
 
 // Export the app instance
 export { app, server, startServer };

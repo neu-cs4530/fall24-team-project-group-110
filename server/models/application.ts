@@ -816,3 +816,16 @@ export const getConversationById = async (id: string): Promise<ConversationRespo
     return { error: 'Error when fetching conversation' };
   }
 };
+
+export const checkConversationAccess = async (username: string, conversationId: string): Promise<boolean> => {
+  try {
+    const conversation = await ConversationModel.findOne({ _id: conversationId });
+    if (!conversation) {
+      return false;
+    }
+
+    return conversation.participants.includes(username);
+  } catch (error) {
+    return false;
+  }
+}

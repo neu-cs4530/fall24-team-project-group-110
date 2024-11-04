@@ -2,7 +2,7 @@ import { Request } from 'express';
 import { ObjectId } from 'mongodb';
 import { Server } from 'socket.io';
 
-export type FakeSOSocket = Server<ServerToClientEvents>;
+export type FakeSOSocket = Server<ClientToServerEvents, ServerToClientEvents>;
 
 /**
  * Type representing the possible ordering options for questions.
@@ -272,6 +272,15 @@ export interface ServerToClientEvents {
   voteUpdate: (vote: VoteUpdatePayload) => void;
   commentUpdate: (comment: CommentUpdatePayload) => void;
   userUpdate: (user: UserResponse) => void;
+  newMessage: (message: Message) => void;
+}
+
+/**
+ * Interface representing the possible events that the client can emit to the server.
+ */
+interface ClientToServerEvents {
+  joinConversation: (conversationId: string) => void;
+  leaveConversation: (conversationId: string) => void;
 }
 
 /**

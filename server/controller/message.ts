@@ -1,8 +1,8 @@
 import express, { Response } from 'express';
-import { AddMessageRequest, Message } from '../types';
+import { AddMessageRequest, FakeSOSocket, Message } from '../types';
 import { saveMessage, getConversationById } from '../models/application';
 
-const messageController = () => {
+const messageController = (socket: FakeSOSocket) => {
   const router = express.Router();
 
   interface InvalidMessageFields {
@@ -67,6 +67,8 @@ const messageController = () => {
       if ('error' in result) {
         throw new Error(result.error);
       }
+
+      socket.to(req.body.conversationId).emit('newMessage', result);
 
       res.json(result);
     } catch (error) {
