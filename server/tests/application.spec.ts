@@ -19,10 +19,16 @@ import {
   addVoteToQuestion,
   saveUser,
   updateUserProfile,
+  saveConversation,
+  getConversationById,
+  saveMessage,
+  getUsersByUsernames,
   getUserByUsername,
 } from '../models/application';
-import { Answer, Question, Tag, Comment, User } from '../types';
+import { Answer, Question, Tag, Comment, User, Conversation, Message } from '../types';
 import { T1_DESC, T2_DESC, T3_DESC } from '../data/posts_strings';
+import ConversationModel from '../models/conversation';
+import MessageModel from '../models/message';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mockingoose = require('mockingoose');
@@ -153,6 +159,36 @@ const user1: User = {
   answers: [],
   followers: [],
   following: [],
+};
+
+const user2: User = {
+  _id: new ObjectId('65e9b716ff0e892116b2de12'),
+  username: 'testUser2',
+  firstName: 'Test',
+  lastName: 'User',
+  email: 'testuser@example.com',
+  password: 'password123',
+  bio: 'Test user bio',
+  picture: 'http://example.com/picture.jpg',
+  comments: [],
+  questions: [],
+  answers: [],
+  followers: [],
+  following: [],
+};
+
+const conv1: Conversation = {
+  _id: new ObjectId('65e9b716ff0e892116b2de19'),
+  participants: ['user1', 'user2'],
+  updatedAt: new Date('2023-11-20T09:24:00'),
+};
+
+const msg1: Message = {
+  _id: new ObjectId('65e9b716ff0e892116b2de19'),
+  conversationId: '65e9b716ff0e892116b2de19',
+  sender: 'user1',
+  text: 'Hello!',
+  sentAt: new Date('2023-11-20T09:24:00'),
 };
 
 describe('application module', () => {
@@ -1028,6 +1064,93 @@ describe('application module', () => {
         } else {
           expect(result).toEqual(user1);
         }
+      });
+    });
+
+    describe('getUsersByUsernames', () => {
+      test('getUsersByUsernames should return the users with the given usernames', async () => {
+        mockingoose(UserModel).toReturn([user1, user2], 'find');
+
+        const users = (await getUsersByUsernames([user1.username, user2.username])) as User[];
+
+        expect(users).toEqual([user1, user2]);
+      });
+
+      test('getUsersByUsernames should return an object with error if find throws an error', async () => {
+        mockingoose(UserModel).toReturn(new Error('error'), 'find');
+
+        const result = await getUsersByUsernames([user1.username, user2.username]);
+
+        if ('error' in result) {
+          expect(true).toBeTruthy();
+        } else {
+          expect(false).toBeTruthy();
+        }
+      });
+    });
+  });
+  describe('Conversation model', () => {
+    describe('saveConversation', () => {
+      test('saveConversation should return the saved conversation', async () => {
+        mockingoose(ConversationModel).toReturn(conv1, 'save');
+
+        const result = (await saveConversation(conv1)) as Conversation;
+
+        expect(result).toEqual(conv1);
+      });
+
+      test('saveConversation should return an object with an error field if an error is thrown', async () => {
+        jest.spyOn(ConversationModel, 'create').mockRejectedValue(new Error('error'));
+
+        const result = (await saveConversation(conv1)) as Conversation;
+
+        expect(result).toEqual({ error: 'Error when saving a conversation' });
+      });
+    });
+
+    describe('getConversationById', () => {
+      test('getConversationById should return the conversation with the given id', async () => {
+        mockingoose(ConversationModel).toReturn(conv1, 'findOne');
+
+        const result = await getConversationById(conv1._id!.toString() as string);
+
+        expect(result).toEqual(conv1);
+      });
+
+      test('getConversationsById should return an object with an error field if conversation is null', async () => {
+        jest.spyOn(ConversationModel, 'findOne').mockResolvedValueOnce(null);
+
+        const result = await getConversationById(conv1._id!.toString() as string);
+
+        expect(result).toEqual({ error: 'Error when fetching conversation' });
+      });
+
+      test('getConversationsById should return an object with an error field if an error is thrown', async () => {
+        jest.spyOn(ConversationModel, 'findOne').mockRejectedValue(new Error('error'));
+
+        const result = await getConversationById(conv1._id!.toString() as string);
+
+        expect(result).toEqual({ error: 'Error when fetching conversation' });
+      });
+    });
+  });
+
+  describe('Message model', () => {
+    describe('saveMessage', () => {
+      test('saveMessage should return the saved message', async () => {
+        mockingoose(MessageModel).toReturn(msg1, 'save');
+
+        const result = (await saveMessage(msg1)) as Message;
+
+        expect(result).toEqual(msg1);
+      });
+
+      test('saveMessage should return an object with an error field if an error is thrown', async () => {
+        jest.spyOn(MessageModel, 'create').mockRejectedValue(new Error('error'));
+
+        const result = (await saveMessage(msg1)) as Message;
+
+        expect(result).toEqual({ error: 'Error when saving a message' });
       });
     });
   });
