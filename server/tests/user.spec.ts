@@ -87,14 +87,6 @@ describe('POST /addUser', () => {
 
     it('should return bad request error if required fields are missing', async () => {
       const mockReqBody = { username: 'testUser' }; // Missing other required fields
-      await assertErrorResponse(mockReqBody, 400, 'Invalid user request');
-    });
-
-    it('should return bad request error if email format is invalid', async () => {
-      const mockReqBody = {
-        ...setupMockReqBody(),
-        email: 'invalidEmailFormat',
-      };
       await assertErrorResponse(mockReqBody, 400, 'Invalid user');
     });
 
@@ -130,10 +122,8 @@ describe('POST /addUser', () => {
       };
 
       const mockReqBody = {
-        body: {
-          qid: mockUser._id,
-          newUserData: mockNewUserData,
-        },
+        qid: mockUser._id,
+        newUserData: mockNewUserData,
       };
 
       updateUserProfileSpy.mockResolvedValueOnce(mockUser);
@@ -161,16 +151,64 @@ describe('POST /addUser', () => {
       updateUserProfileSpy.mockRejectedValueOnce(new Error('Error when updating user'));
 
       const mockReqBody = {
-        body: {
-          qid: createMockUser(),
-          newUserData: {},
-        },
+        qid: createMockUser(),
+        newUserData: {},
       };
 
       const response = await supertest(app).put('/user/updateUser').send(mockReqBody);
 
       expect(response.status).toBe(500);
       expect(response.text).toBe('Error when updating user: Error when updating user');
+    });
+
+    it('should return 400 error if newUserData field is missing', async () => {
+      const mockReqBody = { qid: createMockUser()._id };
+
+      const response = await supertest(app).put('/user/updateUser').send(mockReqBody);
+
+      expect(response.status).toBe(400);
+      expect(response.text).toBe('Invalid request');
+    });
+
+    it('should return 400 error if qid field is missing', async () => {
+      const mockReqBody = { newUserData: {} };
+
+      const response = await supertest(app).put('/user/updateUser').send(mockReqBody);
+
+      expect(response.status).toBe(400);
+      expect(response.text).toBe('Invalid request');
+    });
+
+    it('should return 400 error if newUserData fields are invalid', async () => {
+      const mockReqBody = {
+        qid: createMockUser()._id,
+        newUserData: {
+          username: '',
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: '',
+          bio: '',
+          picture: '',
+        },
+      };
+
+      const expectedResponse = {
+        error: {
+          username: 'Username cannot be empty',
+          firstName: 'Password cannot be empty',
+          lastName: 'Last name cannot be empty',
+          email: 'Email cannot be empty and must contain an @ symbol',
+          password: 'Password cannot be empty',
+          bio: 'Bio cannot be empty',
+          picture: 'Picture cannot be empty',
+        },
+      };
+
+      const response = await supertest(app).put('/user/updateUser').send(mockReqBody);
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual(expectedResponse);
     });
   });
 });

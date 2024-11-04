@@ -23,6 +23,7 @@ import {
   getConversationById,
   saveMessage,
   getUsersByUsernames,
+  getUserByUsername,
 } from '../models/application';
 import { Answer, Question, Tag, Comment, User, Conversation, Message } from '../types';
 import { T1_DESC, T2_DESC, T3_DESC } from '../data/posts_strings';
@@ -1040,6 +1041,32 @@ describe('application module', () => {
       });
     });
 
+    describe('getUserByUsername', () => {
+      test('getUserByUsername should return an error if findOne returns null', async () => {
+        mockingoose(UserModel).toReturn(null, 'findOne');
+
+        const result = await getUserByUsername(user1.username);
+
+        if ('error' in result) {
+          expect(true).toBeTruthy();
+        } else {
+          expect(false).toBeTruthy();
+        }
+      });
+
+      test('getUserByUsername should return the user with the given username', async () => {
+        mockingoose(UserModel).toReturn(user1, 'findOne');
+
+        const result = await getUserByUsername(user1.username);
+
+        if ('error' in result) {
+          expect(false).toBeTruthy();
+        } else {
+          expect(result).toEqual(user1);
+        }
+      });
+    });
+
     describe('getUsersByUsernames', () => {
       test('getUsersByUsernames should return the users with the given usernames', async () => {
         mockingoose(UserModel).toReturn([user1, user2], 'find');
@@ -1048,9 +1075,20 @@ describe('application module', () => {
 
         expect(users).toEqual([user1, user2]);
       });
+
+      test('getUsersByUsernames should return an object with error if find throws an error', async () => {
+        mockingoose(UserModel).toReturn(new Error('error'), 'find');
+
+        const result = await getUsersByUsernames([user1.username, user2.username]);
+
+        if ('error' in result) {
+          expect(true).toBeTruthy();
+        } else {
+          expect(false).toBeTruthy();
+        }
+      });
     });
   });
-
   describe('Conversation model', () => {
     describe('saveConversation', () => {
       test('saveConversation should return the saved conversation', async () => {

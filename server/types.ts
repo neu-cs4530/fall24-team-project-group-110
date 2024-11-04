@@ -275,6 +275,18 @@ export interface ServerToClientEvents {
 }
 
 /**
+ * Interface representing the payload for a login request, which contains:
+ * - username - The username of the user.
+ * - password - The password of the user.
+ */
+export interface LoginRequest extends Request {
+  body: {
+    username: string;
+    password: string;
+  };
+}
+
+/**
  * Interface extending the request body when adding a new conversation, which contains:
  * - body - The conversation being added.
  */

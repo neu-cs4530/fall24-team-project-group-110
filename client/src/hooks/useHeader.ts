@@ -1,5 +1,6 @@
 import { ChangeEvent, useState, KeyboardEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { logout } from '../services/authService';
 
 /**
  * Custom hook to manage the state and logic for a header search input.
@@ -40,11 +41,22 @@ const useHeader = () => {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/');
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('Error logging out:', e);
+    }
+  };
+
   return {
     val,
     setVal,
     handleInputChange,
     handleKeyDown,
+    handleLogout,
   };
 };
 
