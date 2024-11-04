@@ -48,7 +48,6 @@ const sessionMiddleware = session({
     maxAge: 1000 * 60 * 60,
   },
   resave: false,
-  saveUninitialized: false,
 });
 socket.engine.use(sessionMiddleware);
 
@@ -65,6 +64,8 @@ socket.on('connection', socket => {
   const session = req.session;
 
   socket.on('joinConversation', async (conversationId: string) => {
+    await new Promise((resolve) => req.session.reload(resolve));
+
     if (session.username) {
       const access = await checkConversationAccess(session.username, conversationId);
       if (access) {
