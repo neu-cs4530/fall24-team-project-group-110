@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ChangeEvent, useState } from 'react';
 import useLoginContext from './useLoginContext';
+import { login } from '../services/authService';
 
 /**
  * Custom hook to handle login input and submission.
@@ -15,7 +16,6 @@ import useLoginContext from './useLoginContext';
 const useLogin = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  // eslint-disable-next-line
   const [error, setError] = useState<string>('');
   const { setUser } = useLoginContext();
   const navigate = useNavigate();
@@ -47,14 +47,15 @@ const useLogin = () => {
    *
    * @param event - the form event object.
    */
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // TODO: need to call api to login user
-    // if successful, set user in context and navigate to home
-    // else, set error message
-    // setError('Error while logging in');
-    setUser({ username });
-    navigate('/home');
+    try {
+      const user = await login(username, password);
+      setUser(user);
+      navigate('/home');
+    } catch (e) {
+      setError('Invalid username or password');
+    }
   };
 
   return { username, password, error, handleUsernameChange, handlePasswordChange, handleSubmit };

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Layout from './layout';
 import Login from './login';
 import { FakeSOSocket, User } from '../types';
@@ -11,6 +11,7 @@ import NewQuestionPage from './main/newQuestion';
 import NewAnswerPage from './main/newAnswer';
 import AnswerPage from './main/answerPage';
 import Register from './register';
+import { validate } from '../services/authService';
 
 const ProtectedRoute = ({
   user,
@@ -34,8 +35,25 @@ const ProtectedRoute = ({
  */
 const FakeStackOverflow = ({ socket }: { socket: FakeSOSocket | null }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
 
-  return (
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const validatedUser = await validate();
+        setUser(validatedUser);
+        setLoading(false);
+        navigate('/home');
+      } catch (e) {
+        setLoading(false);
+      }
+    };
+
+    checkSession();
+  }, [navigate]);
+
+  return !loading ? (
     <LoginContext.Provider value={{ setUser }}>
       <Routes>
         {/* Public Route */}
@@ -59,7 +77,7 @@ const FakeStackOverflow = ({ socket }: { socket: FakeSOSocket | null }) => {
         }
       </Routes>
     </LoginContext.Provider>
-  );
+  ) : null;
 };
 
 export default FakeStackOverflow;

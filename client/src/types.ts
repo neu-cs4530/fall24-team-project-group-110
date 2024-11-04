@@ -3,13 +3,6 @@ import { Socket } from 'socket.io-client';
 export type FakeSOSocket = Socket<ServerToClientEvents>;
 
 /**
- * Represents a user in the application.
- */
-export interface User {
-  username: string;
-}
-
-/**
  * Enum representing the possible ordering options for questions.
  * and their display names.
  */
@@ -147,4 +140,23 @@ export interface ServerToClientEvents {
   viewsUpdate: (question: Question) => void;
   voteUpdate: (vote: VoteUpdatePayload) => void;
   commentUpdate: (update: CommentUpdatePayload) => void;
+}
+
+/**
+ * Represents a user in the application.
+ */
+export interface User {
+  _id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  bio: string;
+  picture: string;
+  comments: Comment[];
+  questions: Question[];
+  answers: Answer[];
+  followers: User[];
+  following: User[];
 }

@@ -1,23 +1,10 @@
 import express, { Response } from 'express';
+import bcrypt from 'bcryptjs';
 import { User, AddUserRequest, FakeSOSocket, EditUserRequest } from '../types';
 import { saveUser, updateUserProfile } from '../models/application';
 
 const userController = (socket: FakeSOSocket) => {
   const router = express.Router();
-
-  /**
-   * Checks if the provided user request contains the required fields.
-   *
-   * @param req The request object containing the user data.
-   *
-   * @returns `true` if the request is valid, otherwise `false`.
-   */
-  const isRequestValid = (req: AddUserRequest): boolean =>
-    !!req.body.firstName &&
-    !!req.body.lastName &&
-    !!req.body.questions &&
-    !!req.body.answers &&
-    !!req.body.comments;
 
   /**
    * Validates the user object to ensure it is not empty.
@@ -27,17 +14,60 @@ const userController = (socket: FakeSOSocket) => {
    * @returns `true` if the user is valid, otherwise `false`.
    */
   const isUserValid = (user: User): boolean =>
-    user.firstName !== '' &&
-    user.lastName !== '' &&
-    user.questions !== undefined &&
-    user.answers !== undefined &&
-    user.comments !== undefined &&
-    user.email !== undefined &&
     user.password !== undefined &&
+    user.password !== '' &&
     user.username !== undefined &&
-    user.bio !== undefined &&
-    user.picture !== undefined &&
-    user.email.includes('@');
+    user.username !== '';
+
+  /**
+   * An object containing the invalid fields of a user and basic error messages.
+   */
+  interface InvalidUserFields {
+    error: {
+      [key: string]: string;
+    };
+  }
+
+  /**
+   * Validates the user object to ensure all fields are valid.
+   *
+   * @param user The user to validate.
+   *
+   * @returns An object containing the invalid fields.
+   */
+  const validateFields = (user: Partial<User>): InvalidUserFields => {
+    const errors: InvalidUserFields = { error: {} };
+
+    if (user.username !== undefined && user.username === '') {
+      errors.error.username = 'Username cannot be empty';
+    }
+
+    if (user.firstName !== undefined && user.firstName === '') {
+      errors.error.firstName = 'Password cannot be empty';
+    }
+
+    if (user.lastName !== undefined && user.lastName === '') {
+      errors.error.lastName = 'Last name cannot be empty';
+    }
+
+    if (user.email !== undefined && user.email === '' && !user.email.includes('@')) {
+      errors.error.email = 'Email cannot be empty and must contain an @ symbol';
+    }
+
+    if (user.password !== undefined && user.password === '') {
+      errors.error.password = 'Password cannot be empty';
+    }
+
+    if (user.bio !== undefined && user.bio === '') {
+      errors.error.bio = 'Bio cannot be empty';
+    }
+
+    if (user.picture !== undefined && user.picture === '') {
+      errors.error.picture = 'Picture cannot be empty';
+    }
+
+    return errors;
+  };
 
   /**
    * Adds a new user to the database. The user is first validated and then saved.
@@ -48,23 +78,35 @@ const userController = (socket: FakeSOSocket) => {
    * @returns A Promise that resolves to void.
    */
   const addUser = async (req: AddUserRequest, res: Response): Promise<void> => {
-    if (!isRequestValid(req)) {
-      res.status(400).send('Invalid user request');
-      return;
-    }
-
     if (!isUserValid(req.body)) {
       res.status(400).send('Invalid user');
       return;
     }
 
-    const user: User = req.body;
+    const hashedPassword = bcrypt.hashSync(req.body.password, 10);
+
+    // add default values for new user and hashed password
+    const user: User = {
+      ...req.body,
+      password: hashedPassword,
+      firstName: '',
+      lastName: '',
+      email: '',
+      bio: '',
+      picture: '',
+      comments: [],
+      questions: [],
+      answers: [],
+      followers: [],
+      following: [],
+    };
     try {
       const result = await saveUser(user);
       if ('error' in result) {
         throw new Error(result.error);
       }
 
+      req.session.username = user.username;
       res.json(result);
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -85,6 +127,22 @@ const userController = (socket: FakeSOSocket) => {
    */
   const updateUser = async (req: EditUserRequest, res: Response): Promise<void> => {
     const { qid, newUserData } = req.body;
+
+    if (!qid || !newUserData) {
+      res.status(400).send('Invalid request');
+      return;
+    }
+
+    const errors = validateFields(newUserData);
+    if (Object.keys(errors.error).length > 0) {
+      res.status(400).json(errors);
+      return;
+    }
+
+    if (newUserData.password) {
+      newUserData.password = bcrypt.hashSync(newUserData.password, 10);
+    }
+
     try {
       const result = await updateUserProfile(qid, newUserData);
 

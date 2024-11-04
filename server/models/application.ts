@@ -723,3 +723,23 @@ export const addFollowToUser = async (qid: string, user: User): Promise<UserResp
     return { error: `Error when following: ${(error as Error).message}` };
   }
 };
+
+/**
+ * Gets a user by their username.
+ *
+ * @param username The username of the user to fetch.
+ * @returns {Promise<UserResponse>} - The user, or an error message if the fetch failed
+ */
+export const getUserByUsername = async (username: string): Promise<UserResponse> => {
+  try {
+    const result = await UserModel.findOne({ username });
+
+    if (result === null) {
+      throw new Error('User does not exist');
+    }
+
+    return result.toObject();
+  } catch (error) {
+    return { error: 'Error when fetching user' };
+  }
+};

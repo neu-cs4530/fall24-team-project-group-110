@@ -268,3 +268,15 @@ export interface ServerToClientEvents {
   commentUpdate: (comment: CommentUpdatePayload) => void;
   userUpdate: (user: UserResponse) => void;
 }
+
+/**
+ * Interface representing the payload for a login request, which contains:
+ * - username - The username of the user.
+ * - password - The password of the user.
+ */
+export interface LoginRequest extends Request {
+  body: {
+    username: string;
+    password: string;
+  };
+}
