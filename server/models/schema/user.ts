@@ -48,6 +48,7 @@ const userSchema: Schema = new Schema(
     answers: [{ type: Schema.Types.ObjectId, ref: 'Answer' }],
     followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    notifications: [{ type: Schema.Types.ObjectId, ref: 'Notification' }],
   },
   { collection: 'User' },
 );

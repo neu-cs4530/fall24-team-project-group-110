@@ -179,6 +179,24 @@ export interface User {
   answers: Answer[];
   followers: User[];
   following: User[];
+  notifications: Notification[];
+}
+
+/**
+ * Interface representing a Notification document, which contains:
+ * - _id - The unique identifier for the notification. Optional field.
+ * - text - The content of the notification.
+ * - link - The link to the notification.
+ * - read - A boolean indicating if the notification has been read.
+ * - dateTime - The date and time when the notification was created.
+ */
+export interface Notification {
+  _id?: ObjectId;
+  type: string;
+  text: string;
+  link: string;
+  read: boolean;
+  dateTime: Date;
 }
 
 /**

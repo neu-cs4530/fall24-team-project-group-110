@@ -159,4 +159,14 @@ export interface User {
   answers: Answer[];
   followers: User[];
   following: User[];
+  notifications: Notification[];
+}
+
+export interface Notification {
+  _id: string;
+  type: string;
+  text: string;
+  link: string;
+  read: boolean;
+  dateTime: Date;
 }
