@@ -817,7 +817,10 @@ export const getConversationById = async (id: string): Promise<ConversationRespo
   }
 };
 
-export const checkConversationAccess = async (username: string, conversationId: string): Promise<boolean> => {
+export const checkConversationAccess = async (
+  username: string,
+  conversationId: string,
+): Promise<boolean> => {
   try {
     const conversation = await ConversationModel.findOne({ _id: conversationId });
     if (!conversation) {
@@ -828,4 +831,4 @@ export const checkConversationAccess = async (username: string, conversationId: 
   } catch (error) {
     return false;
   }
-}
+};
