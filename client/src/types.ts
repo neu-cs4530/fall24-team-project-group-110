@@ -159,4 +159,21 @@ export interface User {
   answers: Answer[];
   followers: User[];
   following: User[];
+  notifications: Notification[];
+}
+
+/**
+ * Interface representing a notification object.
+ * - _id - The unique identifier for the notification.
+ * - type - The type of notification.
+ * - text - The content of the notification.
+ * - targetId - The ID of the associated object for the notification (e.g., Question or Conversation).
+ * - dateTime - The date and time when the notification was created.
+ */
+export interface Notification {
+  _id: string;
+  type: string;
+  text: string;
+  targetId: string;
+  dateTime: Date;
 }

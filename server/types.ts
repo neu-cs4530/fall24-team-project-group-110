@@ -164,6 +164,7 @@ export interface Comment {
  * - answers - An array of references to `Answer` documents associated with the user.
  * - followers - An array of references to `User` documents that are following the user.
  * - following - An array of references to `User` documents that the user is following.
+ * - notifications - An array of references to `Notification` documents associated with the user.
  */
 export interface User {
   _id?: ObjectId;
@@ -179,6 +180,22 @@ export interface User {
   answers: Answer[];
   followers: User[];
   following: User[];
+  notifications: Notification[];
+}
+
+/**
+ * Interface representing a Notification document, which contains:
+ * - _id - The unique identifier for the notification. Optional field.
+ * - text - The content of the notification.
+ * - targetId - The id associated with the object notification is about (ex. Question or Conversation).
+ * - dateTime - The date and time when the notification was created.
+ */
+export interface Notification {
+  _id?: ObjectId;
+  type: string;
+  text: string;
+  targetId: string;
+  dateTime: Date;
 }
 
 /**

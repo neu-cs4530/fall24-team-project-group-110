@@ -19,6 +19,7 @@ const user1: User = {
   answers: [],
   followers: [],
   following: [],
+  notifications: [],
 };
 
 const user2: User = {
@@ -35,6 +36,7 @@ const user2: User = {
   answers: [],
   followers: [],
   following: [],
+  notifications: [],
 };
 
 describe('POST /addConversation', () => {
