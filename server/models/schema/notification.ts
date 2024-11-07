@@ -7,8 +7,7 @@ import { Schema } from 'mongoose';
  * Each notification includes the following fields:
  * - `type`: The type of notification.
  * - `text`: The content of the notification.
- * - `read`: A boolean value indicating whether the notification has been read.
- * - `link`: A link to the resource associated with the notification.
+ * - `targetId`: The id for the associated object for the notification (ex. Question or Conversation).
  * - `dateTime`: The date and time when the notification was created.
  */
 const notificationSchema: Schema = new Schema(
@@ -20,10 +19,7 @@ const notificationSchema: Schema = new Schema(
     text: {
       type: String,
     },
-    read: {
-      type: Boolean,
-    },
-    link: {
+    targetId: {
       type: String,
       required: true,
     },
