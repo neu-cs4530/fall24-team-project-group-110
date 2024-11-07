@@ -42,12 +42,13 @@ const socket: FakeSOSocket = new Server(server, {
   cors: { origin: '*' },
 });
 const sessionMiddleware = session({
-  secret: 'fakeso',
+  secret: 'fakeso_secret',
   cookie: {
     // 60 minutes
     maxAge: 1000 * 60 * 60,
   },
   resave: false,
+  saveUninitialized: true,
 });
 socket.engine.use(sessionMiddleware);
 
@@ -61,13 +62,12 @@ socket.on('connection', socket => {
   console.log('A user connected ->', socket.id);
 
   const req = socket.request as Request;
-  const session = req.session;
 
   socket.on('joinConversation', async (conversationId: string) => {
     await new Promise((resolve) => req.session.reload(resolve));
 
-    if (session.username) {
-      const access = await checkConversationAccess(session.username, conversationId);
+    if (req.session.username) {
+      const access = await checkConversationAccess(req.session.username, conversationId);
       if (access) {
         socket.join(conversationId);
       }
