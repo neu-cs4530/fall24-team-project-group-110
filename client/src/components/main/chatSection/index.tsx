@@ -3,10 +3,20 @@ import { getMetaData } from '../../../tool';
 import useMessagePage from '../../../hooks/useMessagePage';
 import './index.css';
 
+/**
+ * Interface representing the props for the Chat Section component.
+ *
+ * - conversationId - The id of the conversation.
+ */
 interface ChatSectionProps {
   conversationId: string;
 }
 
+/**
+ * ChatSection component shows the messages of the conversation and allows the users to message other users.
+ *
+ * @param param conversationId: The id of the conversation.
+ */
 const ChatSection = ({ conversationId }: ChatSectionProps) => {
   const { user, messagesEndRef, messages, message, setMessage, textErr, handleNewMessage } =
     useMessagePage(conversationId);

@@ -11,6 +11,15 @@ import { saveMessage, getConversationById, getMessagesInOrder } from '../models/
 const messageController = (socket: FakeSOSocket) => {
   const router = express.Router();
 
+  /**
+   * Retrieves a list of messages by what conversation they are associated with based on the conversation id.
+   * If there is an error, the HTTP response's status is updated.
+   *
+   * @param req The FindMessagesByConversationIdRequest object containing the conversation ID as a parameter
+   * @param res The HTTP response object used to send back the result of the operation.
+   *
+   * @returns A Promise that resolves to void.
+   */
   const getMessagesByConversationId = async (
     req: FindMessagesByConversationIdRequest,
     res: Response,
@@ -36,6 +45,9 @@ const messageController = (socket: FakeSOSocket) => {
     }
   };
 
+  /**
+   * Interface representing errors containing the invalid field and error messages.
+   */
   interface InvalidMessageFields {
     error: {
       [key: string]: string;
@@ -46,6 +58,7 @@ const messageController = (socket: FakeSOSocket) => {
    * Validates the fields of a message object.
    *
    * @param message The message object to validate.
+   *
    * @returns An object containing the invalid fields and their corresponding error messages.
    */
   const validateFields = (message: Message): InvalidMessageFields => {

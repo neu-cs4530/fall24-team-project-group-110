@@ -19,6 +19,9 @@ const useMessagePage = (conversationId: string) => {
     scrollToBottom();
   }, [messages]);
 
+  /**
+   * Function to handle creating a new message.
+   */
   const handleNewMessage = async () => {
     if (message.trim() === '' || user.username.trim() === '') {
       setTextErr(message.trim() === '' ? 'Message text cannot be empty' : '');
@@ -48,7 +51,6 @@ const useMessagePage = (conversationId: string) => {
      */
     const fetchData = async () => {
       try {
-        // eslint-disable-next-line no-console
         const res = await getMessagesByConvoId(conversationId);
         setMessages(res || []);
       } catch (error) {

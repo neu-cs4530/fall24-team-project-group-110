@@ -3,6 +3,12 @@ import { Message } from '../types';
 
 const MESSAGE_API_URL = `${process.env.REACT_APP_SERVER_URL}/message`;
 
+/**
+ * Function to get all messages part of the conversation by its id.
+ *
+ * @param c_id - The id of the conversation to get messages from.
+ * @throws Error if there is an issue fetching the conservation messages.
+ */
 const getMessagesByConvoId = async (c_id: string): Promise<Message[]> => {
   const res = await api.get(`${MESSAGE_API_URL}/getMessagesByConvoId/${c_id}`);
   if (res.status !== 200) {

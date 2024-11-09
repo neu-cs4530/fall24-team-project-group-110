@@ -4,8 +4,7 @@ import useConversationPage from '../../../hooks/useConversationPage';
 import ChatSection from '../chatSection';
 
 /**
- * ConversationSection renders a page displaying a list of the current
- * user's conversations
+ * ConversationSection renders a page displaying a list of the current user's conversations
  */
 const ConversationPage = () => {
   const {

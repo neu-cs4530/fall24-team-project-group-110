@@ -17,6 +17,15 @@ import {
 const conversationController = (socket: FakeSOSocket) => {
   const router = express.Router();
 
+  /**
+   * Retrieves a list of conversations by the username they are associated in the participants.
+   * If there is an error, the HTTP response's status is updated.
+   *
+   * @param req The FindConversationsByUsernameRequest object containing the username as a query parameter.
+   * @param res The HTTP response object used to send back the result of the operation.
+   *
+   * @returns A Promise that resolves to void.
+   */
   const getConversationsByFilter = async (
     req: FindConversationsByUsernameRequest,
     res: Response,
@@ -43,6 +52,15 @@ const conversationController = (socket: FakeSOSocket) => {
     }
   };
 
+  /**
+   * Retrieves a conversation by its unique ID.
+   * If there is an error, the HTTP response's status is updated.
+   *
+   * @param req The FindConversationByIdRequest object containing the conversation id as a parameter.
+   * @param res The HTTP response object used to send back the result of the operation.
+   *
+   * @returns A Promise that resolves to void.
+   */
   const getConversation = async (
     req: FindConversationByIdRequest,
     res: Response,
@@ -63,7 +81,7 @@ const conversationController = (socket: FakeSOSocket) => {
       }
 
       throw new Error('Error while fetching conversation by id');
-    } catch (err: unknown) {
+    } catch (err) {
       if (err instanceof Error) {
         res.status(500).send(`Error when fetching questions by filter: ${err.message}`);
       } else {
