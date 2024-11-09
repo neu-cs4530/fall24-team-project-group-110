@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ChangeEvent, useState } from 'react';
 import useLoginContext from './useLoginContext';
+import addUser from '../services/userService';
 
 /**
  * Custom hook to handle login input and submission.
@@ -15,7 +16,6 @@ import useLoginContext from './useLoginContext';
 const useRegister = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  // eslint-disable-next-line
   const [error, setError] = useState<string>('');
   const { setUser } = useLoginContext();
   const navigate = useNavigate();
@@ -47,14 +47,15 @@ const useRegister = () => {
    *
    * @param event - the form event object.
    */
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // TODO: need to call api to register user
-    // if successful, set user in context and navigate to home
-    // else, set error message
-    // setError('Error while registering user');
-    setUser({ username });
-    navigate('/home');
+    try {
+      const user = await addUser(username, password);
+      setUser(user);
+      navigate('/home');
+    } catch (e) {
+      setError('Error while registering user');
+    }
   };
 
   return { username, password, error, handleUsernameChange, handlePasswordChange, handleSubmit };

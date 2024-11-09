@@ -181,6 +181,58 @@ export interface User {
   following: User[];
 }
 
+/**
+ * Interface for the request body when adding a new user.
+ * - body - The user being added
+ */
+export interface AddUserRequest extends Request {
+  body: User;
+}
+
+/**
+ * Interface extending the request body when editing a user, which contains:
+ * - qid - The unique identifier of the user being edited
+ * - newUserData - The new user fields that has been edited
+ */
+export interface EditUserRequest extends Request {
+  body: {
+    qid: string,
+    newUserData: Partial<User>,
+  }
+}
+
+/**
+ * Interface representing a User document, which contains:
+ * - _id - The unique identifier for the user. Optional field.
+ * - username - The username of the user.
+ * - firstName - The first name of the user.
+ * - lastName - The last name of the user.
+ * - email - The email address of the user.
+ * - password - The password of the user.
+ * - bio - A string description of the user.
+ * - picture - A string URL of the user's profile picture.
+ * - comments - An array of references to `Comment` documents associated with the user.
+ * - questions - An array of references to `Question` documents associated with the user.
+ * - answers - An array of references to `Answer` documents associated with the user.
+ * - followers - An array of references to `User` documents that are following the user.
+ * - following - An array of references to `User` documents that the user is following.
+ */
+export interface User {
+  _id?: ObjectId;
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  bio: string;
+  picture: string;
+  comments: Comment[];
+  questions: Question[];
+  answers: Answer[];
+  followers: User[];
+  following: User[];
+}
+
 export interface AddUserRequest extends Request {
   body: User;
 }
@@ -203,6 +255,16 @@ export interface AddCommentRequest extends Request {
  * Type representing the possible responses for a Comment-related operation.
  */
 export type CommentResponse = Comment | { error: string };
+
+/**
+ * Type representing the possible responses for a User-related operation.
+ */
+export type UserResponse = User | { error: string };
+
+/**
+ * Type representing the possible responses for a User-related operation involving a list of users.
+ */
+export type UserListResponse = User[] | { error: string };
 
 /**
  * Type representing the possible responses for a User-related operation.
@@ -251,4 +313,71 @@ export interface ServerToClientEvents {
   voteUpdate: (vote: VoteUpdatePayload) => void;
   commentUpdate: (comment: CommentUpdatePayload) => void;
   userUpdate: (user: UserResponse) => void;
+  userUpdate: (user: UserResponse) => void;
 }
+
+/**
+ * Interface representing the payload for a login request, which contains:
+ * - username - The username of the user.
+ * - password - The password of the user.
+ */
+export interface LoginRequest extends Request {
+  body: {
+    username: string;
+    password: string;
+  };
+}
+
+/**
+ * Interface extending the request body when adding a new conversation, which contains:
+ * - body - The conversation being added.
+ */
+export interface AddConversationRequest extends Request {
+  body: Conversation;
+}
+
+/**
+ * Interface extending the request body when adding a new message, which contains:
+ * - body - The message being added.
+ */
+export interface AddMessageRequest extends Request {
+  body: Message;
+}
+
+/**
+ * Interface representing a message document, which contains:
+ * - _id - The unique identifier for the message. Optional field.
+ * - conversationId - The unique identifier for the conversation the message belongs to.
+ * - sender - The username of the user who sent the message.
+ * - text - The content of the message.
+ * - sentAt - The date and time when the message was sent.
+ */
+export interface Message {
+  _id?: ObjectId;
+  conversationId: string;
+  sender: string;
+  text: string;
+  sentAt: Date;
+}
+
+/**
+ * Interface representing a conversation document, which contains:
+ * - _id - The unique identifier for the conversation. Optional field.
+ * - participants - An array of usernames of the users participating in the conversation.
+ * - updatedAt - The date and time when the conversation was last updated.
+ */
+export interface Conversation {
+  _id?: ObjectId;
+  participants: string[];
+  updatedAt: Date;
+}
+
+/**
+ * Type representing the possible responses for a Conversation-related operation.
+ */
+export type ConversationResponse = Conversation | { error: string };
+
+/**
+ * Type representing the possible responses for a Message-related operation.
+ */
+export type MessageResponse = Message | { error: string };

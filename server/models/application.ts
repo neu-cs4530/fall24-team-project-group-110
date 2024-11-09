@@ -5,11 +5,16 @@ import {
   AnswerResponse,
   Comment,
   CommentResponse,
+  Conversation,
+  ConversationResponse,
+  Message,
+  MessageResponse,
   OrderType,
   Question,
   QuestionResponse,
   Tag,
   User,
+  UserListResponse,
   UserResponse,
 } from '../types';
 import AnswerModel from './answers';
@@ -17,6 +22,8 @@ import QuestionModel from './questions';
 import TagModel from './tags';
 import CommentModel from './comments';
 import UserModel from './users';
+import ConversationModel from './conversation';
+import MessageModel from './message';
 
 /**
  * Parses tags from a search string.
@@ -401,15 +408,16 @@ export const saveComment = async (comment: Comment): Promise<CommentResponse> =>
 
 /**
  * Saves a new user to the database.
- * @param {User} user - the user to save
- * @returns {Promise<UserResponse>} - the saved user or an error message if the save failed
+ *
+ * @param {User} user - The user to save
+ * @returns {Promise<UserResponse>} - The saved user, or an error message if the save failed
  */
 export const saveUser = async (user: User): Promise<UserResponse> => {
   try {
     const result = await UserModel.create(user);
     return result;
   } catch (error) {
-    return { error: 'Error when saving a comment' };
+    return { error: 'Error when saving a user' };
   }
 };
 
@@ -657,5 +665,154 @@ export const getTagCountMap = async (): Promise<Map<string, number> | null | { e
     return tmap;
   } catch (error) {
     return { error: 'Error when construction tag map' };
+  }
+};
+
+/**
+ * Updates the user based on the new data.
+ *
+ * @param qid The ID of the current user.
+ * @param newUserData User data that has been changed.
+ * @returns {Promise<UserResponse>} - The edited user, or an error message if the update failed
+ */
+export const updateUserProfile = async (
+  qid: string,
+  newUserData: Partial<User>,
+): Promise<UserResponse> => {
+  try {
+    const result = await UserModel.findOneAndUpdate(
+      { _id: qid },
+      { $set: newUserData },
+      { new: true },
+    );
+
+    if (result == null) {
+      throw new Error('Failed to update user');
+    }
+    return result;
+  } catch (error) {
+    return { error: `Error when updating user: ${(error as Error).message}` };
+  }
+};
+
+/** TODO: Other user following must be changed accordingly */
+/**
+ * Adds follower to user.
+ *
+ * @param qid The ID of the current user.
+ * @param user The user being followed.
+ * @returns {Promise<UserResponse>} - The new user, or an error message if the update failed
+ */
+export const addFollowToUser = async (qid: string, user: User): Promise<UserResponse> => {
+  try {
+    // if (!user || !user.username || !user.email) {
+    //   throw new Error('Invalid user');
+    // }
+
+    const result = await UserModel.findOneAndUpdate(
+      { _id: qid },
+      {
+        $cond: [
+          { $in: [user._id, '$followees'] },
+          { $filter: { input: '$followees', as: 'f', cond: { $ne: ['$$f', user._id] } } },
+          { $concatArrays: ['$followees', [user._id]] },
+        ],
+      },
+      { new: true },
+    );
+
+    if (result == null) {
+      throw new Error('Failed to follow user');
+    }
+
+    return result;
+  } catch (error) {
+    return { error: `Error when following: ${(error as Error).message}` };
+  }
+};
+
+/**
+ * Gets a user by their username.
+ *
+ * @param username The username of the user to fetch.
+ * @returns {Promise<UserResponse>} - The user, or an error message if the fetch failed
+ */
+export const getUserByUsername = async (username: string): Promise<UserResponse> => {
+  try {
+    const result = await UserModel.findOne({ username });
+
+    if (result === null) {
+      throw new Error('User does not exist');
+    }
+
+    return result.toObject();
+  } catch (error) {
+    return { error: 'Error when fetching user' };
+  }
+};
+
+/**
+ * Gets a list of users based on the provided usernames.
+ *
+ * @param usernames The usernames of the users to fetch.
+ * @returns {Promise<UserListResponse>} - The list of users, or an error message if the fetch failed
+ */
+export const getUsersByUsernames = async (usernames: string[]): Promise<UserListResponse> => {
+  try {
+    const users = await UserModel.find({ username: { $in: usernames } });
+    return users.map(user => user.toObject());
+  } catch (error) {
+    return { error: 'Error when fetching users' };
+  }
+};
+
+/**
+ * Adds a new conversation to the database.
+ *
+ * @param conversation The conversation to save
+ * @returns {Promise<ConversationResponse>} - The saved conversation, or an error message if the save failed
+ */
+export const saveConversation = async (
+  conversation: Conversation,
+): Promise<ConversationResponse> => {
+  try {
+    const result = await ConversationModel.create(conversation);
+    return result.toObject();
+  } catch (error) {
+    return { error: 'Error when saving a conversation' };
+  }
+};
+
+/**
+ * Adds a new message to a conversation in the database. The message request is validated and then saved.
+ *
+ * @param message The message to save
+ * @returns {Promise<MessageResponse>} - The saved message, or an error message if the save failed
+ */
+export const saveMessage = async (message: Message): Promise<MessageResponse> => {
+  try {
+    const result = await MessageModel.create(message);
+    return result.toObject();
+  } catch (error) {
+    return { error: 'Error when saving a message' };
+  }
+};
+
+/**
+ * Gets a conversation by its ID.
+ *
+ * @param id The ID of the conversation to fetch
+ * @returns {Promise<ConversationResponse>} - The fetched conversation, or an error message if the fetch failed
+ */
+export const getConversationById = async (id: string): Promise<ConversationResponse> => {
+  try {
+    const result = await ConversationModel.findOne({ _id: id });
+    if (!result) {
+      throw new Error('Conversation not found');
+    }
+
+    return result.toObject();
+  } catch (error) {
+    return { error: 'Error when fetching conversation' };
   }
 };

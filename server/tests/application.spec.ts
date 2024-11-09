@@ -1,6 +1,8 @@
 import { ObjectId } from 'mongodb';
 import Tags from '../models/tags';
 import QuestionModel from '../models/questions';
+import AnswerModel from '../models/answers';
+import UserModel from '../models/users';
 import {
   addTag,
   getQuestionsByOrder,
@@ -15,10 +17,18 @@ import {
   saveComment,
   addComment,
   addVoteToQuestion,
+  saveUser,
+  updateUserProfile,
+  saveConversation,
+  getConversationById,
+  saveMessage,
+  getUsersByUsernames,
+  getUserByUsername,
 } from '../models/application';
-import { Answer, Question, Tag, Comment } from '../types';
+import { Answer, Question, Tag, Comment, User, Conversation, Message } from '../types';
 import { T1_DESC, T2_DESC, T3_DESC } from '../data/posts_strings';
-import AnswerModel from '../models/answers';
+import ConversationModel from '../models/conversation';
+import MessageModel from '../models/message';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mockingoose = require('mockingoose');
@@ -134,6 +144,52 @@ const QUESTIONS: Question[] = [
     comments: [],
   },
 ];
+
+const user1: User = {
+  _id: new ObjectId('65e9b716ff0e892116b2de19'),
+  username: 'testUser',
+  firstName: 'Test',
+  lastName: 'User',
+  email: 'testuser@example.com',
+  password: 'password123',
+  bio: 'Test user bio',
+  picture: 'http://example.com/picture.jpg',
+  comments: [],
+  questions: [],
+  answers: [],
+  followers: [],
+  following: [],
+};
+
+const user2: User = {
+  _id: new ObjectId('65e9b716ff0e892116b2de12'),
+  username: 'testUser2',
+  firstName: 'Test',
+  lastName: 'User',
+  email: 'testuser@example.com',
+  password: 'password123',
+  bio: 'Test user bio',
+  picture: 'http://example.com/picture.jpg',
+  comments: [],
+  questions: [],
+  answers: [],
+  followers: [],
+  following: [],
+};
+
+const conv1: Conversation = {
+  _id: new ObjectId('65e9b716ff0e892116b2de19'),
+  participants: ['user1', 'user2'],
+  updatedAt: new Date('2023-11-20T09:24:00'),
+};
+
+const msg1: Message = {
+  _id: new ObjectId('65e9b716ff0e892116b2de19'),
+  conversationId: '65e9b716ff0e892116b2de19',
+  sender: 'user1',
+  text: 'Hello!',
+  sentAt: new Date('2023-11-20T09:24:00'),
+};
 
 describe('application module', () => {
   beforeEach(() => {
@@ -881,6 +937,220 @@ describe('application module', () => {
           expect(err).toBeInstanceOf(Error);
           if (err instanceof Error) expect(err.message).toBe('Invalid comment');
         }
+      });
+    });
+  });
+
+  describe('User model', () => {
+    describe('saveUser', () => {
+      test('saveUser should return the saved user', async () => {
+        const result = (await saveUser(user1)) as User;
+
+        expect(result._id).toBeDefined();
+        expect(result.username).toEqual(user1.username);
+        expect(result.firstName).toEqual(user1.firstName);
+        expect(result.lastName).toEqual(user1.lastName);
+        expect(result.email).toEqual(user1.email);
+        expect(result.password).toEqual(user1.password);
+        expect(result.bio).toEqual(user1.bio);
+        expect(result.picture).toEqual(user1.picture);
+        expect(result.comments).toEqual([]);
+        expect(result.questions).toEqual([]);
+        expect(result.answers).toEqual([]);
+        expect(result.followers).toEqual([]);
+        expect(result.following).toEqual([]);
+      });
+    });
+
+    describe('updateUserProfile', () => {
+      test('updateUserProfile should return the updated user profile', async () => {
+        const newUserData = {
+          firstname: 'Mark',
+          email: 'mark@gmail.com',
+        };
+        const newUser = { ...user1 };
+        newUser.firstName = 'Mark';
+        newUser.email = 'mark@gmail.com';
+        mockingoose(UserModel).toReturn(newUser, 'findOneAndUpdate');
+
+        const result = (await updateUserProfile(
+          user1._id?.toString() as string,
+          newUserData,
+        )) as User;
+
+        expect(result.firstName).toEqual('Mark');
+        expect(result.lastName).toEqual('User');
+        expect(result.email).toEqual('mark@gmail.com');
+      });
+
+      test('updateUserProfile should return the original user when no new user data is given', async () => {
+        const emptyUserData = {};
+        mockingoose(UserModel).toReturn(user1, 'findOneAndUpdate');
+
+        const result = (await updateUserProfile(
+          user1._id?.toString() as string,
+          emptyUserData,
+        )) as User;
+
+        expect(result._id).toBeDefined();
+        expect(result.username).toEqual(user1.username);
+        expect(result.firstName).toEqual(user1.firstName);
+        expect(result.lastName).toEqual(user1.lastName);
+        expect(result.email).toEqual(user1.email);
+        expect(result.password).toEqual(user1.password);
+        expect(result.bio).toEqual(user1.bio);
+        expect(result.picture).toEqual(user1.picture);
+        expect(result.comments).toEqual([]);
+        expect(result.questions).toEqual([]);
+        expect(result.answers).toEqual([]);
+        expect(result.followers).toEqual([]);
+        expect(result.following).toEqual([]);
+      });
+
+      test('updateUserProfile should return an object with error if findOneAndUpdate throws an error', async () => {
+        const newUserData = {
+          firstname: 'Mark',
+          email: 'mark@gmail.com',
+        };
+        mockingoose(UserModel).toReturn(
+          new Error('Error from findOneAndUpdate'),
+          'findOneAndUpdate',
+        );
+
+        const result = (await updateUserProfile(
+          user1._id?.toString() as string,
+          newUserData,
+        )) as User;
+
+        expect(result).toEqual({ error: 'Error when updating user: Error from findOneAndUpdate' });
+      });
+
+      test('updateUserProfile should return an object with error if findOneAndUpdate returns null', async () => {
+        const newUserData = {
+          firstname: 'Mark',
+          email: 'mark@gmail.com',
+        };
+        mockingoose(UserModel).toReturn(null, 'findOneAndUpdate');
+
+        const result = (await updateUserProfile(
+          user1._id?.toString() as string,
+          newUserData,
+        )) as User;
+
+        expect(result).toEqual({ error: 'Error when updating user: Failed to update user' });
+      });
+    });
+
+    describe('getUserByUsername', () => {
+      test('getUserByUsername should return an error if findOne returns null', async () => {
+        mockingoose(UserModel).toReturn(null, 'findOne');
+
+        const result = await getUserByUsername(user1.username);
+
+        if ('error' in result) {
+          expect(true).toBeTruthy();
+        } else {
+          expect(false).toBeTruthy();
+        }
+      });
+
+      test('getUserByUsername should return the user with the given username', async () => {
+        mockingoose(UserModel).toReturn(user1, 'findOne');
+
+        const result = await getUserByUsername(user1.username);
+
+        if ('error' in result) {
+          expect(false).toBeTruthy();
+        } else {
+          expect(result).toEqual(user1);
+        }
+      });
+    });
+
+    describe('getUsersByUsernames', () => {
+      test('getUsersByUsernames should return the users with the given usernames', async () => {
+        mockingoose(UserModel).toReturn([user1, user2], 'find');
+
+        const users = (await getUsersByUsernames([user1.username, user2.username])) as User[];
+
+        expect(users).toEqual([user1, user2]);
+      });
+
+      test('getUsersByUsernames should return an object with error if find throws an error', async () => {
+        mockingoose(UserModel).toReturn(new Error('error'), 'find');
+
+        const result = await getUsersByUsernames([user1.username, user2.username]);
+
+        if ('error' in result) {
+          expect(true).toBeTruthy();
+        } else {
+          expect(false).toBeTruthy();
+        }
+      });
+    });
+  });
+  describe('Conversation model', () => {
+    describe('saveConversation', () => {
+      test('saveConversation should return the saved conversation', async () => {
+        mockingoose(ConversationModel).toReturn(conv1, 'save');
+
+        const result = (await saveConversation(conv1)) as Conversation;
+
+        expect(result).toEqual(conv1);
+      });
+
+      test('saveConversation should return an object with an error field if an error is thrown', async () => {
+        jest.spyOn(ConversationModel, 'create').mockRejectedValue(new Error('error'));
+
+        const result = (await saveConversation(conv1)) as Conversation;
+
+        expect(result).toEqual({ error: 'Error when saving a conversation' });
+      });
+    });
+
+    describe('getConversationById', () => {
+      test('getConversationById should return the conversation with the given id', async () => {
+        mockingoose(ConversationModel).toReturn(conv1, 'findOne');
+
+        const result = await getConversationById(conv1._id!.toString() as string);
+
+        expect(result).toEqual(conv1);
+      });
+
+      test('getConversationsById should return an object with an error field if conversation is null', async () => {
+        jest.spyOn(ConversationModel, 'findOne').mockResolvedValueOnce(null);
+
+        const result = await getConversationById(conv1._id!.toString() as string);
+
+        expect(result).toEqual({ error: 'Error when fetching conversation' });
+      });
+
+      test('getConversationsById should return an object with an error field if an error is thrown', async () => {
+        jest.spyOn(ConversationModel, 'findOne').mockRejectedValue(new Error('error'));
+
+        const result = await getConversationById(conv1._id!.toString() as string);
+
+        expect(result).toEqual({ error: 'Error when fetching conversation' });
+      });
+    });
+  });
+
+  describe('Message model', () => {
+    describe('saveMessage', () => {
+      test('saveMessage should return the saved message', async () => {
+        mockingoose(MessageModel).toReturn(msg1, 'save');
+
+        const result = (await saveMessage(msg1)) as Message;
+
+        expect(result).toEqual(msg1);
+      });
+
+      test('saveMessage should return an object with an error field if an error is thrown', async () => {
+        jest.spyOn(MessageModel, 'create').mockRejectedValue(new Error('error'));
+
+        const result = (await saveMessage(msg1)) as Message;
+
+        expect(result).toEqual({ error: 'Error when saving a message' });
       });
     });
   });
