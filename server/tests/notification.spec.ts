@@ -85,7 +85,7 @@ describe('POST /addNotification', () => {
     const mockNotification: Notification = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
       targetId: '65e9b58910afe6e94fc6e6fe',
-      type: 'invalidType',
+      type: '',
       text: 'Test notification',
       dateTime: new Date(),
     };
