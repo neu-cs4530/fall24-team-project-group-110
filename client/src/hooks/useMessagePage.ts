@@ -70,10 +70,7 @@ const useMessagePage = (conversationId: string) => {
      * @param message - The new message object.
      */
     const handleMessageUpdate = (m: Message) => {
-      console.log('new message', m);
-      if (m.conversationId === conversationId) {
-        setMessages([...messages, m]);
-      }
+      setMessages(prevMessages => [...prevMessages, m]);
     };
 
     socket.emit('joinConversation', conversationId);

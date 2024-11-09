@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './index.css';
 import QuestionHeader from './header';
 import QuestionView from './question';
 import useQuestionPage from '../../../hooks/useQuestionPage';
+import useUserContext from '../../../hooks/useUserContext';
 
 /**
  * QuestionPage component renders a page displaying a list of questions
@@ -11,6 +12,12 @@ import useQuestionPage from '../../../hooks/useQuestionPage';
  */
 const QuestionPage = () => {
   const { titleText, qlist, setQuestionOrder } = useQuestionPage();
+  const { socket } = useUserContext();
+
+  useEffect(() => {
+    socket.disconnect();
+    socket.connect();
+  }, [socket]);
 
   return (
     <>
