@@ -9,6 +9,11 @@ import cors from 'cors';
 import { Server } from 'socket.io';
 import * as http from 'http';
 import session from 'express-session';
+declare module 'express-session' {
+  interface SessionData {
+    username?: string;
+  }
+}
 
 import answerController from './controller/answer';
 import questionController from './controller/question';
@@ -19,6 +24,7 @@ import userController from './controller/user';
 import conversationController from './controller/conversation';
 import messageController from './controller/message';
 import authController from './controller/auth';
+import { checkConversationAccess } from './models/application';
 
 dotenv.config();
 
@@ -35,6 +41,16 @@ const server = http.createServer(app);
 const socket: FakeSOSocket = new Server(server, {
   cors: { origin: '*' },
 });
+const sessionMiddleware = session({
+  secret: 'fakeso_secret',
+  cookie: {
+    // 60 minutes
+    maxAge: 1000 * 60 * 60,
+  },
+  resave: false,
+  saveUninitialized: true,
+});
+socket.engine.use(sessionMiddleware);
 
 function startServer() {
   server.listen(port, () => {
@@ -45,14 +61,26 @@ function startServer() {
 socket.on('connection', socket => {
   console.log('A user connected ->', socket.id);
 
-  socket.on('joinRoom', (conversationId: string) => {
-    socket.join(conversationId);
-    console.log('A user joined conversation room ->', conversationId)
+  const req = socket.request as Request;
+
+  socket.on('joinConversation', async (conversationId: string) => {
+    console.log('a user is attempting to join room: ', conversationId);
+    await new Promise((resolve) => req.session.reload(resolve));
+
+    console.log('session username:', req.session.username);
+
+    if (req.session.username) {
+      const access = await checkConversationAccess(req.session.username, conversationId);
+      if (access) {
+        socket.join(conversationId);
+        console.log('A user joined conversation room ->', conversationId);
+      }
+    }
   });
 
-  socket.on('leaveRoom', (conversationId: string) => {
+  socket.on('leaveConversation', (conversationId: string) => {
     socket.leave(conversationId);
-    console.log('A user left conversation room ->', conversationId)
+    console.log('A user left conversation room ->', conversationId);
   });
 
   socket.on('disconnect', () => {
@@ -77,22 +105,7 @@ app.use(
 );
 
 app.use(express.json());
-
-declare module 'express-session' {
-  interface SessionData {
-    username?: string;
-  }
-}
-
-app.use(session({
-  secret: 'fakeso',
-  cookie: {
-    // 60 minutes
-    maxAge: 1000 * 60 * 60,
-  },
-  resave: false,
-  saveUninitialized: false,
-}));
+app.use(sessionMiddleware);
 
 // authentication middleware that excludes unprotected routes
 // only include in development and production modes so that tests can run

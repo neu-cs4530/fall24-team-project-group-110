@@ -1,6 +1,6 @@
 import { Socket } from 'socket.io-client';
 
-export type FakeSOSocket = Socket<ServerToClientEvents>;
+export type FakeSOSocket = Socket<ServerToClientEvents, ClientToServerEvents>;
 
 /**
  * Enum representing the possible ordering options for questions.
@@ -142,8 +142,13 @@ export interface ServerToClientEvents {
   commentUpdate: (update: CommentUpdatePayload) => void;
   joinRoom: (conversationId: string) => void;
   leaveRoom: (conversationId: string) => void;
-  messageUpdate: (message: Message) => void;
+  newMessage: (message: Message) => void;
   conversationUpdate: (conversation: Conversation) => void;
+}
+
+export interface ClientToServerEvents {
+  joinConversation: (conversationId: string) => void;
+  leaveConversation: (conversationId: string) => void;
 }
 
 /**

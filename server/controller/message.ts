@@ -9,7 +9,7 @@ import {
 import {
   saveMessage,
   getConversationById,
-  getMessagesInOrder,
+  getMessagesSortedByDateAsc,
   updateConversationWithMessage,
 } from '../models/application';
 
@@ -37,9 +37,8 @@ const messageController = (socket: FakeSOSocket) => {
     }
 
     try {
-      const mlist = await getMessagesInOrder(qid);
+      const mlist = await getMessagesSortedByDateAsc(qid);
 
-      socket.emit('joinRoom', qid);
       res.json(mlist);
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -122,7 +121,7 @@ const messageController = (socket: FakeSOSocket) => {
         throw new Error(updatedConversation.error);
       }
 
-      socket.to(req.body.conversationId).emit('messageUpdate', result);
+      socket.to(req.body.conversationId).emit('newMessage', result);
       socket.emit('conversationUpdate', updatedConversation);
       res.json(result);
     } catch (error) {

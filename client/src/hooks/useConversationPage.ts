@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import useUserContext from './useUserContext';
 import { Conversation } from '../types';
-import { addConversation, getConversationsByFilter } from '../services/conversationService';
+import { addConversation, getConversationsByUsername } from '../services/conversationService';
 
 const useConversationPage = () => {
   const { user, socket } = useUserContext();
@@ -51,8 +51,8 @@ const useConversationPage = () => {
      */
     const fetchData = async () => {
       try {
-        const res = await getConversationsByFilter(user.username);
-        setClist(res || []);
+        const res = await getConversationsByUsername(user.username);
+        setClist(res);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error);
@@ -60,23 +60,19 @@ const useConversationPage = () => {
     };
 
     fetchData();
-  }, [user.username]);
+  }, []);
 
   useEffect(() => {
     /**
-     * Function to handle conversation updates from the socket.
+     * Function to handle conversation updates from the socket. When a conversation update is received, we want to:
+     * - Check if the conversation is in the user's conversation list
+     * - If it is, prepend the updated conversation to the conversation list and remove the old conversation
+     * - If it is not, do nothing
      */
     const handleUpdatedConversation = async (conversation: Conversation) => {
-      setClist(prevCList => {
-        const conversationExists = prevCList.some(c => c._id === conversation._id);
-
-        if (conversationExists) {
-          // Update the existing conversation
-          return prevCList.map(c => (c._id === conversation._id ? conversation : c));
-        }
-
-        return [conversation, ...prevCList];
-      });
+      if (conversation.participants.includes(user.username)) {
+        setClist(prevList => [conversation, ...prevList.filter(c => c._id !== conversation._id)]);
+      }
     };
 
     socket.on('conversationUpdate', handleUpdatedConversation);
@@ -84,7 +80,7 @@ const useConversationPage = () => {
     return () => {
       socket.off('conversationUpdate', handleUpdatedConversation);
     };
-  }, [clist, socket]);
+  }, [socket]);
 
   return {
     user,

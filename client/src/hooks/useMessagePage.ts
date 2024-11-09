@@ -52,7 +52,7 @@ const useMessagePage = (conversationId: string) => {
     const fetchData = async () => {
       try {
         const res = await getMessagesByConvoId(conversationId);
-        setMessages(res || []);
+        setMessages(res);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error('Error fetching messages:', error);
@@ -70,19 +70,21 @@ const useMessagePage = (conversationId: string) => {
      * @param message - The new message object.
      */
     const handleMessageUpdate = (m: Message) => {
+      console.log('new message', m);
       if (m.conversationId === conversationId) {
         setMessages([...messages, m]);
       }
     };
 
-    socket.emit('joinRoom', conversationId);
-    socket.on('messageUpdate', handleMessageUpdate);
+    console.log('joining conversation', conversationId);
+    socket.emit('joinConversation', conversationId);
+    socket.on('newMessage', handleMessageUpdate);
 
     return () => {
-      socket.emit('leaveRoom', conversationId);
-      socket.off('messageUpdate', handleMessageUpdate);
+      socket.emit('leaveConversation', conversationId);
+      socket.off('newMessage', handleMessageUpdate);
     };
-  }, [conversationId, messages, socket]);
+  }, [conversationId, socket]);
 
   return {
     user,

@@ -2,7 +2,7 @@ import { Request } from 'express';
 import { ObjectId } from 'mongodb';
 import { Server } from 'socket.io';
 
-export type FakeSOSocket = Server<ServerToClientEvents>;
+export type FakeSOSocket = Server<ClientToServerEvents, ServerToClientEvents>;
 
 /**
  * Type representing the possible ordering options for questions.
@@ -310,8 +310,13 @@ export interface ServerToClientEvents {
   userUpdate: (user: UserResponse) => void;
   joinRoom: (conversationId: string) => void;
   leaveRoom: (conversationId: string) => void;
-  messageUpdate: (message: MessageResponse) => void;
+  newMessage: (message: MessageResponse) => void;
   conversationUpdate: (conversation: ConversationResponse) => void;
+}
+
+export interface ClientToServerEvents {
+  joinConversation: (conversationId: string) => void;
+  leaveConversation: (conversationId: string) => void;
 }
 
 /**
@@ -358,18 +363,8 @@ export interface FindConversationsByUsernameRequest extends Request {
  */
 export interface FindConversationByIdRequest extends Request {
   params: {
-    qid: string;
+    cid: string;
   };
-}
-
-/**
- * Interface extending the reequest body when updating a conversation with its most recent message. 
- * - message - The most recent message sent in the conversation.
- */
-export interface UpdateConversationRequest extends Request {
-  body: {
-    message: Message;
-  }
 }
 
 /**

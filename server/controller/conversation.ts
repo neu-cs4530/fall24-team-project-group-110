@@ -9,7 +9,7 @@ import {
 } from '../types';
 import {
   getConversationById,
-  getConversationsByUsername,
+  getConversationsByUsernameSortedByDateDesc,
   getUsersByUsernames,
   saveConversation,
 } from '../models/application';
@@ -26,14 +26,11 @@ const conversationController = (socket: FakeSOSocket) => {
    *
    * @returns A Promise that resolves to void.
    */
-  const getConversationsByFilter = async (
+  const getConversationsByUsername = async (
     req: FindConversationsByUsernameRequest,
     res: Response,
   ): Promise<void> => {
     const { username } = req.query;
-
-    // eslint-disable-next-line no-console
-    console.log(username);
 
     if (username === undefined) {
       res.status(400).send('Invalid username requesting conversations.');
@@ -41,7 +38,7 @@ const conversationController = (socket: FakeSOSocket) => {
     }
 
     try {
-      const clist: Conversation[] = await getConversationsByUsername(username);
+      const clist: Conversation[] = await getConversationsByUsernameSortedByDateDesc(username);
       res.json(clist);
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -65,15 +62,15 @@ const conversationController = (socket: FakeSOSocket) => {
     req: FindConversationByIdRequest,
     res: Response,
   ): Promise<void> => {
-    const { qid } = req.params;
+    const { cid } = req.params;
 
-    if (!ObjectId.isValid(qid)) {
+    if (!ObjectId.isValid(cid)) {
       res.status(400).send('Invalid ID format');
       return;
     }
 
     try {
-      const c = await getConversationById(qid);
+      const c = await getConversationById(cid);
 
       if (c && !('error' in c)) {
         res.json(c);
@@ -118,14 +115,15 @@ const conversationController = (socket: FakeSOSocket) => {
         throw new Error(result.error);
       }
 
+      socket.emit('conversationUpdate', result);
       res.json(result);
     } catch (error) {
       res.status(500).send('Error adding conversation');
     }
   };
 
-  router.get('/getConversation', getConversationsByFilter);
-  router.get('/getConversation/:qid', getConversation);
+  router.get('/getConversations', getConversationsByUsername);
+  router.get('/getConversation/:cid', getConversation);
   router.post('/addConversation', addConversation);
 
   return router;

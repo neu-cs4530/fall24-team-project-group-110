@@ -9,8 +9,8 @@ const CONVERSATION_API_URL = `${process.env.REACT_APP_SERVER_URL}/conversation`;
  * @param username - The current user's username.
  * @throws Error if there is an issue fetching the conversations.
  */
-const getConversationsByFilter = async (username: string): Promise<Conversation[]> => {
-  const res = await api.get(`${CONVERSATION_API_URL}/getConversation?username=${username}`);
+const getConversationsByUsername = async (username: string): Promise<Conversation[]> => {
+  const res = await api.get(`${CONVERSATION_API_URL}/getConversations?username=${username}`);
   if (res.status !== 200) {
     throw new Error('Error when fetching conversations with username');
   }
@@ -45,4 +45,4 @@ const addConversation = async (c: Conversation): Promise<Conversation> => {
   return res.data;
 };
 
-export { getConversationsByFilter, getConversationById, addConversation };
+export { getConversationsByUsername, getConversationById, addConversation };

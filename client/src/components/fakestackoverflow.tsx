@@ -45,12 +45,15 @@ const FakeStackOverflow = ({ socket }: { socket: FakeSOSocket | null }) => {
         const validatedUser = await validate();
         setUser(validatedUser);
         setLoading(false);
+        navigate('/home');
       } catch (e) {
         setLoading(false);
       }
     };
 
-    checkSession();
+    if (loading) {
+      checkSession();
+    }
   }, [navigate]);
 
   return !loading ? (

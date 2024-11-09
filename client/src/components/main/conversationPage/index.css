@@ -57,16 +57,18 @@
 
 .new-conversation {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 0.5em;
   padding: 1em;
+  width: 100%;
 }
 
 .conversation-input {
   padding: 0.5em;
   border: 1px solid #ccc;
   border-radius: 4px;
-  flex: 1;
+  width: 100%;
 }
 
 .create-conversation-button {
