@@ -101,7 +101,7 @@ const conversationController = (socket: FakeSOSocket) => {
    * @returns A Promise that resolves to void.
    */
   const addConversation = async (req: AddConversationRequest, res: Response): Promise<void> => {
-    if (!req.body.participants || req.body.participants.length !== 2) {
+    if (!req.body.participants || req.body.participants.length < 2) {
       res.status(400).send('Invalid request');
       return;
     }
