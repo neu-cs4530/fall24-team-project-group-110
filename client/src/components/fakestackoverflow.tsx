@@ -52,7 +52,7 @@ const FakeStackOverflow = ({ socket }: { socket: FakeSOSocket | null }) => {
       }
     };
 
-    // checkSession();
+    checkSession();
   }, [navigate]);
 
   return !loading ? (
