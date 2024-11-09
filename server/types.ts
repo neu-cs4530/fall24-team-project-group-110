@@ -311,6 +311,7 @@ export interface ServerToClientEvents {
   joinRoom: (conversationId: string) => void;
   leaveRoom: (conversationId: string) => void;
   messageUpdate: (message: MessageResponse) => void;
+  conversationUpdate: (conversation: ConversationResponse) => void;
 }
 
 /**

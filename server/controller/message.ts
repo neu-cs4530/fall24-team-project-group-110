@@ -123,6 +123,7 @@ const messageController = (socket: FakeSOSocket) => {
       }
 
       socket.to(req.body.conversationId).emit('messageUpdate', result);
+      socket.emit('conversationUpdate', updatedConversation);
       res.json(result);
     } catch (error) {
       res.status(500).send('Error adding message');

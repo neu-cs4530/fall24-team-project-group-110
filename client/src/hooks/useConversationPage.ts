@@ -4,8 +4,8 @@ import { Conversation } from '../types';
 import { addConversation, getConversationsByFilter } from '../services/conversationService';
 
 const useConversationPage = () => {
-  const { user } = useUserContext();
-  const [clist, setClist] = useState<Conversation[]>();
+  const { user, socket } = useUserContext();
+  const [clist, setClist] = useState<Conversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<string>('');
   const [participants, setParticipants] = useState<string>('');
   const [textErr, setTextErr] = useState<string>('');
@@ -61,6 +61,30 @@ const useConversationPage = () => {
 
     fetchData();
   }, [user.username]);
+
+  useEffect(() => {
+    /**
+     * Function to handle conversation updates from the socket.
+     */
+    const handleUpdatedConversation = async (conversation: Conversation) => {
+      setClist(prevCList => {
+        const conversationExists = prevCList.some(c => c._id === conversation._id);
+
+        if (conversationExists) {
+          // Update the existing conversation
+          return prevCList.map(c => (c._id === conversation._id ? conversation : c));
+        }
+
+        return [conversation, ...prevCList];
+      });
+    };
+
+    socket.on('conversationUpdate', handleUpdatedConversation);
+
+    return () => {
+      socket.off('conversationUpdate', handleUpdatedConversation);
+    };
+  }, [clist, socket]);
 
   return {
     user,
