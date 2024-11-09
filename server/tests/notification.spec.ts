@@ -11,7 +11,6 @@ describe('POST /addNotification', () => {
   });
 
   afterAll(async () => {
-    jest.clearAllMocks();
     await mongoose.disconnect(); // Ensure mongoose is disconnected after all tests
   });
 
