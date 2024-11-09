@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import useUserContext from './useUserContext';
 import { Conversation } from '../types';
 import { addConversation, getConversationsByFilter } from '../services/conversationService';
 
 const useConversationPage = () => {
-  const navigate = useNavigate();
-
   const { user } = useUserContext();
   const [clist, setClist] = useState<Conversation[]>();
   const [selectedConversation, setSelectedConversation] = useState<string>('');

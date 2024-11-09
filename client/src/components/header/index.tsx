@@ -9,7 +9,7 @@ import useUserContext from '../../hooks/useUserContext';
  * when they press Enter.
  */
 const Header = () => {
-  const { val, handleInputChange, handleKeyDown, handleChat, handleLogout } = useHeader();
+  const { val, handleInputChange, handleKeyDown, handleLogout } = useHeader();
   const { user } = useUserContext();
 
   return (

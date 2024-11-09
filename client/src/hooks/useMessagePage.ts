@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import useUserContext from './useUserContext';
 import { Message } from '../types';
 import { getMessagesByConvoId, addMessage } from '../services/messageService';

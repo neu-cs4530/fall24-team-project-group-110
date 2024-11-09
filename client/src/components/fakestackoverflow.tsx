@@ -13,7 +13,6 @@ import AnswerPage from './main/answerPage';
 import ConversationPage from './main/conversationPage';
 import Register from './register';
 import { validate } from '../services/authService';
-import ChatSection from './main/chatSection';
 
 const ProtectedRoute = ({
   user,
