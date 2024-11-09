@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import { Server } from 'socket.io';
 import * as http from 'http';
-import session from 'express-session';
+import session, { SessionData } from 'express-session';
 declare module 'express-session' {
   interface SessionData {
     username?: string;
@@ -39,7 +39,10 @@ mongoose
 const app = express();
 const server = http.createServer(app);
 const socket: FakeSOSocket = new Server(server, {
-  cors: { origin: '*' },
+  cors: { 
+    origin: CLIENT_URL,
+    credentials: true,
+  },
 });
 const sessionMiddleware = session({
   secret: 'fakeso_secret',
@@ -60,14 +63,10 @@ function startServer() {
 
 socket.on('connection', socket => {
   console.log('A user connected ->', socket.id);
-
   const req = socket.request as Request;
 
   socket.on('joinConversation', async (conversationId: string) => {
-    console.log('a user is attempting to join room: ', conversationId);
     await new Promise((resolve) => req.session.reload(resolve));
-
-    console.log('session username:', req.session.username);
 
     if (req.session.username) {
       const access = await checkConversationAccess(req.session.username, conversationId);

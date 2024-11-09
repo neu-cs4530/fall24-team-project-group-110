@@ -76,7 +76,6 @@ const useMessagePage = (conversationId: string) => {
       }
     };
 
-    console.log('joining conversation', conversationId);
     socket.emit('joinConversation', conversationId);
     socket.on('newMessage', handleMessageUpdate);
 
