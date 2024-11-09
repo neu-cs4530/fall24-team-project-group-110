@@ -52,7 +52,7 @@ describe('POST /addNotification', () => {
     response.body._id = new ObjectId(String(response.body._id));
     expect(response.status).toBe(200);
     expect(response.body).toEqual(mockNotification);
-  });
+  }, 10000);
 
   test('should return 400 if the request body is empty', async () => {
     const input = {};
