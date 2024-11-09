@@ -879,7 +879,7 @@ export const updateConversationWithMessage = async (
 
     return result;
   } catch (error) {
-    return { error: `Error when updating user: ${(error as Error).message}` };
+    return { error: `Error when updating conversation: ${(error as Error).message}` };
   }
 };
 

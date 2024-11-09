@@ -180,6 +180,7 @@ const user2: User = {
 const conv1: Conversation = {
   _id: new ObjectId('65e9b716ff0e892116b2de19'),
   participants: ['user1', 'user2'],
+  lastMessage: '',
   updatedAt: new Date('2023-11-20T09:24:00'),
 };
 
