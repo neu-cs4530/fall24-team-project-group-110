@@ -41,6 +41,10 @@ const useHeader = () => {
     }
   };
 
+  const handleChat = () => {
+    navigate(`/conversations`);
+  };
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -56,6 +60,7 @@ const useHeader = () => {
     setVal,
     handleInputChange,
     handleKeyDown,
+    handleChat,
     handleLogout,
   };
 };

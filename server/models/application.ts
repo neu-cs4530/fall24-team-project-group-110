@@ -816,3 +816,73 @@ export const getConversationById = async (id: string): Promise<ConversationRespo
     return { error: 'Error when fetching conversation' };
   }
 };
+
+/**
+ * Sort the conversations list based on updated at in ascending order.
+ *
+ * @param {Conversation[]} clist - The list of conversations to sort.
+ * @returns {Conversation[]} - The sorted list of conversations.
+ */
+const sortConversationsByUpdatedAt = (clist: Conversation[]): Conversation[] =>
+  clist.sort((a, b) => {
+    if (a.updatedAt > b.updatedAt) {
+      return -1;
+    }
+
+    if (a.updatedAt < b.updatedAt) {
+      return 1;
+    }
+
+    return 0;
+  });
+
+/**
+ * Gets conversations based on if username is a participant of them.
+ *
+ * @param username - The participant's username.
+ * @returns {Promise<Conversation[]>} - The list of conversation, or an empty array if the fetch fails.
+ */
+export const getConversationsByUsername = async (username: string): Promise<Conversation[]> => {
+  try {
+    const result = await ConversationModel.find({ participants: username });
+
+    return sortConversationsByUpdatedAt(result);
+  } catch (error) {
+    return [];
+  }
+};
+
+/**
+ * Sort the message list based on sent at in descending order.
+ *
+ * @param {Message[]} mlist - The list of messages to sort.
+ * @returns {Message[]} - The sorted list of messages.
+ */
+export const sortMessagesBySentAt = (mlist: Message[]): Message[] =>
+  mlist.sort((a, b) => {
+    if (a.sentAt < b.sentAt) {
+      return -1;
+    }
+
+    if (a.sentAt > b.sentAt) {
+      return 1;
+    }
+
+    return 0;
+  });
+
+/**
+ * Gets the messages that belongs to a conversation based on its id.
+ *
+ * @param c_id - The id of the conversation the messages belong to.
+ * @returns {Promise<Message[]>} - The fetched messages, or an empty array if the fetch fails.
+ */
+export const getMessagesInOrder = async (c_id: string): Promise<Message[]> => {
+  try {
+    const result = await MessageModel.find({ conversationId: c_id });
+
+    return sortMessagesBySentAt(result);
+  } catch (error) {
+    return [];
+  }
+};

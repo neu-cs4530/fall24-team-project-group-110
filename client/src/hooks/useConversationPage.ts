@@ -1,0 +1,79 @@
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useUserContext from './useUserContext';
+import { Conversation } from '../types';
+import { addConversation, getConversationsByFilter } from '../services/conversationService';
+
+const useConversationPage = () => {
+  const navigate = useNavigate();
+
+  const { user } = useUserContext();
+  const [clist, setClist] = useState<Conversation[]>();
+  const [selectedConversation, setSelectedConversation] = useState<string>('');
+  const [participants, setParticipants] = useState<string>('');
+  const [textErr, setTextErr] = useState<string>('');
+
+  /**
+   * Function to handle creating a new conversation
+   */
+  const handleCreateConversation = async () => {
+    if (!participants) return;
+
+    const participantsArray = Array.from(
+      new Set(
+        participants
+          .split(',')
+          .map(name => name.trim())
+          .filter(name => user.username !== name),
+      ),
+    );
+
+    if (participants.length === 0) {
+      setTextErr('Cannot create chat with no users');
+      return;
+    }
+
+    const newConversation: Conversation = {
+      participants: [...participantsArray, user.username],
+      updatedAt: new Date(),
+    };
+
+    try {
+      await addConversation(newConversation);
+      setParticipants('');
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error adding conversation:', error);
+    }
+  };
+
+  useEffect(() => {
+    /**
+     * Function to fetch conversations based on the username and update the question list.
+     */
+    const fetchData = async () => {
+      try {
+        const res = await getConversationsByFilter(user.username);
+        setClist(res || []);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, [user.username]);
+
+  return {
+    user,
+    clist,
+    selectedConversation,
+    setSelectedConversation,
+    participants,
+    setParticipants,
+    textErr,
+    handleCreateConversation,
+  };
+};
+
+export default useConversationPage;

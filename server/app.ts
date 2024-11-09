@@ -45,6 +45,16 @@ function startServer() {
 socket.on('connection', socket => {
   console.log('A user connected ->', socket.id);
 
+  socket.on('joinRoom', (conversationId: string) => {
+    socket.join(conversationId);
+    console.log('A user joined conversation room ->', conversationId)
+  });
+
+  socket.on('leaveRoom', (conversationId: string) => {
+    socket.leave(conversationId);
+    console.log('A user left conversation room ->', conversationId)
+  });
+
   socket.on('disconnect', () => {
     console.log('User disconnected');
   });
@@ -118,8 +128,8 @@ app.use('/tag', tagController());
 app.use('/answer', answerController(socket));
 app.use('/comment', commentController(socket));
 app.use('/user', userController(socket));
-app.use('/conversation', conversationController());
-app.use('/message', messageController());
+app.use('/conversation', conversationController(socket));
+app.use('/message', messageController(socket));
 
 // Export the app instance
 export { app, server, startServer };

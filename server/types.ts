@@ -267,11 +267,6 @@ export type UserResponse = User | { error: string };
 export type UserListResponse = User[] | { error: string };
 
 /**
- * Type representing the possible responses for a User-related operation.
- */
-export type UserResponse = User | { error: string };
-
-/**
  * Interface representing the payload for a comment update event, which contains:
  * - result - The updated question or answer.
  * - type - The type of the updated item, either 'question' or 'answer'.
@@ -313,7 +308,9 @@ export interface ServerToClientEvents {
   voteUpdate: (vote: VoteUpdatePayload) => void;
   commentUpdate: (comment: CommentUpdatePayload) => void;
   userUpdate: (user: UserResponse) => void;
-  userUpdate: (user: UserResponse) => void;
+  joinRoom: (conversationId: string) => void;
+  leaveRoom: (conversationId: string) => void;
+  messageUpdate: (message: MessageResponse) => void;
 }
 
 /**
@@ -342,6 +339,36 @@ export interface AddConversationRequest extends Request {
  */
 export interface AddMessageRequest extends Request {
   body: Message;
+}
+
+/**
+ * Interface extending the request query to find conversations on username participating in, which contains:
+ * - username - The username participating in the conversations
+ */
+export interface FindConversationsByUsernameRequest extends Request {
+  query: {
+    username: string,
+  };
+}
+
+/**
+ * Interface for the request parameters when finding a conversation by its ID.
+ * - qid - The unique identifier of the conversation. 
+ */
+export interface FindConversationByIdRequest extends Request {
+  params: {
+    qid: string;
+  };
+}
+
+/**
+ * Interface for the request parameters when finding messages for conversation by the conversion ID.
+ * - qid - The unique identifier of the conversation. 
+ */
+export interface FindMessagesByConversationIdRequest extends Request {
+  params: {
+    qid: string;
+  };
 }
 
 /**

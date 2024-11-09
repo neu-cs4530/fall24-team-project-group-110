@@ -140,6 +140,9 @@ export interface ServerToClientEvents {
   viewsUpdate: (question: Question) => void;
   voteUpdate: (vote: VoteUpdatePayload) => void;
   commentUpdate: (update: CommentUpdatePayload) => void;
+  joinRoom: (conversationId: string) => void;
+  leaveRoom: (conversationId: string) => void;
+  messageUpdate: (message: Message) => void;
 }
 
 /**
@@ -159,4 +162,34 @@ export interface User {
   answers: Answer[];
   followers: User[];
   following: User[];
+}
+
+/**
+ * Interface representing the structure of a Message object:
+ *
+ * - _id - The unique identifier for the message. Optional field.
+ * - conversationId - The unique identifier for the conversation the message belongs to.
+ * - sender - The username of the user who sent the message.
+ * - text - The content of the message.
+ * - sentAt - The date and time when the message was sent.
+ */
+export interface Message {
+  _id?: string;
+  conversationId: string;
+  sender: string;
+  text: string;
+  sentAt: Date;
+}
+
+/**
+ * Interface representing the structure of a Conversation object:
+ *
+ * - _id - The unique identifier for the conversation. Optional field.
+ * - participants - An array of usernames of the users participating in the conversation.
+ * - updatedAt - The date and time when the conversation was last updated.
+ */
+export interface Conversation {
+  _id?: string;
+  participants: string[];
+  updatedAt: Date;
 }

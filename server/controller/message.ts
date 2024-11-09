@@ -1,9 +1,40 @@
 import express, { Response } from 'express';
-import { AddMessageRequest, Message } from '../types';
-import { saveMessage, getConversationById } from '../models/application';
+import { ObjectId } from 'mongodb';
+import {
+  AddMessageRequest,
+  FakeSOSocket,
+  FindMessagesByConversationIdRequest,
+  Message,
+} from '../types';
+import { saveMessage, getConversationById, getMessagesInOrder } from '../models/application';
 
-const messageController = () => {
+const messageController = (socket: FakeSOSocket) => {
   const router = express.Router();
+
+  const getMessagesByConversationId = async (
+    req: FindMessagesByConversationIdRequest,
+    res: Response,
+  ): Promise<void> => {
+    const { qid } = req.params;
+
+    if (!ObjectId.isValid(qid)) {
+      res.status(400).send('Invalid ID format');
+      return;
+    }
+
+    try {
+      const mlist = await getMessagesInOrder(qid);
+
+      socket.emit('joinRoom', qid);
+      res.json(mlist);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        res.status(500).send(`Error when fetching messages in order: ${err.message}`);
+      } else {
+        res.status(500).send(`Error when fetching messages in order`);
+      }
+    }
+  };
 
   interface InvalidMessageFields {
     error: {
@@ -68,12 +99,14 @@ const messageController = () => {
         throw new Error(result.error);
       }
 
+      socket.to(req.body.conversationId).emit('messageUpdate', result);
       res.json(result);
     } catch (error) {
       res.status(500).send('Error adding message');
     }
   };
 
+  router.get('/getMessagesByConvoId/:qid', getMessagesByConversationId);
   router.post('/addMessage', addMessage);
 
   return router;
