@@ -16,6 +16,8 @@ import {
   User,
   UserListResponse,
   UserResponse,
+  Notification,
+  NotificationResponse,
 } from '../types';
 import AnswerModel from './answers';
 import QuestionModel from './questions';
@@ -24,6 +26,7 @@ import CommentModel from './comments';
 import UserModel from './users';
 import ConversationModel from './conversation';
 import MessageModel from './message';
+import NotificationModel from './notifications';
 
 /**
  * Parses tags from a search string.
@@ -375,6 +378,24 @@ export const saveQuestion = async (question: Question): Promise<QuestionResponse
 };
 
 /**
+ * Saves a new Notification to the database.
+ *
+ * @param notification The message to save
+ *
+ * @returns {Promise<NotificationResponse>} - The saved Notification, or an error Notification if the save failed
+ */
+export const saveNotification = async (
+  notification: Notification,
+): Promise<NotificationResponse> => {
+  try {
+    const result = await NotificationModel.create(notification);
+    return result;
+  } catch (error) {
+    return { error: 'Error when saving a notification' };
+  }
+};
+
+/**
  * Saves a new answer to the database.
  *
  * @param {Answer} answer - The answer to save
@@ -593,6 +614,28 @@ export const addAnswerToQuestion = async (qid: string, ans: Answer): Promise<Que
   }
 };
 
+export const addNotificationToUser = async (
+  userId: string,
+  notification: Notification,
+): Promise<UserResponse> => {
+  try {
+    if (!notification || !notification.text || !notification.dateTime) {
+      throw new Error('Invalid notification');
+    }
+    const result = await UserModel.findOneAndUpdate(
+      { _id: userId },
+      { $push: { notifications: { $each: [notification._id] } } },
+      { new: true },
+    );
+    if (result === null) {
+      throw new Error('Error when adding notification to user');
+    }
+    return result;
+  } catch (error) {
+    return { error: 'Error when adding notification to user' };
+  }
+};
+
 /**
  * Adds a comment to a question or answer.
  *
@@ -763,6 +806,26 @@ export const getUsersByUsernames = async (usernames: string[]): Promise<UserList
     return users.map(user => user.toObject());
   } catch (error) {
     return { error: 'Error when fetching users' };
+  }
+};
+
+/**
+ * Gets a Notification by their ID.
+ *
+ * @param id The ID of the Notification to fetch.
+ *
+ * @returns {Promise<NotificationResponse>} - The user, or an error message if the fetch failed
+ */
+export const getNotificationById = async (id: string): Promise<NotificationResponse> => {
+  try {
+    const result = await NotificationModel.findOne({ _id: id });
+    if (!result) {
+      throw new Error('Notification not found');
+    }
+
+    return result.toObject();
+  } catch (error) {
+    return { error: 'Error when fetching notification' };
   }
 };
 

@@ -175,12 +175,12 @@ export interface User {
   password: string;
   bio: string;
   picture: string;
-  comments: Comment[];
-  questions: Question[];
-  answers: Answer[];
-  followers: User[];
-  following: User[];
-  notifications: Notification[];
+  comments: Comment[] | ObjectId[];
+  questions: Question[] | ObjectId[];
+  answers: Answer[] | ObjectId[];
+  followers: User[] | ObjectId[];
+  following: User[] | ObjectId[];
+  notifications: Notification[] | ObjectId[];
 }
 
 /**
@@ -196,6 +196,17 @@ export interface Notification {
   text: string;
   targetId: string;
   dateTime: Date;
+}
+
+/**
+ * Interface for the request body when adding a new notification.
+ * - body - The notification being added.
+ */
+export interface AddNotificationRequest extends Request {
+  body: {
+    uid: string;
+    notif: Notification;
+  };
 }
 
 /**
@@ -241,6 +252,11 @@ export type CommentResponse = Comment | { error: string };
  * Type representing the possible responses for a User-related operation.
  */
 export type UserResponse = User | { error: string };
+
+/**
+ * Type representing the possible responses for a Tag-related operation.
+ */
+export type NotificationResponse = Notification | { error: string };
 
 /**
  * Type representing the possible responses for a User-related operation involving a list of users.
