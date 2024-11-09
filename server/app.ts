@@ -66,8 +66,6 @@ socket.on('connection', socket => {
   const req = socket.request as Request;
 
   socket.on('joinConversation', async (conversationId: string) => {
-    await new Promise((resolve) => req.session.reload(resolve));
-
     if (req.session.username) {
       const access = await checkConversationAccess(req.session.username, conversationId);
       if (access) {

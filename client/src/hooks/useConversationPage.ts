@@ -60,7 +60,7 @@ const useConversationPage = () => {
     };
 
     fetchData();
-  }, []);
+  }, [user.username]);
 
   useEffect(() => {
     /**
@@ -80,7 +80,7 @@ const useConversationPage = () => {
     return () => {
       socket.off('conversationUpdate', handleUpdatedConversation);
     };
-  }, [socket]);
+  }, [socket, user.username]);
 
   return {
     user,

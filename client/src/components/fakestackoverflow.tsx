@@ -54,7 +54,7 @@ const FakeStackOverflow = ({ socket }: { socket: FakeSOSocket | null }) => {
     if (loading) {
       checkSession();
     }
-  }, [navigate]);
+  }, [navigate, loading]);
 
   return !loading ? (
     <LoginContext.Provider value={{ setUser }}>

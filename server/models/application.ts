@@ -823,7 +823,9 @@ export const getConversationById = async (id: string): Promise<ConversationRespo
  * @param username - The participant's username.
  * @returns {Promise<Conversation[]>} - The list of conversation, or an empty array if the fetch fails.
  */
-export const getConversationsByUsernameSortedByDateDesc = async (username: string): Promise<Conversation[]> => {
+export const getConversationsByUsernameSortedByDateDesc = async (
+  username: string,
+): Promise<Conversation[]> => {
   try {
     const result = await ConversationModel.find({ participants: username }).sort({ updatedAt: -1 });
 
@@ -882,7 +884,7 @@ export const getMessagesSortedByDateAsc = async (c_id: string): Promise<Message[
 
 /**
  * Checks if a user has access to a conversation based on the conversation id.
- * 
+ *
  * @param username - The username of the user to check access for.
  * @param conversationId - The id of the conversation to check access to.
  * @returns {Promise<boolean>} - `true` if the user has access, `false` otherwise.
