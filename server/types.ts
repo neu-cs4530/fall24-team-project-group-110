@@ -352,13 +352,23 @@ export interface FindConversationsByUsernameRequest extends Request {
 }
 
 /**
- * Interface for the request parameters when finding a conversation by its ID.
+ * Interface extending the request parameters when finding a conversation by its ID.
  * - qid - The unique identifier of the conversation. 
  */
 export interface FindConversationByIdRequest extends Request {
   params: {
     qid: string;
   };
+}
+
+/**
+ * Interface extending the reequest body when updating a conversation with its most recent message. 
+ * - message - The most recent message sent in the conversation.
+ */
+export interface UpdateConversationRequest extends Request {
+  body: {
+    message: Message;
+  }
 }
 
 /**
@@ -391,11 +401,13 @@ export interface Message {
  * Interface representing a conversation document, which contains:
  * - _id - The unique identifier for the conversation. Optional field.
  * - participants - An array of usernames of the users participating in the conversation.
+ * - lastMessage - The most recent message sent for the conversation.
  * - updatedAt - The date and time when the conversation was last updated.
  */
 export interface Conversation {
   _id?: ObjectId;
   participants: string[];
+  lastMessage: string;
   updatedAt: Date;
 }
 

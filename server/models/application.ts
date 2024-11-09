@@ -853,6 +853,37 @@ export const getConversationsByUsername = async (username: string): Promise<Conv
 };
 
 /**
+ * Updates the conversation with the message sent data.
+ *
+ * @param {Message} message - The message object with data to update conversation
+ * @returns {Promise<ConversationResponse>} - The updated conversation, or an error message if the update failed
+ */
+export const updateConversationWithMessage = async (
+  message: Message,
+): Promise<ConversationResponse> => {
+  try {
+    const result = await ConversationModel.findOneAndUpdate(
+      { _id: message.conversationId },
+      {
+        $set: {
+          lastMessage: message.text,
+          updatedAt: message.sentAt,
+        },
+      },
+      { new: true },
+    );
+
+    if (result == null) {
+      throw new Error('Failed to update conversation');
+    }
+
+    return result;
+  } catch (error) {
+    return { error: `Error when updating user: ${(error as Error).message}` };
+  }
+};
+
+/**
  * Sort the message list based on sent at in descending order.
  *
  * @param {Message[]} mlist - The list of messages to sort.

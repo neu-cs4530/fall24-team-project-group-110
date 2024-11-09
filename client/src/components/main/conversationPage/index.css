@@ -30,7 +30,7 @@
   padding: 0;
   margin: 0;
 	overflow-y: auto;
-  max-height: calc(100vh - 120px);
+	width: 100%
 }
 
 .conversation {
@@ -45,6 +45,14 @@
 
 .convo-participants {
 	font-weight: bold;
+}
+
+.convo-meta {
+	font-size: 0.85rem;
+  color: #888;
+  margin-top: 0.25em;
+  display: flex;
+  justify-content: space-between;
 }
 
 .new-conversation {

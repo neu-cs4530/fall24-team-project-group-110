@@ -186,10 +186,12 @@ export interface Message {
  *
  * - _id - The unique identifier for the conversation. Optional field.
  * - participants - An array of usernames of the users participating in the conversation.
+ * - lastMessage - The most recent message sent for the conversation.
  * - updatedAt - The date and time when the conversation was last updated.
  */
 export interface Conversation {
   _id?: string;
   participants: string[];
+  lastMessage: string;
   updatedAt: Date;
 }

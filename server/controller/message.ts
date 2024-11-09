@@ -6,7 +6,12 @@ import {
   FindMessagesByConversationIdRequest,
   Message,
 } from '../types';
-import { saveMessage, getConversationById, getMessagesInOrder } from '../models/application';
+import {
+  saveMessage,
+  getConversationById,
+  getMessagesInOrder,
+  updateConversationWithMessage,
+} from '../models/application';
 
 const messageController = (socket: FakeSOSocket) => {
   const router = express.Router();
@@ -110,6 +115,11 @@ const messageController = (socket: FakeSOSocket) => {
       const result = await saveMessage(req.body);
       if ('error' in result) {
         throw new Error(result.error);
+      }
+
+      const updatedConversation = await updateConversationWithMessage(result);
+      if ('error' in updatedConversation) {
+        throw new Error(updatedConversation.error);
       }
 
       socket.to(req.body.conversationId).emit('messageUpdate', result);

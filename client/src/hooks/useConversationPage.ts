@@ -32,6 +32,7 @@ const useConversationPage = () => {
 
     const newConversation: Conversation = {
       participants: [...participantsArray, user.username],
+      lastMessage: '',
       updatedAt: new Date(),
     };
 

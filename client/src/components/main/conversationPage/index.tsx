@@ -2,6 +2,7 @@ import React from 'react';
 import './index.css';
 import useConversationPage from '../../../hooks/useConversationPage';
 import ChatSection from '../chatSection';
+import { getMetaData } from '../../../tool';
 
 /**
  * ConversationSection renders a page displaying a list of the current user's conversations
@@ -55,7 +56,9 @@ const ConversationPage = () => {
               <div className='convo-participants'>
                 {c.participants.filter(username => username !== user.username).join(', ')}
               </div>
-              {/** last message and last message time? */}
+              <div className='convo-meta'>
+                {c.lastMessage} {getMetaData(new Date(c.updatedAt))}
+              </div>
             </div>
           </li>
         ))}
