@@ -24,6 +24,7 @@ import userController from './controller/user';
 import conversationController from './controller/conversation';
 import messageController from './controller/message';
 import authController from './controller/auth';
+import notificationController from './controller/notification';
 import { checkConversationAccess } from './models/application';
 
 dotenv.config();
@@ -140,6 +141,7 @@ app.use('/comment', commentController(socket));
 app.use('/user', userController(socket));
 app.use('/conversation', conversationController(socket));
 app.use('/message', messageController(socket));
+app.use('/notification', notificationController());
 
 // Export the app instance
 export { app, server, startServer };
