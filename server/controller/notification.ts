@@ -113,7 +113,7 @@ const notificationController = () => {
       const status = await deleteNotificationFromUser(req.params.uid, req.params.nid);
       res.json(status);
     } catch (error) {
-      res.status(500).send('Error fetching notification');
+      res.status(500).send('Error deleting notification');
     }
   };
 
