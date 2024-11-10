@@ -10,6 +10,7 @@ import TagPage from './main/tagPage';
 import NewQuestionPage from './main/newQuestion';
 import NewAnswerPage from './main/newAnswer';
 import AnswerPage from './main/answerPage';
+import ConversationPage from './main/conversationPage';
 import Register from './register';
 import { validate } from '../services/authService';
 
@@ -50,8 +51,10 @@ const FakeStackOverflow = ({ socket }: { socket: FakeSOSocket | null }) => {
       }
     };
 
-    checkSession();
-  }, [navigate]);
+    if (loading) {
+      checkSession();
+    }
+  }, [navigate, loading]);
 
   return !loading ? (
     <LoginContext.Provider value={{ setUser }}>
@@ -73,6 +76,7 @@ const FakeStackOverflow = ({ socket }: { socket: FakeSOSocket | null }) => {
             <Route path='/question/:qid' element={<AnswerPage />} />
             <Route path='/new/question' element={<NewQuestionPage />} />
             <Route path='/new/answer/:qid' element={<NewAnswerPage />} />
+            <Route path='/conversation' element={<ConversationPage />} />
           </Route>
         }
       </Routes>

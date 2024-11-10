@@ -19,7 +19,11 @@ const App = () => {
 
   useEffect(() => {
     if (!socket) {
-      setSocket(io(serverURL));
+      setSocket(
+        io(serverURL, {
+          withCredentials: true,
+        }),
+      );
     }
 
     return () => {

@@ -2,7 +2,7 @@ import { Request } from 'express';
 import { ObjectId } from 'mongodb';
 import { Server } from 'socket.io';
 
-export type FakeSOSocket = Server<ServerToClientEvents>;
+export type FakeSOSocket = Server<ClientToServerEvents, ServerToClientEvents>;
 
 /**
  * Type representing the possible ordering options for questions.
@@ -219,6 +219,42 @@ export interface EditUserRequest extends Request {
 }
 
 /**
+ * Interface representing a User document, which contains:
+ * - _id - The unique identifier for the user. Optional field.
+ * - username - The username of the user.
+ * - firstName - The first name of the user.
+ * - lastName - The last name of the user.
+ * - email - The email address of the user.
+ * - password - The password of the user.
+ * - bio - A string description of the user.
+ * - picture - A string URL of the user's profile picture.
+ * - comments - An array of references to `Comment` documents associated with the user.
+ * - questions - An array of references to `Question` documents associated with the user.
+ * - answers - An array of references to `Answer` documents associated with the user.
+ * - followers - An array of references to `User` documents that are following the user.
+ * - following - An array of references to `User` documents that the user is following.
+ */
+export interface User {
+  _id?: ObjectId;
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  bio: string;
+  picture: string;
+  comments: Comment[];
+  questions: Question[];
+  answers: Answer[];
+  followers: User[];
+  following: User[];
+}
+
+export interface AddUserRequest extends Request {
+  body: User;
+}
+
+/**
  * Interface extending the request body when adding a comment to a question or an answer, which contains:
  * - id - The unique identifier of the question or answer being commented on.
  * - type - The type of the comment, either 'question' or 'answer'.
@@ -289,6 +325,15 @@ export interface ServerToClientEvents {
   voteUpdate: (vote: VoteUpdatePayload) => void;
   commentUpdate: (comment: CommentUpdatePayload) => void;
   userUpdate: (user: UserResponse) => void;
+  joinRoom: (conversationId: string) => void;
+  leaveRoom: (conversationId: string) => void;
+  newMessage: (message: MessageResponse) => void;
+  conversationUpdate: (conversation: ConversationResponse) => void;
+}
+
+export interface ClientToServerEvents {
+  joinConversation: (conversationId: string) => void;
+  leaveConversation: (conversationId: string) => void;
 }
 
 /**
@@ -320,6 +365,36 @@ export interface AddMessageRequest extends Request {
 }
 
 /**
+ * Interface extending the request query to find conversations on username participating in, which contains:
+ * - username - The username participating in the conversations
+ */
+export interface FindConversationsByUsernameRequest extends Request {
+  query: {
+    username: string,
+  };
+}
+
+/**
+ * Interface extending the request parameters when finding a conversation by its ID.
+ * - qid - The unique identifier of the conversation. 
+ */
+export interface FindConversationByIdRequest extends Request {
+  params: {
+    cid: string;
+  };
+}
+
+/**
+ * Interface for the request parameters when finding messages for conversation by the conversion ID.
+ * - qid - The unique identifier of the conversation. 
+ */
+export interface FindMessagesByConversationIdRequest extends Request {
+  params: {
+    qid: string;
+  };
+}
+
+/**
  * Interface representing a message document, which contains:
  * - _id - The unique identifier for the message. Optional field.
  * - conversationId - The unique identifier for the conversation the message belongs to.
@@ -339,11 +414,13 @@ export interface Message {
  * Interface representing a conversation document, which contains:
  * - _id - The unique identifier for the conversation. Optional field.
  * - participants - An array of usernames of the users participating in the conversation.
+ * - lastMessage - The most recent message sent for the conversation.
  * - updatedAt - The date and time when the conversation was last updated.
  */
 export interface Conversation {
   _id?: ObjectId;
   participants: string[];
+  lastMessage: string;
   updatedAt: Date;
 }
 
