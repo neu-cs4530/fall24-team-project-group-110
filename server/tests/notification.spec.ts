@@ -7,11 +7,12 @@ import { Notification, User } from '../types';
 
 describe('POST /addNotification', () => {
   afterEach(async () => {
-    await mongoose.connection.close(); // Ensure the connection is properly closed
+    jest.restoreAllMocks();
+    await mongoose.connection.close();
   });
 
   afterAll(async () => {
-    await mongoose.disconnect(); // Ensure mongoose is disconnected after all tests
+    await mongoose.disconnect();
   });
 
   test('should return 200 and the created notification if the response is successful', async () => {
@@ -51,7 +52,7 @@ describe('POST /addNotification', () => {
     response.body._id = new ObjectId(String(response.body._id));
     expect(response.status).toBe(200);
     expect(response.body).toEqual(mockNotification);
-  }, 10000);
+  });
 
   test('should return 400 if the request body is empty', async () => {
     const input = {};
@@ -83,7 +84,7 @@ describe('POST /addNotification', () => {
   test('should return 400 if the type is invalid', async () => {
     const mockNotification: Notification = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
-      targetId: '65e9b58910afe6e94fc6e6fe',
+      targetId: '65e9b58910afe6e6fe',
       type: '',
       text: 'Test notification',
       dateTime: new Date(),

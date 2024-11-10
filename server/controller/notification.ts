@@ -69,6 +69,7 @@ const notificationController = () => {
       if (status && 'error' in status) {
         throw new Error(status.error);
       }
+      res.json(notFromDb);
     } catch (error) {
       res.status(500).send('Error adding notification');
     }
