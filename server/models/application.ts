@@ -926,3 +926,91 @@ export const getConversationById = async (id: string): Promise<ConversationRespo
     return { error: 'Error when fetching conversation' };
   }
 };
+
+/**
+ * Gets conversations based on if username is a participant of them and sorts them by date in descending order.
+ *
+ * @param username - The participant's username.
+ * @returns {Promise<Conversation[]>} - The list of conversation, or an empty array if the fetch fails.
+ */
+export const getConversationsByUsernameSortedByDateDesc = async (
+  username: string,
+): Promise<Conversation[]> => {
+  try {
+    const result = await ConversationModel.find({ participants: username }).sort({ updatedAt: -1 });
+
+    return result;
+  } catch (error) {
+    return [];
+  }
+};
+
+/**
+ * Updates the conversation with the message sent data.
+ *
+ * @param {Message} message - The message object with data to update conversation
+ * @returns {Promise<ConversationResponse>} - The updated conversation, or an error message if the update failed
+ */
+export const updateConversationWithMessage = async (
+  message: Message,
+): Promise<ConversationResponse> => {
+  try {
+    const result = await ConversationModel.findOneAndUpdate(
+      { _id: message.conversationId },
+      {
+        $set: {
+          lastMessage: message.text,
+          updatedAt: message.sentAt,
+        },
+      },
+      { new: true },
+    );
+
+    if (result == null) {
+      throw new Error('Failed to update conversation');
+    }
+
+    return result;
+  } catch (error) {
+    return { error: `Error when updating conversation: ${(error as Error).message}` };
+  }
+};
+
+/**
+ * Gets the messages that belongs to a conversation based on its id and sorts them by date in ascending order.
+ *
+ * @param c_id - The id of the conversation the messages belong to.
+ * @returns {Promise<Message[]>} - The fetched messages, or an empty array if the fetch fails.
+ */
+export const getMessagesSortedByDateAsc = async (c_id: string): Promise<Message[]> => {
+  try {
+    const result = await MessageModel.find({ conversationId: c_id }).sort({ sentAt: 1 });
+
+    return result;
+  } catch (error) {
+    return [];
+  }
+};
+
+/**
+ * Checks if a user has access to a conversation based on the conversation id.
+ *
+ * @param username - The username of the user to check access for.
+ * @param conversationId - The id of the conversation to check access to.
+ * @returns {Promise<boolean>} - `true` if the user has access, `false` otherwise.
+ */
+export const checkConversationAccess = async (
+  username: string,
+  conversationId: string,
+): Promise<boolean> => {
+  try {
+    const conversation = await ConversationModel.findOne({ _id: conversationId });
+    if (!conversation) {
+      return false;
+    }
+
+    return conversation.participants.includes(username);
+  } catch (error) {
+    return false;
+  }
+};

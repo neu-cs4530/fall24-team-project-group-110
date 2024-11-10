@@ -1,6 +1,6 @@
 import { Socket } from 'socket.io-client';
 
-export type FakeSOSocket = Socket<ServerToClientEvents>;
+export type FakeSOSocket = Socket<ServerToClientEvents, ClientToServerEvents>;
 
 /**
  * Enum representing the possible ordering options for questions.
@@ -140,6 +140,15 @@ export interface ServerToClientEvents {
   viewsUpdate: (question: Question) => void;
   voteUpdate: (vote: VoteUpdatePayload) => void;
   commentUpdate: (update: CommentUpdatePayload) => void;
+  joinRoom: (conversationId: string) => void;
+  leaveRoom: (conversationId: string) => void;
+  newMessage: (message: Message) => void;
+  conversationUpdate: (conversation: Conversation) => void;
+}
+
+export interface ClientToServerEvents {
+  joinConversation: (conversationId: string) => void;
+  leaveConversation: (conversationId: string) => void;
 }
 
 /**
@@ -176,4 +185,36 @@ export interface Notification {
   text: string;
   targetId: string;
   dateTime: Date;
+}
+
+/**
+ * Interface representing the structure of a Message object:
+ *
+ * - _id - The unique identifier for the message. Optional field.
+ * - conversationId - The unique identifier for the conversation the message belongs to.
+ * - sender - The username of the user who sent the message.
+ * - text - The content of the message.
+ * - sentAt - The date and time when the message was sent.
+ */
+export interface Message {
+  _id?: string;
+  conversationId: string;
+  sender: string;
+  text: string;
+  sentAt: Date;
+}
+
+/**
+ * Interface representing the structure of a Conversation object:
+ *
+ * - _id - The unique identifier for the conversation. Optional field.
+ * - participants - An array of usernames of the users participating in the conversation.
+ * - lastMessage - The most recent message sent for the conversation.
+ * - updatedAt - The date and time when the conversation was last updated.
+ */
+export interface Conversation {
+  _id?: string;
+  participants: string[];
+  lastMessage: string;
+  updatedAt: Date;
 }

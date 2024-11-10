@@ -1,10 +1,57 @@
 import express, { Response } from 'express';
-import { AddMessageRequest, Message } from '../types';
-import { saveMessage, getConversationById } from '../models/application';
+import { ObjectId } from 'mongodb';
+import {
+  AddMessageRequest,
+  FakeSOSocket,
+  FindMessagesByConversationIdRequest,
+  Message,
+} from '../types';
+import {
+  saveMessage,
+  getConversationById,
+  getMessagesSortedByDateAsc,
+  updateConversationWithMessage,
+} from '../models/application';
 
-const messageController = () => {
+const messageController = (socket: FakeSOSocket) => {
   const router = express.Router();
 
+  /**
+   * Retrieves a list of messages by what conversation they are associated with based on the conversation id.
+   * If there is an error, the HTTP response's status is updated.
+   *
+   * @param req The FindMessagesByConversationIdRequest object containing the conversation ID as a parameter
+   * @param res The HTTP response object used to send back the result of the operation.
+   *
+   * @returns A Promise that resolves to void.
+   */
+  const getMessagesByConversationId = async (
+    req: FindMessagesByConversationIdRequest,
+    res: Response,
+  ): Promise<void> => {
+    const { qid } = req.params;
+
+    if (!ObjectId.isValid(qid)) {
+      res.status(400).send('Invalid ID format');
+      return;
+    }
+
+    try {
+      const mlist = await getMessagesSortedByDateAsc(qid);
+
+      res.json(mlist);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        res.status(500).send(`Error when fetching messages in order: ${err.message}`);
+      } else {
+        res.status(500).send(`Error when fetching messages in order`);
+      }
+    }
+  };
+
+  /**
+   * Interface representing errors containing the invalid field and error messages.
+   */
   interface InvalidMessageFields {
     error: {
       [key: string]: string;
@@ -15,6 +62,7 @@ const messageController = () => {
    * Validates the fields of a message object.
    *
    * @param message The message object to validate.
+   *
    * @returns An object containing the invalid fields and their corresponding error messages.
    */
   const validateFields = (message: Message): InvalidMessageFields => {
@@ -68,12 +116,20 @@ const messageController = () => {
         throw new Error(result.error);
       }
 
+      const updatedConversation = await updateConversationWithMessage(result);
+      if ('error' in updatedConversation) {
+        throw new Error(updatedConversation.error);
+      }
+
+      socket.to(req.body.conversationId).emit('newMessage', result);
+      socket.emit('conversationUpdate', updatedConversation);
       res.json(result);
     } catch (error) {
       res.status(500).send('Error adding message');
     }
   };
 
+  router.get('/getMessagesByConvoId/:qid', getMessagesByConversationId);
   router.post('/addMessage', addMessage);
 
   return router;

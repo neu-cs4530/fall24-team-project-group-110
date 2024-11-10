@@ -15,6 +15,10 @@ const conversationSchema: Schema = new Schema(
         type: String,
       },
     ],
+    lastMessage: {
+      type: String,
+      default: '',
+    },
     updatedAt: {
       type: Date,
       default: Date.now,
