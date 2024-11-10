@@ -40,7 +40,7 @@ const Register = () => {
           />
           <p className='error-text'>{error}</p>
           <div className='form-buttons-container'>
-            <button onClick={() => navigate('/')} className='cancel-button'>
+            <button type='button' onClick={() => navigate('/')} className='cancel-button'>
               Cancel
             </button>
             <button type='submit' className='login-button'>
