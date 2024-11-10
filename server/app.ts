@@ -19,7 +19,6 @@ import userController from './controller/user';
 import conversationController from './controller/conversation';
 import messageController from './controller/message';
 import authController from './controller/auth';
-import { checkConversationAccess } from './models/application';
 import notificationController from './controller/notification';
 
 dotenv.config();
@@ -120,8 +119,8 @@ app.use('/tag', tagController());
 app.use('/answer', answerController(socket));
 app.use('/comment', commentController(socket));
 app.use('/user', userController(socket));
-app.use('/conversation', conversationController(socket));
-app.use('/message', messageController(socket));
+app.use('/conversation', conversationController());
+app.use('/message', messageController());
 app.use('/notification', notificationController());
 
 // Export the app instance
