@@ -210,6 +210,28 @@ export interface AddNotificationRequest extends Request {
 }
 
 /**
+ * Interface for the request parameters when finding a notification by its ID.
+ * - nid - The unique identifier of the notification.
+ */
+export interface FindNotificationByIdRequest extends Request {
+  params: {
+    nid: string;
+  };
+}
+
+/**
+ * Interface for the request parameters when finding a notification by its ID and the user it belongs to.
+ * - nid - The unique identifier of the notification.
+ * - uid - The unique identifier of the user.
+ */
+export interface FindNotificationByIdAndUserRequest extends Request {
+  params: {
+    nid: string;
+    uid: string;
+  };
+}
+
+/**
  * Interface for the request body when adding a new user.
  * - body - The user being added
  */

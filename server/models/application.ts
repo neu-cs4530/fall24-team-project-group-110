@@ -637,6 +637,34 @@ export const addNotificationToUser = async (
 };
 
 /**
+ * Adds a message to a conversation.
+ *
+ * @param userId The ID of the user to add the message to
+ *
+ * @param notificationId The ID of the notification to add
+ *
+ * @returns {Promise<UserResponse>} - The updated user or an error message
+ */
+export const deleteNotificationFromUser = async (
+  userId: string,
+  notificationId: string,
+): Promise<UserResponse> => {
+  try {
+    const result = await UserModel.findOneAndUpdate(
+      { _id: userId },
+      { $pull: { notifications: notificationId } },
+      { new: true },
+    );
+    if (result === null) {
+      throw new Error('Error when deleting notification from user');
+    }
+    return result;
+  } catch (error) {
+    return { error: 'Error when deleting notification from user' };
+  }
+};
+
+/**
  * Adds a comment to a question or answer.
  *
  * @param id The ID of the question or answer to add a comment to
@@ -826,6 +854,25 @@ export const getNotificationById = async (id: string): Promise<NotificationRespo
     return result.toObject();
   } catch (error) {
     return { error: 'Error when fetching notification' };
+  }
+};
+
+/**
+ * Deletes a Notification by their ID.
+ *
+ * @param id The ID of the Notification to delete.
+ *
+ * @returns {Promise<NotificationResponse>} - The deleted Notification, or an error message if the delete failed
+ */
+export const deleteNotificationById = async (id: string): Promise<NotificationResponse> => {
+  try {
+    const result = await NotificationModel.findOneAndDelete({ _id: id });
+    if (!result) {
+      throw new Error('Notification not found');
+    }
+    return result.toObject();
+  } catch (error) {
+    return { error: 'Error when deleting notification' };
   }
 };
 

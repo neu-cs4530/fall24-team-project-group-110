@@ -1,6 +1,17 @@
 import express, { Response } from 'express';
-import { Notification, AddNotificationRequest } from '../types';
-import { addNotificationToUser, saveNotification } from '../models/application';
+import {
+  Notification,
+  AddNotificationRequest,
+  FindNotificationByIdRequest,
+  FindNotificationByIdAndUserRequest,
+} from '../types';
+import {
+  addNotificationToUser,
+  deleteNotificationById,
+  deleteNotificationFromUser,
+  getNotificationById,
+  saveNotification,
+} from '../models/application';
 
 const notificationController = () => {
   const router = express.Router();
@@ -75,7 +86,40 @@ const notificationController = () => {
     }
   };
 
+  const getNotification = async (
+    req: FindNotificationByIdRequest,
+    res: Response,
+  ): Promise<void> => {
+    try {
+      const notification = await getNotificationById(req.params.nid);
+      if ('error' in notification) {
+        throw new Error(notification.error);
+      }
+      res.json(notification);
+    } catch (error) {
+      res.status(500).send('Error fetching notification');
+    }
+  };
+
+  const deleteNotification = async (
+    req: FindNotificationByIdAndUserRequest,
+    res: Response,
+  ): Promise<void> => {
+    try {
+      const notification = await deleteNotificationById(req.params.nid);
+      if ('error' in notification) {
+        throw new Error(notification.error);
+      }
+      const status = await deleteNotificationFromUser(req.params.uid, req.params.nid);
+      res.json(status);
+    } catch (error) {
+      res.status(500).send('Error fetching notification');
+    }
+  };
+
   router.post('/addNotification', addNotification);
+  router.get('/getNotificationById/:nid', getNotification);
+  router.delete('/deleteNotificationById/:nid', deleteNotification);
 
   return router;
 };
