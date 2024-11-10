@@ -119,7 +119,7 @@ const notificationController = () => {
 
   router.post('/addNotification', addNotification);
   router.get('/getNotificationById/:nid', getNotification);
-  router.delete('/deleteNotificationById/:nid', deleteNotification);
+  router.delete('/deleteNotificationById/:uid/:nid', deleteNotification);
 
   return router;
 };
