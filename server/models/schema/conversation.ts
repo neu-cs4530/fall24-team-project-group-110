@@ -10,11 +10,7 @@ import { Schema } from 'mongoose';
  */
 const conversationSchema: Schema = new Schema(
   {
-    participants: [
-      {
-        type: String,
-      },
-    ],
+    participants: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     lastMessage: {
       type: String,
       default: '',

@@ -356,10 +356,12 @@ export interface LoginRequest extends Request {
 
 /**
  * Interface extending the request body when adding a new conversation, which contains:
- * - body - The conversation being added.
+ * - body - The usernames of the participants of the conversation.
  */
 export interface AddConversationRequest extends Request {
-  body: Conversation;
+  body: {
+    participants: string[];
+  }
 }
 
 /**
@@ -376,7 +378,7 @@ export interface AddMessageRequest extends Request {
  */
 export interface FindConversationsByUsernameRequest extends Request {
   query: {
-    username: string,
+    userId: string,
   };
 }
 
@@ -425,7 +427,7 @@ export interface Message {
  */
 export interface Conversation {
   _id?: ObjectId;
-  participants: string[];
+  participants: User[] | ObjectId[];
   lastMessage: string;
   updatedAt: Date;
 }

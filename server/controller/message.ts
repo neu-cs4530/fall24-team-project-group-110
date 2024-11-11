@@ -11,6 +11,7 @@ import {
   getConversationById,
   getMessagesSortedByDateAsc,
   updateConversationWithMessage,
+  populateConversation,
 } from '../models/application';
 
 const messageController = (socket: FakeSOSocket) => {
@@ -121,8 +122,13 @@ const messageController = (socket: FakeSOSocket) => {
         throw new Error(updatedConversation.error);
       }
 
+      const populatedUpdatedConversation = await populateConversation(req.body.conversationId);
+      if ('error' in populatedUpdatedConversation) {
+        throw new Error(populatedUpdatedConversation.error);
+      }
+
       socket.to(req.body.conversationId).emit('newMessage', result);
-      socket.emit('conversationUpdate', updatedConversation);
+      socket.emit('conversationUpdate', populatedUpdatedConversation);
       res.json(result);
     } catch (error) {
       res.status(500).send('Error adding message');

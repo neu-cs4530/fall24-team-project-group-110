@@ -1,5 +1,5 @@
 import api from './config';
-import { Conversation } from '../types';
+import { Conversation, NewConversationPayload } from '../types';
 
 const CONVERSATION_API_URL = `${process.env.REACT_APP_SERVER_URL}/conversation`;
 
@@ -9,8 +9,8 @@ const CONVERSATION_API_URL = `${process.env.REACT_APP_SERVER_URL}/conversation`;
  * @param username - The current user's username.
  * @throws Error if there is an issue fetching the conversations.
  */
-const getConversationsByUsername = async (username: string): Promise<Conversation[]> => {
-  const res = await api.get(`${CONVERSATION_API_URL}/getConversations?username=${username}`);
+const getConversationsByUserId = async (userId: string): Promise<Conversation[]> => {
+  const res = await api.get(`${CONVERSATION_API_URL}/getConversations?userId=${userId}`);
   if (res.status !== 200) {
     throw new Error('Error when fetching conversations with username');
   }
@@ -37,7 +37,7 @@ const getConversationById = async (qid: string): Promise<Conversation> => {
  * @param c - The conversation object to add.
  * @throws Error if there is an issue creating the new conversation.
  */
-const addConversation = async (c: Conversation): Promise<Conversation> => {
+const addConversation = async (c: NewConversationPayload): Promise<Conversation> => {
   const res = await api.post(`${CONVERSATION_API_URL}/addConversation`, c);
   if (res.status !== 200) {
     throw new Error('Error while creating a new conversation');
@@ -45,4 +45,4 @@ const addConversation = async (c: Conversation): Promise<Conversation> => {
   return res.data;
 };
 
-export { getConversationsByUsername, getConversationById, addConversation };
+export { getConversationsByUserId, getConversationById, addConversation };
