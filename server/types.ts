@@ -251,38 +251,6 @@ export interface EditUserRequest extends Request {
   }
 }
 
-/**
- * Interface representing a User document, which contains:
- * - _id - The unique identifier for the user. Optional field.
- * - username - The username of the user.
- * - firstName - The first name of the user.
- * - lastName - The last name of the user.
- * - email - The email address of the user.
- * - password - The password of the user.
- * - bio - A string description of the user.
- * - picture - A string URL of the user's profile picture.
- * - comments - An array of references to `Comment` documents associated with the user.
- * - questions - An array of references to `Question` documents associated with the user.
- * - answers - An array of references to `Answer` documents associated with the user.
- * - followers - An array of references to `User` documents that are following the user.
- * - following - An array of references to `User` documents that the user is following.
- */
-export interface User {
-  _id?: ObjectId;
-  username: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  bio: string;
-  picture: string;
-  comments: Comment[];
-  questions: Question[];
-  answers: Answer[];
-  followers: User[];
-  following: User[];
-}
-
 export interface AddUserRequest extends Request {
   body: User;
 }
