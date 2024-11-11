@@ -326,6 +326,36 @@ export const populateDocument = async (
 };
 
 /**
+ * Fetches and populates a conversation document based on the provided ID.
+ *
+ * @param {string | undefined} id - The ID of the conversation to fetch.
+ *
+ * @returns {Promise<ConversationResponse>} - Promise that resolves to the
+ *          populated conversation or an error message if the operation fails
+ */
+export const populateConversation = async (
+  id: string | undefined,
+): Promise<ConversationResponse> => {
+  try {
+    if (!id) {
+      throw new Error('Provided conversation ID is undefined.');
+    }
+    const result = await ConversationModel.findOne({ _id: id }).populate([
+      {
+        path: 'participants',
+        model: UserModel,
+      },
+    ]);
+    if (!result) {
+      throw new Error('Failed to fetch and populate conversation');
+    }
+    return result;
+  } catch (error) {
+    return { error: `Error when fetching and populating conversation: ${(error as Error).message}` };
+  }
+};
+
+/**
  * Fetches a question by its ID and increments its view count.
  *
  * @param {string} qid - The ID of the question to fetch.
@@ -823,6 +853,26 @@ export const getUserByUsername = async (username: string): Promise<UserResponse>
 };
 
 /**
+ * Gets a user by their object id.
+ *
+ * @param username The username of the user to fetch.
+ * @returns {Promise<UserResponse>} - The user, or an error message if the fetch failed
+ */
+export const getUserById = async (id: string): Promise<UserResponse> => {
+  try {
+    const result = await UserModel.findOne({ _id: id });
+
+    if (result === null) {
+      throw new Error('User does not exist');
+    }
+
+    return result.toObject();
+  } catch (error) {
+    return { error: 'Error when fetching user' };
+  }
+};
+
+/**
  * Gets a list of users based on the provided usernames.
  *
  * @param usernames The usernames of the users to fetch.
@@ -995,12 +1045,12 @@ export const getMessagesSortedByDateAsc = async (c_id: string): Promise<Message[
 /**
  * Checks if a user has access to a conversation based on the conversation id.
  *
- * @param username - The username of the user to check access for.
+ * @param id - The id of the user to check access for.
  * @param conversationId - The id of the conversation to check access to.
  * @returns {Promise<boolean>} - `true` if the user has access, `false` otherwise.
  */
 export const checkConversationAccess = async (
-  username: string,
+  id: string,
   conversationId: string,
 ): Promise<boolean> => {
   try {
@@ -1009,7 +1059,8 @@ export const checkConversationAccess = async (
       return false;
     }
 
-    return conversation.participants.includes(username);
+    const participantIdStrings = conversation.participants.map(participant => participant.toString());
+    return participantIdStrings.includes(id);
   } catch (error) {
     return false;
   }

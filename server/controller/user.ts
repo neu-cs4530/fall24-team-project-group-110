@@ -107,7 +107,7 @@ const userController = (socket: FakeSOSocket) => {
         throw new Error(result.error);
       }
 
-      req.session.username = user.username;
+      req.session.userId = result._id!.toString();
       res.json(result);
     } catch (err: unknown) {
       if (err instanceof Error) {

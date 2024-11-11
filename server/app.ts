@@ -8,10 +8,10 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import { Server } from 'socket.io';
 import * as http from 'http';
-import session, { SessionData } from 'express-session';
+import session from 'express-session';
 declare module 'express-session' {
   interface SessionData {
-    username?: string;
+    userId?: string;
   }
 }
 
@@ -67,8 +67,8 @@ socket.on('connection', socket => {
   const req = socket.request as Request;
 
   socket.on('joinConversation', async (conversationId: string) => {
-    if (req.session.username) {
-      const access = await checkConversationAccess(req.session.username, conversationId);
+    if (req.session.userId) {
+      const access = await checkConversationAccess(req.session.userId, conversationId);
       if (access) {
         socket.join(conversationId);
         console.log('A user joined conversation room ->', conversationId);
@@ -121,7 +121,7 @@ app.use((req: Request, res: Response, next) => {
     return next();
   }
 
-  if (!req.session.username) {
+  if (!req.session.userId) {
     return res.status(401).send('unauthorized');
   }
 

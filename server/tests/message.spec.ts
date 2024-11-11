@@ -27,14 +27,14 @@ describe('POST /addMessage', () => {
 
     const mockConversation: Conversation = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
-      participants: ['testUser', 'anotherUser'],
+      participants: [new ObjectId('64e9b58910afe6e94fc6e6fe'), new ObjectId('63e9b58910afe6e94fc6e6fe')],
       lastMessage: '',
       updatedAt: now,
     };
 
     const mockUpdatedConversation: Conversation = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
-      participants: ['testUser', 'anotherUser'],
+      participants: [new ObjectId('64e9b58910afe6e94fc6e6fe'), new ObjectId('63e9b58910afe6e94fc6e6fe')],
       lastMessage: 'Hello, world!',
       updatedAt: now,
     };
@@ -102,7 +102,7 @@ describe('POST /addMessage', () => {
 
     const mockConversation: Conversation = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
-      participants: ['testUser', 'anotherUser'],
+      participants: [new ObjectId('64e9b58910afe6e94fc6e6fe'), new ObjectId('63e9b58910afe6e94fc6e6fe')],
       lastMessage: '',
       updatedAt: now,
     };

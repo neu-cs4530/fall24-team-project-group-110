@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb';
 import {
   AddConversationRequest,
   Conversation,
+  ConversationResponse,
   FakeSOSocket,
   FindConversationByIdRequest,
   FindConversationsByUsernameRequest,
@@ -11,6 +12,7 @@ import {
   getConversationById,
   getConversationsByUsernameSortedByDateDesc,
   getUsersByUsernames,
+  populateConversation,
   saveConversation,
 } from '../models/application';
 
@@ -73,7 +75,12 @@ const conversationController = (socket: FakeSOSocket) => {
       const c = await getConversationById(cid);
 
       if (c && !('error' in c)) {
-        res.json(c);
+        const populatedConversation = await populateConversation(c._id?.toString());
+        if ('error' in populatedConversation) {
+          throw new Error(populatedConversation.error);
+        }
+
+        res.json(populatedConversation);
         return;
       }
 
@@ -110,13 +117,25 @@ const conversationController = (socket: FakeSOSocket) => {
         return;
       }
 
-      const result = await saveConversation(req.body);
+      const participants = users.map((u) => u._id!);
+      const conversation: Conversation = {
+        participants,
+        lastMessage: '',
+        updatedAt: new Date(),
+      }
+
+      const result = await saveConversation(conversation);
       if ('error' in result) {
         throw new Error(result.error);
       }
 
-      socket.emit('conversationUpdate', result);
-      res.json(result);
+      const populatedConversation = await populateConversation(result._id?.toString());
+      if ('error' in populatedConversation) {
+        throw new Error(populatedConversation.error);
+      }
+
+      socket.emit('conversationUpdate', populatedConversation);
+      res.json(populatedConversation);
     } catch (error) {
       res.status(500).send('Error adding conversation');
     }
