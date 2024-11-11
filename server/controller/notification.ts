@@ -27,7 +27,6 @@ const notificationController = () => {
     req.body &&
     req.body.notif &&
     typeof req.body.uid === 'string' &&
-    typeof req.body.notif._id === 'string' &&
     typeof req.body.notif.targetId === 'string' &&
     typeof req.body.notif.type === 'string' &&
     typeof req.body.notif.text === 'string';
@@ -42,8 +41,6 @@ const notificationController = () => {
   const isNotificationValid = (notification: Notification): boolean =>
     notification.text !== undefined &&
     notification.text !== '' &&
-    notification._id !== undefined &&
-    notification._id.toString() !== '' &&
     notification.targetId !== undefined &&
     notification.targetId !== '' &&
     notification.type !== undefined &&
@@ -106,12 +103,17 @@ const notificationController = () => {
     res: Response,
   ): Promise<void> => {
     try {
+      const updatedUser = await deleteNotificationFromUser(req.params.uid, req.params.nid);
+      if ('error' in updatedUser) {
+        throw new Error(updatedUser.error);
+      }
+
       const notification = await deleteNotificationById(req.params.nid);
       if ('error' in notification) {
         throw new Error(notification.error);
       }
-      const status = await deleteNotificationFromUser(req.params.uid, req.params.nid);
-      res.json(status);
+
+      res.json(updatedUser);
     } catch (error) {
       res.status(500).send('Error deleting notification');
     }
