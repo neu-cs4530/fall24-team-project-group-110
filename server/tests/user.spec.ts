@@ -125,7 +125,7 @@ describe('POST /addUser', () => {
       };
 
       const mockReqBody = {
-        qid: mockUser._id,
+        uid: mockUser._id,
         newUserData: mockNewUserData,
       };
 
@@ -155,7 +155,7 @@ describe('POST /addUser', () => {
       updateUserProfileSpy.mockRejectedValueOnce(new Error('Error when updating user'));
 
       const mockReqBody = {
-        qid: createMockUser(),
+        uid: createMockUser(),
         newUserData: {},
       };
 
@@ -185,7 +185,7 @@ describe('POST /addUser', () => {
 
     it('should return 400 error if newUserData fields are invalid', async () => {
       const mockReqBody = {
-        qid: createMockUser()._id,
+        uid: createMockUser()._id,
         newUserData: {
           username: '',
           firstName: '',

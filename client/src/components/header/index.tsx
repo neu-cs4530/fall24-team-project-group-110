@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import useHeader from '../../hooks/useHeader';
 import './index.css';
 import useUserContext from '../../hooks/useUserContext';
@@ -11,11 +12,14 @@ import useUserContext from '../../hooks/useUserContext';
 const Header = () => {
   const { val, handleInputChange, handleKeyDown, handleLogout } = useHeader();
   const { user } = useUserContext();
+  const navigate = useNavigate();
 
   return (
     <div id='header' className='header'>
       <div></div>
-      <div className='title'>Fake Stack Overflow</div>
+      <div onClick={() => navigate('/home')} className='title'>
+        Fake Stack Overflow
+      </div>
       <input
         id='searchBar'
         placeholder='Search ...'
@@ -24,7 +28,9 @@ const Header = () => {
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
       />
-      <p>{user.username}</p>
+      <button className='username-button' onClick={() => navigate(`/profile/${user._id}`)}>
+        {user.username}
+      </button>
       <button className='logout-button' onClick={handleLogout}>
         Logout
       </button>
