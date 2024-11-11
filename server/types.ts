@@ -378,7 +378,7 @@ export interface AddMessageRequest extends Request {
  */
 export interface FindConversationsByUsernameRequest extends Request {
   query: {
-    username: string,
+    userId: string,
   };
 }
 

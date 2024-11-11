@@ -10,7 +10,7 @@ import {
 } from '../types';
 import {
   getConversationById,
-  getConversationsByUsernameSortedByDateDesc,
+  getConversationsByUserIdSortedByDateDesc,
   getUsersByUsernames,
   populateConversation,
   saveConversation,
@@ -32,15 +32,25 @@ const conversationController = (socket: FakeSOSocket) => {
     req: FindConversationsByUsernameRequest,
     res: Response,
   ): Promise<void> => {
-    const { username } = req.query;
+    const { userId } = req.query;
 
-    if (username === undefined) {
+    if (userId === undefined) {
       res.status(400).send('Invalid username requesting conversations.');
       return;
     }
 
     try {
-      const clist: Conversation[] = await getConversationsByUsernameSortedByDateDesc(username);
+      const clist: Conversation[] = await getConversationsByUserIdSortedByDateDesc(userId);
+
+      for (let i = 0; i < clist.length; i++) {
+        const populatedConversation = await populateConversation(clist[i]._id?.toString());
+        if ('error' in populatedConversation) {
+          throw new Error(populatedConversation.error);
+        }
+
+        clist[i] = populatedConversation;
+      }
+
       res.json(clist);
     } catch (err: unknown) {
       if (err instanceof Error) {

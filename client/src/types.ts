@@ -214,7 +214,16 @@ export interface Message {
  */
 export interface Conversation {
   _id?: string;
-  participants: string[];
+  participants: User[];
   lastMessage: string;
   updatedAt: Date;
+}
+
+/**
+ * Interface representing the payload for a new conversation request
+ *
+ * participants - An array of usernames of the users participating in the conversation.
+ */
+export interface NewConversationPayload {
+  participants: string[];
 }

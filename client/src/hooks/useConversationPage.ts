@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import useUserContext from './useUserContext';
-import { Conversation } from '../types';
-import { addConversation, getConversationsByUsername } from '../services/conversationService';
+import { Conversation, NewConversationPayload } from '../types';
+import { addConversation, getConversationsByUserId } from '../services/conversationService';
 
 const useConversationPage = () => {
   const { user, socket } = useUserContext();
@@ -30,10 +30,8 @@ const useConversationPage = () => {
       return;
     }
 
-    const newConversation: Conversation = {
+    const newConversation: NewConversationPayload = {
       participants: [...participantsArray, user.username],
-      lastMessage: '',
-      updatedAt: new Date(),
     };
 
     try {
@@ -51,7 +49,7 @@ const useConversationPage = () => {
      */
     const fetchData = async () => {
       try {
-        const res = await getConversationsByUsername(user.username);
+        const res = await getConversationsByUserId(user._id);
         setClist(res);
       } catch (error) {
         // eslint-disable-next-line no-console
@@ -70,7 +68,16 @@ const useConversationPage = () => {
      * - If it is not, do nothing
      */
     const handleUpdatedConversation = async (conversation: Conversation) => {
-      if (conversation.participants.includes(user.username)) {
+      let hasUser = false;
+
+      for (const participant of conversation.participants) {
+        if (participant._id === user._id) {
+          hasUser = true;
+          break;
+        }
+      }
+
+      if (hasUser) {
         setClist(prevList => [conversation, ...prevList.filter(c => c._id !== conversation._id)]);
       }
     };
@@ -80,7 +87,7 @@ const useConversationPage = () => {
     return () => {
       socket.off('conversationUpdate', handleUpdatedConversation);
     };
-  }, [socket, user.username]);
+  }, [socket, user._id]);
 
   return {
     user,

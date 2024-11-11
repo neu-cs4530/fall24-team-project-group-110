@@ -980,14 +980,14 @@ export const getConversationById = async (id: string): Promise<ConversationRespo
 /**
  * Gets conversations based on if username is a participant of them and sorts them by date in descending order.
  *
- * @param username - The participant's username.
+ * @param userId - The ID of the user to fetch conversations for.
  * @returns {Promise<Conversation[]>} - The list of conversation, or an empty array if the fetch fails.
  */
-export const getConversationsByUsernameSortedByDateDesc = async (
-  username: string,
+export const getConversationsByUserIdSortedByDateDesc = async (
+  userId: string,
 ): Promise<Conversation[]> => {
   try {
-    const result = await ConversationModel.find({ participants: username }).sort({ updatedAt: -1 });
+    const result = await ConversationModel.find({ participants: userId }).sort({ updatedAt: -1 });
 
     return result;
   } catch (error) {
