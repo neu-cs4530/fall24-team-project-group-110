@@ -3,7 +3,6 @@ import { ObjectId } from 'mongodb';
 import {
   AddConversationRequest,
   Conversation,
-  ConversationResponse,
   FakeSOSocket,
   FindConversationByIdRequest,
   FindConversationsByUsernameRequest,
@@ -42,16 +41,17 @@ const conversationController = (socket: FakeSOSocket) => {
     try {
       const clist: Conversation[] = await getConversationsByUserIdSortedByDateDesc(userId);
 
-      for (let i = 0; i < clist.length; i++) {
-        const populatedConversation = await populateConversation(clist[i]._id?.toString());
+      const promises = clist.map(async conversation => {
+        const populatedConversation = await populateConversation(conversation._id?.toString());
         if ('error' in populatedConversation) {
           throw new Error(populatedConversation.error);
         }
+        return populatedConversation;
+      });
 
-        clist[i] = populatedConversation;
-      }
+      const populatedList = await Promise.all(promises);
 
-      res.json(clist);
+      res.json(populatedList);
     } catch (err: unknown) {
       if (err instanceof Error) {
         res.status(500).send(`Error when fetching questions by filter: ${err.message}`);
@@ -127,12 +127,12 @@ const conversationController = (socket: FakeSOSocket) => {
         return;
       }
 
-      const participants = users.map((u) => u._id!);
+      const participants = users.map(u => u._id!);
       const conversation: Conversation = {
         participants,
         lastMessage: '',
         updatedAt: new Date(),
-      }
+      };
 
       const result = await saveConversation(conversation);
       if ('error' in result) {

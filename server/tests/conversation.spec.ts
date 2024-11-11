@@ -91,7 +91,7 @@ describe('POST /addConversation', () => {
           followers: [],
           following: [],
           notifications: [],
-        }
+        },
       ],
       lastMessage: '',
       updatedAt: new Date(),
@@ -141,7 +141,10 @@ describe('POST /addConversation', () => {
   test('should return 404 if an error is returned by getUsersByUsernames', async () => {
     const mockConversation: Conversation = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
-      participants: [new ObjectId('64e9b58910afe6e94fc6e6fe'), new ObjectId('63e9b58910afe6e94fc6e6fe')],
+      participants: [
+        new ObjectId('64e9b58910afe6e94fc6e6fe'),
+        new ObjectId('63e9b58910afe6e94fc6e6fe'),
+      ],
       lastMessage: '',
       updatedAt: new Date(),
     };
@@ -158,7 +161,10 @@ describe('POST /addConversation', () => {
   test('should return 404 if less than 2 users are returned', async () => {
     const mockConversation: Conversation = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
-      participants: [new ObjectId('64e9b58910afe6e94fc6e6fe'), new ObjectId('63e9b58910afe6e94fc6e6fe')],
+      participants: [
+        new ObjectId('64e9b58910afe6e94fc6e6fe'),
+        new ObjectId('63e9b58910afe6e94fc6e6fe'),
+      ],
       lastMessage: '',
       updatedAt: new Date(),
     };
@@ -175,7 +181,10 @@ describe('POST /addConversation', () => {
   test('should return 500 if an error is returned by saveConversation', async () => {
     const mockConversation: Conversation = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
-      participants: [new ObjectId('64e9b58910afe6e94fc6e6fe'), new ObjectId('63e9b58910afe6e94fc6e6fe')],
+      participants: [
+        new ObjectId('64e9b58910afe6e94fc6e6fe'),
+        new ObjectId('63e9b58910afe6e94fc6e6fe'),
+      ],
       lastMessage: '',
       updatedAt: new Date(),
     };

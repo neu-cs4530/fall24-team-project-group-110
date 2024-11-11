@@ -58,7 +58,7 @@ const useConversationPage = () => {
     };
 
     fetchData();
-  }, [user.username]);
+  }, [user._id]);
 
   useEffect(() => {
     /**

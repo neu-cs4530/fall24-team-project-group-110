@@ -351,7 +351,9 @@ export const populateConversation = async (
     }
     return result;
   } catch (error) {
-    return { error: `Error when fetching and populating conversation: ${(error as Error).message}` };
+    return {
+      error: `Error when fetching and populating conversation: ${(error as Error).message}`,
+    };
   }
 };
 
@@ -1059,7 +1061,9 @@ export const checkConversationAccess = async (
       return false;
     }
 
-    const participantIdStrings = conversation.participants.map(participant => participant.toString());
+    const participantIdStrings = conversation.participants.map(participant =>
+      participant.toString(),
+    );
     return participantIdStrings.includes(id);
   } catch (error) {
     return false;

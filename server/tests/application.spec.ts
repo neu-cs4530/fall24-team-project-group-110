@@ -183,21 +183,30 @@ const user2: User = {
 
 const conv1: Conversation = {
   _id: new ObjectId('65e9b716ff0e892116b2de19'),
-  participants: [new ObjectId('65e9b716ff0e892116b2de19'), new ObjectId('65e9b716ff0e892116b2de12')],
+  participants: [
+    new ObjectId('65e9b716ff0e892116b2de19'),
+    new ObjectId('65e9b716ff0e892116b2de12'),
+  ],
   lastMessage: '',
   updatedAt: new Date('2023-11-20T09:24:00'),
 };
 
 const conv2: Conversation = {
   _id: new ObjectId('65e9b716ff0e892116b2de18'),
-  participants: [new ObjectId('65e9b716ff0e892116b2da19'), new ObjectId('65e9b716ff0e892116b2db12')],
+  participants: [
+    new ObjectId('65e9b716ff0e892116b2da19'),
+    new ObjectId('65e9b716ff0e892116b2db12'),
+  ],
   lastMessage: '',
   updatedAt: new Date('2023-11-20T09:24:00'),
 };
 
 const conv3: Conversation = {
   _id: new ObjectId('65e9b716ff0e892116b2de18'),
-  participants: [new ObjectId('65e9b716ff0e892116b2de19'), new ObjectId('65e9b716ff0e892116b2dc12')],
+  participants: [
+    new ObjectId('65e9b716ff0e892116b2de19'),
+    new ObjectId('65e9b716ff0e892116b2dc12'),
+  ],
   lastMessage: '',
   updatedAt: new Date('2023-11-20T09:24:00'),
 };
@@ -1202,8 +1211,6 @@ describe('application module', () => {
 
       test('checkConversationAccess should return true if the user is in the room', async () => {
         jest.spyOn(ConversationModel, 'findOne').mockResolvedValueOnce(conv3);
-
-        console.log(user1._id!.toString(), conv3.participants[0]._id!.toString());
 
         const result = await checkConversationAccess(user1._id!.toString(), conv3._id!.toString());
 
