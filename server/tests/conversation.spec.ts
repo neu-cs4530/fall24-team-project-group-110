@@ -19,6 +19,7 @@ const user1: User = {
   answers: [],
   followers: [],
   following: [],
+  notifications: [],
 };
 
 const user2: User = {
@@ -35,6 +36,7 @@ const user2: User = {
   answers: [],
   followers: [],
   following: [],
+  notifications: [],
 };
 
 describe('POST /addConversation', () => {
@@ -51,6 +53,7 @@ describe('POST /addConversation', () => {
     const mockConversation: Conversation = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
       participants: ['testUser', 'testUser2'],
+      lastMessage: '',
       updatedAt: new Date(),
     };
 
@@ -79,6 +82,7 @@ describe('POST /addConversation', () => {
     const mockConversation: Conversation = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
       participants: ['testUser'],
+      lastMessage: '',
       updatedAt: new Date(),
     };
 
@@ -93,6 +97,7 @@ describe('POST /addConversation', () => {
     const mockConversation: Conversation = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
       participants: ['testUser', 'testUser2'],
+      lastMessage: '',
       updatedAt: new Date(),
     };
 
@@ -109,6 +114,7 @@ describe('POST /addConversation', () => {
     const mockConversation: Conversation = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
       participants: ['testUser', 'testUser2'],
+      lastMessage: '',
       updatedAt: new Date(),
     };
 
@@ -125,6 +131,7 @@ describe('POST /addConversation', () => {
     const mockConversation: Conversation = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
       participants: ['testUser', 'testUser2'],
+      lastMessage: '',
       updatedAt: new Date(),
     };
 

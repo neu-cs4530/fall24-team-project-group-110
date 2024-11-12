@@ -2,6 +2,7 @@ import React from 'react';
 import useHeader from '../../hooks/useHeader';
 import './index.css';
 import useUserContext from '../../hooks/useUserContext';
+import NotificationDropdown from './notificationDropdown';
 
 /**
  * Header component that renders the main title and a search bar.
@@ -25,6 +26,7 @@ const Header = () => {
         onKeyDown={handleKeyDown}
       />
       <p>{user.username}</p>
+      <NotificationDropdown />
       <button className='logout-button' onClick={handleLogout}>
         Logout
       </button>

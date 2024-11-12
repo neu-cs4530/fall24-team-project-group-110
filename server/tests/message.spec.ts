@@ -28,11 +28,20 @@ describe('POST /addMessage', () => {
     const mockConversation: Conversation = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
       participants: ['testUser', 'anotherUser'],
+      lastMessage: '',
+      updatedAt: now,
+    };
+
+    const mockUpdatedConversation: Conversation = {
+      _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
+      participants: ['testUser', 'anotherUser'],
+      lastMessage: 'Hello, world!',
       updatedAt: now,
     };
 
     jest.spyOn(util, 'getConversationById').mockResolvedValue(mockConversation);
     jest.spyOn(util, 'saveMessage').mockResolvedValue(mockMessage);
+    jest.spyOn(util, 'updateConversationWithMessage').mockResolvedValue(mockUpdatedConversation);
 
     const response = await supertest(app).post('/message/addMessage').send(mockMessage);
 
@@ -94,6 +103,7 @@ describe('POST /addMessage', () => {
     const mockConversation: Conversation = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
       participants: ['testUser', 'anotherUser'],
+      lastMessage: '',
       updatedAt: now,
     };
 

@@ -99,6 +99,7 @@ const userController = (socket: FakeSOSocket) => {
       answers: [],
       followers: [],
       following: [],
+      notifications: [],
     };
     try {
       const result = await saveUser(user);

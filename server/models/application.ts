@@ -16,6 +16,8 @@ import {
   User,
   UserListResponse,
   UserResponse,
+  Notification,
+  NotificationResponse,
 } from '../types';
 import AnswerModel from './answers';
 import QuestionModel from './questions';
@@ -24,6 +26,7 @@ import CommentModel from './comments';
 import UserModel from './users';
 import ConversationModel from './conversation';
 import MessageModel from './message';
+import NotificationModel from './notifications';
 
 /**
  * Parses tags from a search string.
@@ -375,6 +378,24 @@ export const saveQuestion = async (question: Question): Promise<QuestionResponse
 };
 
 /**
+ * Saves a new Notification to the database.
+ *
+ * @param notification The message to save
+ *
+ * @returns {Promise<NotificationResponse>} - The saved Notification, or an error Notification if the save failed
+ */
+export const saveNotification = async (
+  notification: Notification,
+): Promise<NotificationResponse> => {
+  try {
+    const result = await NotificationModel.create(notification);
+    return result;
+  } catch (error) {
+    return { error: 'Error when saving a notification' };
+  }
+};
+
+/**
  * Saves a new answer to the database.
  *
  * @param {Answer} answer - The answer to save
@@ -593,6 +614,56 @@ export const addAnswerToQuestion = async (qid: string, ans: Answer): Promise<Que
   }
 };
 
+export const addNotificationToUser = async (
+  userId: string,
+  notification: Notification,
+): Promise<UserResponse> => {
+  try {
+    if (!notification || !notification.text || !notification.dateTime) {
+      throw new Error('Invalid notification');
+    }
+    const result = await UserModel.findOneAndUpdate(
+      { _id: userId },
+      { $push: { notifications: { $each: [notification._id] } } },
+      { new: true },
+    );
+    if (result === null) {
+      throw new Error('Error when adding notification to user');
+    }
+    return result;
+  } catch (error) {
+    return { error: 'Error when adding notification to user' };
+  }
+};
+
+/**
+ * Adds a message to a conversation.
+ *
+ * @param userId The ID of the user to add the message to
+ *
+ * @param notificationId The ID of the notification to add
+ *
+ * @returns {Promise<UserResponse>} - The updated user or an error message
+ */
+export const deleteNotificationFromUser = async (
+  userId: string,
+  notificationId: string,
+): Promise<UserResponse> => {
+  try {
+    const result = await UserModel.findOneAndUpdate(
+      { _id: userId },
+      { $pull: { notifications: notificationId } },
+      { new: true },
+    );
+    if (result === null) {
+      throw new Error('Error when deleting notification from user');
+    }
+    return result;
+  } catch (error) {
+    return { error: 'Error when deleting notification from user' };
+  }
+};
+
 /**
  * Adds a comment to a question or answer.
  *
@@ -767,6 +838,45 @@ export const getUsersByUsernames = async (usernames: string[]): Promise<UserList
 };
 
 /**
+ * Gets a Notification by their ID.
+ *
+ * @param id The ID of the Notification to fetch.
+ *
+ * @returns {Promise<NotificationResponse>} - The user, or an error message if the fetch failed
+ */
+export const getNotificationById = async (id: string): Promise<NotificationResponse> => {
+  try {
+    const result = await NotificationModel.findOne({ _id: id });
+    if (!result) {
+      throw new Error('Notification not found');
+    }
+
+    return result.toObject();
+  } catch (error) {
+    return { error: 'Error when fetching notification' };
+  }
+};
+
+/**
+ * Deletes a Notification by their ID.
+ *
+ * @param id The ID of the Notification to delete.
+ *
+ * @returns {Promise<NotificationResponse>} - The deleted Notification, or an error message if the delete failed
+ */
+export const deleteNotificationById = async (id: string): Promise<NotificationResponse> => {
+  try {
+    const result = await NotificationModel.findOneAndDelete({ _id: id });
+    if (!result) {
+      throw new Error('Notification not found');
+    }
+    return result.toObject();
+  } catch (error) {
+    return { error: 'Error when deleting notification' };
+  }
+};
+
+/**
  * Adds a new conversation to the database.
  *
  * @param conversation The conversation to save
@@ -814,5 +924,93 @@ export const getConversationById = async (id: string): Promise<ConversationRespo
     return result.toObject();
   } catch (error) {
     return { error: 'Error when fetching conversation' };
+  }
+};
+
+/**
+ * Gets conversations based on if username is a participant of them and sorts them by date in descending order.
+ *
+ * @param username - The participant's username.
+ * @returns {Promise<Conversation[]>} - The list of conversation, or an empty array if the fetch fails.
+ */
+export const getConversationsByUsernameSortedByDateDesc = async (
+  username: string,
+): Promise<Conversation[]> => {
+  try {
+    const result = await ConversationModel.find({ participants: username }).sort({ updatedAt: -1 });
+
+    return result;
+  } catch (error) {
+    return [];
+  }
+};
+
+/**
+ * Updates the conversation with the message sent data.
+ *
+ * @param {Message} message - The message object with data to update conversation
+ * @returns {Promise<ConversationResponse>} - The updated conversation, or an error message if the update failed
+ */
+export const updateConversationWithMessage = async (
+  message: Message,
+): Promise<ConversationResponse> => {
+  try {
+    const result = await ConversationModel.findOneAndUpdate(
+      { _id: message.conversationId },
+      {
+        $set: {
+          lastMessage: message.text,
+          updatedAt: message.sentAt,
+        },
+      },
+      { new: true },
+    );
+
+    if (result == null) {
+      throw new Error('Failed to update conversation');
+    }
+
+    return result;
+  } catch (error) {
+    return { error: `Error when updating conversation: ${(error as Error).message}` };
+  }
+};
+
+/**
+ * Gets the messages that belongs to a conversation based on its id and sorts them by date in ascending order.
+ *
+ * @param c_id - The id of the conversation the messages belong to.
+ * @returns {Promise<Message[]>} - The fetched messages, or an empty array if the fetch fails.
+ */
+export const getMessagesSortedByDateAsc = async (c_id: string): Promise<Message[]> => {
+  try {
+    const result = await MessageModel.find({ conversationId: c_id }).sort({ sentAt: 1 });
+
+    return result;
+  } catch (error) {
+    return [];
+  }
+};
+
+/**
+ * Checks if a user has access to a conversation based on the conversation id.
+ *
+ * @param username - The username of the user to check access for.
+ * @param conversationId - The id of the conversation to check access to.
+ * @returns {Promise<boolean>} - `true` if the user has access, `false` otherwise.
+ */
+export const checkConversationAccess = async (
+  username: string,
+  conversationId: string,
+): Promise<boolean> => {
+  try {
+    const conversation = await ConversationModel.findOne({ _id: conversationId });
+    if (!conversation) {
+      return false;
+    }
+
+    return conversation.participants.includes(username);
+  } catch (error) {
+    return false;
   }
 };

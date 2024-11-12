@@ -24,6 +24,7 @@ import {
   saveMessage,
   getUsersByUsernames,
   getUserByUsername,
+  checkConversationAccess,
 } from '../models/application';
 import { Answer, Question, Tag, Comment, User, Conversation, Message } from '../types';
 import { T1_DESC, T2_DESC, T3_DESC } from '../data/posts_strings';
@@ -159,6 +160,7 @@ const user1: User = {
   answers: [],
   followers: [],
   following: [],
+  notifications: [],
 };
 
 const user2: User = {
@@ -175,11 +177,27 @@ const user2: User = {
   answers: [],
   followers: [],
   following: [],
+  notifications: [],
 };
 
 const conv1: Conversation = {
   _id: new ObjectId('65e9b716ff0e892116b2de19'),
   participants: ['user1', 'user2'],
+  lastMessage: '',
+  updatedAt: new Date('2023-11-20T09:24:00'),
+};
+
+const conv2: Conversation = {
+  _id: new ObjectId('65e9b716ff0e892116b2de18'),
+  participants: ['john', 'jane'],
+  lastMessage: '',
+  updatedAt: new Date('2023-11-20T09:24:00'),
+};
+
+const conv3: Conversation = {
+  _id: new ObjectId('65e9b716ff0e892116b2de18'),
+  participants: ['testUser', 'testUser2'],
+  lastMessage: '',
   updatedAt: new Date('2023-11-20T09:24:00'),
 };
 
@@ -1131,6 +1149,40 @@ describe('application module', () => {
         const result = await getConversationById(conv1._id!.toString() as string);
 
         expect(result).toEqual({ error: 'Error when fetching conversation' });
+      });
+    });
+
+    describe('checkConversationAccess', () => {
+      test('checkConversationAccess should return false if ConversationModel throws an error', async () => {
+        jest.spyOn(ConversationModel, 'findOne').mockRejectedValueOnce(new Error('error'));
+
+        const result = await checkConversationAccess(user1.username, conv3._id!.toString());
+
+        expect(result).toEqual(false);
+      });
+
+      test('checkConversationAccess should return false if the room does not exist', async () => {
+        jest.spyOn(ConversationModel, 'findOne').mockResolvedValueOnce(null);
+
+        const result = await checkConversationAccess(user1.username, conv3._id!.toString());
+
+        expect(result).toEqual(false);
+      });
+
+      test('checkConversationAccess should return false if the user is not in the room', async () => {
+        jest.spyOn(ConversationModel, 'findOne').mockResolvedValueOnce(conv2);
+
+        const result = await checkConversationAccess(user1.username, conv3._id!.toString());
+
+        expect(result).toEqual(false);
+      });
+
+      test('checkConversationAccess should return true if the user is in the room', async () => {
+        jest.spyOn(ConversationModel, 'findOne').mockResolvedValueOnce(conv3);
+
+        const result = await checkConversationAccess(user1.username, conv3._id!.toString());
+
+        expect(result).toEqual(true);
       });
     });
   });

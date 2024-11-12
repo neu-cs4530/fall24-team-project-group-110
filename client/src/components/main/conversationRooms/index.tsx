@@ -9,11 +9,7 @@ const ConversationRooms = () => {
   // ...
   const [conversations, setConversations] = useState<Conversation[]>();
 
-  return (
-    <div>
-      
-    </div>
-  );
+  return <div></div>;
 };
 
 export default ConversationRooms;
