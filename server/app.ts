@@ -108,7 +108,7 @@ app.use(sessionMiddleware);
 // authentication middleware that excludes unprotected routes
 // only include in development and production modes so that tests can run
 app.use((req: Request, res: Response, next) => {
-  if (!(process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production')) {
+  if (!(process.env.MODE === 'development' || process.env.MODE === 'production')) {
     return next();
   }
 

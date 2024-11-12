@@ -1,7 +1,7 @@
 import express, { Response } from 'express';
 import bcrypt from 'bcryptjs';
-import { User, AddUserRequest, FakeSOSocket, EditUserRequest } from '../types';
-import { saveUser, updateUserProfile } from '../models/application';
+import { User, AddUserRequest, FakeSOSocket, EditUserRequest, GetUserRequest } from '../types';
+import { getUserById, saveUser, updateUserProfile } from '../models/application';
 
 const userController = (socket: FakeSOSocket) => {
   const router = express.Router();
@@ -42,28 +42,8 @@ const userController = (socket: FakeSOSocket) => {
       errors.error.username = 'Username cannot be empty';
     }
 
-    if (user.firstName !== undefined && user.firstName === '') {
-      errors.error.firstName = 'Password cannot be empty';
-    }
-
-    if (user.lastName !== undefined && user.lastName === '') {
-      errors.error.lastName = 'Last name cannot be empty';
-    }
-
-    if (user.email !== undefined && user.email === '' && !user.email.includes('@')) {
-      errors.error.email = 'Email cannot be empty and must contain an @ symbol';
-    }
-
     if (user.password !== undefined && user.password === '') {
       errors.error.password = 'Password cannot be empty';
-    }
-
-    if (user.bio !== undefined && user.bio === '') {
-      errors.error.bio = 'Bio cannot be empty';
-    }
-
-    if (user.picture !== undefined && user.picture === '') {
-      errors.error.picture = 'Picture cannot be empty';
     }
 
     return errors;
@@ -127,9 +107,17 @@ const userController = (socket: FakeSOSocket) => {
    * @returns A Promise that resolves to void.
    */
   const updateUser = async (req: EditUserRequest, res: Response): Promise<void> => {
-    const { qid, newUserData } = req.body;
+    const { uid, newUserData } = req.body;
 
-    if (!qid || !newUserData) {
+    if (
+      (process.env.MODE === 'development' || process.env.MODE === 'production') &&
+      uid !== req.session.userId
+    ) {
+      res.status(401).send('Unauthorized');
+      return;
+    }
+
+    if (!uid || !newUserData) {
       res.status(400).send('Invalid request');
       return;
     }
@@ -145,7 +133,7 @@ const userController = (socket: FakeSOSocket) => {
     }
 
     try {
-      const result = await updateUserProfile(qid, newUserData);
+      const result = await updateUserProfile(uid, newUserData);
 
       if ('error' in result) {
         throw new Error(result.error);
@@ -161,8 +149,25 @@ const userController = (socket: FakeSOSocket) => {
     }
   };
 
+  const getUser = async (req: GetUserRequest, res: Response): Promise<void> => {
+    const { uid } = req.params;
+
+    try {
+      const result = await getUserById(uid);
+
+      if ('error' in result) {
+        throw new Error(result.error);
+      }
+
+      res.json(result);
+    } catch (err) {
+      res.status(500).send('Error when getting user');
+    }
+  };
+
   router.post('/addUser', addUser);
   router.put('/updateUser', updateUser);
+  router.get('/getUser/:uid', getUser);
 
   return router;
 };

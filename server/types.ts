@@ -241,14 +241,20 @@ export interface AddUserRequest extends Request {
 
 /**
  * Interface extending the request body when editing a user, which contains:
- * - qid - The unique identifier of the user being edited
+ * - uid - The unique identifier of the user being edited
  * - newUserData - The new user fields that has been edited
  */
 export interface EditUserRequest extends Request {
   body: {
-    qid: string,
+    uid: string,
     newUserData: Partial<User>,
   }
+}
+
+export interface GetUserRequest extends Request {
+  params: {
+    uid: string;
+  };
 }
 
 export interface AddUserRequest extends Request {
