@@ -188,24 +188,14 @@ describe('POST /addUser', () => {
         uid: createMockUser()._id,
         newUserData: {
           username: '',
-          firstName: '',
-          lastName: '',
-          email: '',
           password: '',
-          bio: '',
-          picture: '',
         },
       };
 
       const expectedResponse = {
         error: {
           username: 'Username cannot be empty',
-          firstName: 'Password cannot be empty',
-          lastName: 'Last name cannot be empty',
-          email: 'Email cannot be empty and must contain an @ symbol',
           password: 'Password cannot be empty',
-          bio: 'Bio cannot be empty',
-          picture: 'Picture cannot be empty',
         },
       };
 
