@@ -11,27 +11,56 @@ interface EditProfileProps {
 }
 
 const EditProfile = ({ profile, setProfile, onCancel, onSave }: EditProfileProps) => (
-  <>
-    <input
-      value={profile.firstName}
-      onChange={e => setProfile({ ...profile, firstName: e.target.value })}
-    />
-    <input
-      value={profile.lastName}
-      onChange={e => setProfile({ ...profile, lastName: e.target.value })}
-    />
-    <input
-      value={profile.email}
-      onChange={e => setProfile({ ...profile, email: e.target.value })}
-    />
-    <input value={profile.bio} onChange={e => setProfile({ ...profile, bio: e.target.value })} />
-    <input
-      value={profile.picture}
-      onChange={e => setProfile({ ...profile, picture: e.target.value })}
-    />
-    <button onClick={onCancel}>Cancel</button>
-    <button onClick={onSave}>Save Profile</button>
-  </>
+  <div className='edit-container'>
+    <div className='basic-picture-container'>
+      <div className='edit-basic-container'>
+        <div className='edit-basic-field-container'>
+          <label>First Name:</label>
+          <input
+            value={profile.firstName}
+            onChange={e => setProfile({ ...profile, firstName: e.target.value })}
+          />
+        </div>
+        <div className='edit-basic-field-container'>
+          <label>Last Name:</label>
+          <input
+            value={profile.lastName}
+            onChange={e => setProfile({ ...profile, lastName: e.target.value })}
+          />
+        </div>
+        <div className='edit-basic-field-container'>
+          <label>Email:</label>
+          <input
+            value={profile.email}
+            onChange={e => setProfile({ ...profile, email: e.target.value })}
+          />
+        </div>
+        <div className='edit-basic-field-container'>
+          <label>Picture:</label>
+          <input
+            value={profile.picture}
+            onChange={e => setProfile({ ...profile, picture: e.target.value })}
+          />
+        </div>
+      </div>
+      <div className='image-container'>
+        <img className='profile-picture' src={profile.picture} alt='profile picture' />
+      </div>
+    </div>
+
+    <div className='edit-bio-container'>
+      <h2>Bio:</h2>
+      <textarea
+        value={profile.bio}
+        rows={4}
+        onChange={e => setProfile({ ...profile, bio: e.target.value })}
+      />
+    </div>
+    <div className='edit-buttons-container'>
+      <button onClick={onCancel}>Cancel</button>
+      <button onClick={onSave}>Save Profile</button>
+    </div>
+  </div>
 );
 
 interface ViewProfileProps {
@@ -41,15 +70,26 @@ interface ViewProfileProps {
 }
 
 const ViewProfile = ({ profile, canEdit, onEdit }: ViewProfileProps) => (
-  <>
-    <p>{profile.username}</p>
-    <p>{profile.firstName}</p>
-    <p>{profile.lastName}</p>
-    <p>{profile.email}</p>
-    <p>{profile.bio}</p>
-    <p>{profile.picture}</p>
-    {canEdit && <button onClick={onEdit}>Edit Profile</button>}
-  </>
+  <div className='view-container'>
+    <div className='basic-picture-container'>
+      <div className='basic-container'>
+        <p>Username: {profile.username}</p>
+        <p>First name: {profile.firstName}</p>
+        <p>Last name: {profile.lastName}</p>
+        <p>Email: {profile.email}</p>
+      </div>
+      <div className='image-container'>
+        <img className='profile-picture' src={profile.picture} alt='profile picture' />
+      </div>
+    </div>
+    <div className='bio-container'>
+      <h2>Bio:</h2>
+      <p>{profile.bio}</p>
+    </div>
+    <div className='view-buttons-container'>
+      {canEdit && <button onClick={onEdit}>Edit Profile</button>}
+    </div>
+  </div>
 );
 
 const ProfilePage = () => {

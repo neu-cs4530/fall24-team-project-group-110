@@ -42,28 +42,8 @@ const userController = (socket: FakeSOSocket) => {
       errors.error.username = 'Username cannot be empty';
     }
 
-    if (user.firstName !== undefined && user.firstName === '') {
-      errors.error.firstName = 'Password cannot be empty';
-    }
-
-    if (user.lastName !== undefined && user.lastName === '') {
-      errors.error.lastName = 'Last name cannot be empty';
-    }
-
-    if (user.email !== undefined && user.email === '' && !user.email.includes('@')) {
-      errors.error.email = 'Email cannot be empty and must contain an @ symbol';
-    }
-
     if (user.password !== undefined && user.password === '') {
       errors.error.password = 'Password cannot be empty';
-    }
-
-    if (user.bio !== undefined && user.bio === '') {
-      errors.error.bio = 'Bio cannot be empty';
-    }
-
-    if (user.picture !== undefined && user.picture === '') {
-      errors.error.picture = 'Picture cannot be empty';
     }
 
     return errors;
