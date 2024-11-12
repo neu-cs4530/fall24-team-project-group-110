@@ -171,6 +171,14 @@ export interface User {
   notifications: Notification[];
 }
 
+export interface EditableUserFields {
+  firstName: string;
+  lastName: string;
+  email: string;
+  bio: string;
+  picture: string;
+}
+
 /**
  * Interface representing a notification object.
  * - _id - The unique identifier for the notification.

@@ -13,10 +13,6 @@ interface EditProfileProps {
 const EditProfile = ({ profile, setProfile, onCancel, onSave }: EditProfileProps) => (
   <>
     <input
-      value={profile.username}
-      onChange={e => setProfile({ ...profile, username: e.target.value })}
-    />
-    <input
       value={profile.firstName}
       onChange={e => setProfile({ ...profile, firstName: e.target.value })}
     />
@@ -40,10 +36,11 @@ const EditProfile = ({ profile, setProfile, onCancel, onSave }: EditProfileProps
 
 interface ViewProfileProps {
   profile: User;
+  canEdit: boolean;
   onEdit: () => void;
 }
 
-const ViewProfile = ({ profile, onEdit }: ViewProfileProps) => (
+const ViewProfile = ({ profile, canEdit, onEdit }: ViewProfileProps) => (
   <>
     <p>{profile.username}</p>
     <p>{profile.firstName}</p>
@@ -51,12 +48,12 @@ const ViewProfile = ({ profile, onEdit }: ViewProfileProps) => (
     <p>{profile.email}</p>
     <p>{profile.bio}</p>
     <p>{profile.picture}</p>
-    <button onClick={onEdit}>Edit Profile</button>
+    {canEdit && <button onClick={onEdit}>Edit Profile</button>}
   </>
 );
 
 const ProfilePage = () => {
-  const { profile, textErr, setProfile, saveProfile } = useProfilePage();
+  const { profile, textErr, canEdit, setProfile, saveProfile } = useProfilePage();
   const [editing, setEditing] = useState<boolean>(false);
 
   if (!profile || textErr) {
@@ -78,7 +75,7 @@ const ProfilePage = () => {
           onSave={() => handleSave()}
         />
       ) : (
-        <ViewProfile profile={profile} onEdit={() => setEditing(true)} />
+        <ViewProfile profile={profile} canEdit={canEdit} onEdit={() => setEditing(true)} />
       )}
     </>
   );

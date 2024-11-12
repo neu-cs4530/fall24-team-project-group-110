@@ -1,5 +1,5 @@
 import api from './config';
-import { User } from '../types';
+import { EditableUserFields, User } from '../types';
 
 const USER_API_URL = `${process.env.REACT_APP_SERVER_URL}/user`;
 
@@ -30,10 +30,10 @@ const getUser = async (id: string): Promise<User> => {
   return res.data;
 };
 
-const updateUser = async (id: string, user: User): Promise<User> => {
+const updateUser = async (id: string, updatedFields: EditableUserFields): Promise<User> => {
   const res = await api.put(`${USER_API_URL}/updateUser`, {
-    qid: id,
-    newUserData: user,
+    uid: id,
+    newUserData: updatedFields,
   });
   if (res.status !== 200) {
     throw new Error('Error while updating user');

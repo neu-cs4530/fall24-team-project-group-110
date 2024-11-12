@@ -129,6 +129,11 @@ const userController = (socket: FakeSOSocket) => {
   const updateUser = async (req: EditUserRequest, res: Response): Promise<void> => {
     const { uid, newUserData } = req.body;
 
+    if (uid !== req.session.userId) {
+      res.status(401).send('Unauthorized');
+      return;
+    }
+
     if (!uid || !newUserData) {
       res.status(400).send('Invalid request');
       return;
