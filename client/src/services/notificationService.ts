@@ -1,5 +1,5 @@
 import api from './config';
-import { Notification, User } from '../types';
+import { User } from '../types';
 
 const NOTIFICATION_API_URL = `${process.env.REACT_APP_SERVER_URL}/notification`;
 
