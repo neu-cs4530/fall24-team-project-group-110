@@ -3,14 +3,6 @@ import { Notification, User } from '../types';
 
 const NOTIFICATION_API_URL = `${process.env.REACT_APP_SERVER_URL}/notification`;
 
-/** */
-const addNotification = async (n: Notification): Promise<void> => {
-  const res = await api.post(`${NOTIFICATION_API_URL}/addNotification`, n);
-  if (res.status !== 200) {
-    throw new Error('Error while adding notification');
-  }
-};
-
 /**
  * Function to delete a notification by the user id and notification id.
  *
@@ -26,4 +18,4 @@ const deleteNotification = async (uid: string, nid: string): Promise<User> => {
   return res.data;
 };
 
-export { addNotification, deleteNotification };
+export default deleteNotification;

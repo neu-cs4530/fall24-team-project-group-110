@@ -24,12 +24,12 @@
 
 .dropdown {
   position: absolute; 
-  transform: translateX(-48.5%);
+  transform: translateX(-50.5%);
   width: 300px;
-  background: #fff;
+  background: #f9f8f8;
   border-radius: 5px;
   box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.125);
-  margin: 15px auto 0;
+  margin: 15px;
   padding: 15px;
   position: absolute;
   display: none;
@@ -39,8 +39,9 @@
 .dropdown:before {
   content: "";
   position: absolute;
-  top: -15px;
-  left: 49%;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
   border: 10px solid;
   border-color: transparent transparent #fff transparent;
 }
@@ -75,4 +76,28 @@
   color: #c5c5e6;
   font-size: 12px;
   margin-left: 5px;
+}
+
+.notification-none {
+  text-align: center;
+  font-size: 14px;
+  padding: 10px 0;
+}
+
+.notification-clear-button {
+  display: block;
+  width: 100%;
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 8px 0;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.notification-clear-button:hover {
+  background-color: #d9363e;
 }
