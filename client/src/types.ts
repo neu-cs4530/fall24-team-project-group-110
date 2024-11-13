@@ -169,6 +169,7 @@ export interface User {
   followers: User[];
   following: User[];
   notifications: Notification[];
+  verified: boolean;
 }
 
 export interface EditableUserFields {

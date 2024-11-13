@@ -12,6 +12,7 @@ import session from 'express-session';
 declare module 'express-session' {
   interface SessionData {
     userId?: string;
+    code?: string;
   }
 }
 
@@ -26,8 +27,11 @@ import messageController from './controller/message';
 import authController from './controller/auth';
 import notificationController from './controller/notification';
 import { checkConversationAccess } from './models/application';
+import { EmailService } from './utils/email';
 
 dotenv.config();
+
+const emailService = new EmailService();
 
 const MONGO_URL = `${process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017'}/fake_so`;
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:3000';
@@ -138,7 +142,7 @@ app.use('/question', questionController(socket));
 app.use('/tag', tagController());
 app.use('/answer', answerController(socket));
 app.use('/comment', commentController(socket));
-app.use('/user', userController(socket));
+app.use('/user', userController(emailService));
 app.use('/conversation', conversationController(socket));
 app.use('/message', messageController(socket));
 app.use('/notification', notificationController());

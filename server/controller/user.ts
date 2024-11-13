@@ -1,9 +1,10 @@
 import express, { Response } from 'express';
 import bcrypt from 'bcryptjs';
-import { User, AddUserRequest, FakeSOSocket, EditUserRequest, GetUserRequest } from '../types';
-import { getUserById, saveUser, updateUserProfile } from '../models/application';
+import { User, AddUserRequest, EditUserRequest, GetUserRequest } from '../types';
+import { deleteUserById, getUserById, saveUser, updateUserProfile } from '../models/application';
+import { EmailService } from '../utils/email';
 
-const userController = (socket: FakeSOSocket) => {
+const userController = (emailService: EmailService) => {
   const router = express.Router();
 
   /**
@@ -16,6 +17,8 @@ const userController = (socket: FakeSOSocket) => {
   const isUserValid = (user: User): boolean =>
     user.password !== undefined &&
     user.password !== '' &&
+    user.email !== undefined &&
+    user.email !== '' &&
     user.username !== undefined &&
     user.username !== '';
 
@@ -40,6 +43,10 @@ const userController = (socket: FakeSOSocket) => {
 
     if (user.username !== undefined && user.username === '') {
       errors.error.username = 'Username cannot be empty';
+    }
+
+    if (user.email !== undefined && user.email === '') {
+      errors.error.email = 'Email cannot be empty';
     }
 
     if (user.password !== undefined && user.password === '') {
@@ -71,7 +78,6 @@ const userController = (socket: FakeSOSocket) => {
       password: hashedPassword,
       firstName: '',
       lastName: '',
-      email: '',
       bio: '',
       picture: '',
       comments: [],
@@ -88,6 +94,31 @@ const userController = (socket: FakeSOSocket) => {
       }
 
       req.session.userId = result._id!.toString();
+      req.session.code = Math.floor(1000 + Math.random() * 9000).toString();
+
+      if (process.env.MODE === 'development' || process.env.MODE === 'production') {
+        await emailService.sendEmail({
+          to: user.email,
+          subject: 'Verification Code',
+          text: `Your verification code is: ${req.session.code}`,
+        });
+
+        setTimeout(
+          async () => {
+            const u = await getUserById(result._id!.toString());
+            if ('error' in u) {
+              await deleteUserById(result._id!.toString());
+              return;
+            }
+
+            if (u.verified === false) {
+              await deleteUserById(result._id!.toString());
+            }
+          },
+          5 * 60 * 1000,
+        );
+      }
+
       res.json(result);
     } catch (err: unknown) {
       if (err instanceof Error) {

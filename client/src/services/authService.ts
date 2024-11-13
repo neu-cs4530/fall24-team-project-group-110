@@ -52,4 +52,19 @@ const logout = async (): Promise<void> => {
   }
 };
 
-export { login, validate, logout };
+/**
+ * Sends a request to the server to verify a user's code that they got from their email.
+ *
+ * @returns The user object of the validated user.
+ * @throws Error Throws an error if the request fails or the response status is not 204.
+ */
+const verify = async (code: string): Promise<User> => {
+  const res = await api.post(`${AUTH_API_URL}/verify?code=${code}`);
+  if (res.status !== 200) {
+    throw new Error('Error verifying user');
+  }
+
+  return res.data;
+};
+
+export { login, validate, logout, verify };

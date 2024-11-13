@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
-import { LoginRequest } from '../types';
-import { getUserById, getUserByUsername } from '../models/application';
+import { LoginRequest, VerificationRequest } from '../types';
+import { getUserById, getUserByUsername, verifyUser } from '../models/application';
 
 const authController = () => {
   const router = express.Router();
@@ -33,6 +33,14 @@ const authController = () => {
       const result = await getUserByUsername(req.body.username);
       if ('error' in result) {
         throw new Error(result.error);
+      }
+
+      if (
+        (process.env.MODE === 'development' || process.env.MODE === 'production') &&
+        result.verified === false
+      ) {
+        res.status(403).send('User is not verified');
+        return;
       }
 
       if (!bcrypt.compareSync(req.body.password, result.password)) {
@@ -70,6 +78,43 @@ const authController = () => {
   };
 
   /**
+   * Attempts to verify a user by checking if the provided code matches the stored code in the session.
+   *
+   * @param req The Request object containing the code and the session data.
+   * @param res The HTTP response object used to send back the result of the operation.
+   *
+   * @returns A Promise that resolves to void.
+   */
+  const verify = async (req: VerificationRequest, res: Response): Promise<void> => {
+    const { code } = req.query;
+    if (!code) {
+      res.status(400).send('Missing verification code');
+      return;
+    }
+
+    if (!req.session.code) {
+      res.status(400).send('No verification code stored in session');
+      return;
+    }
+
+    if (req.session.code !== code) {
+      res.status(400).send('Invalid verification code');
+      return;
+    }
+
+    try {
+      const result = await verifyUser(req.session.userId!);
+      if ('error' in result) {
+        throw new Error(result.error);
+      }
+
+      res.status(200).send(result);
+    } catch (err) {
+      res.status(500).send('Error verifying user');
+    }
+  };
+
+  /**
    * Logs out a user by destroying the session.
    *
    * @param req The LoginRequest object containing the user data.
@@ -90,6 +135,7 @@ const authController = () => {
   router.post('/login', login);
   router.get('/validate', validate);
   router.post('/logout', logout);
+  router.post('/verify', verify);
 
   return router;
 };

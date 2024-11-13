@@ -20,6 +20,7 @@ const user1: User = {
   followers: [],
   following: [],
   notifications: [],
+  verified: false,
 };
 
 const user2: User = {
@@ -37,6 +38,7 @@ const user2: User = {
   followers: [],
   following: [],
   notifications: [],
+  verified: false,
 };
 
 describe('POST /addConversation', () => {
@@ -75,6 +77,7 @@ describe('POST /addConversation', () => {
           followers: [],
           following: [],
           notifications: [],
+          verified: false,
         },
         {
           _id: new ObjectId('65e9b716ff0e892116b2de12'),
@@ -91,6 +94,7 @@ describe('POST /addConversation', () => {
           followers: [],
           following: [],
           notifications: [],
+          verified: false,
         },
       ],
       lastMessage: '',

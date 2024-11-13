@@ -14,6 +14,7 @@ import ConversationPage from './main/conversationPage';
 import Register from './register';
 import { validate } from '../services/authService';
 import ProfilePage from './main/profilePage';
+import Verify from './verify';
 
 const ProtectedRoute = ({
   user,
@@ -24,7 +25,7 @@ const ProtectedRoute = ({
   socket: FakeSOSocket | null;
   children: JSX.Element;
 }) => {
-  if (!user || !socket) {
+  if (!user || !socket || !user.verified) {
     return <Navigate to='/' />;
   }
 
@@ -63,6 +64,7 @@ const FakeStackOverflow = ({ socket }: { socket: FakeSOSocket | null }) => {
         {/* Public Route */}
         <Route path='/' element={<Login />} />
         <Route path='/register' element={<Register />} />
+        <Route path='/verify' element={<Verify />} />
 
         {/* Protected Routes */}
         {
