@@ -97,6 +97,7 @@ export interface Answer {
  * - upVotes - An array of usernames who upvoted the question.
  * - downVotes - An array of usernames who downvoted the question.
  * - comments - Comments associated with the question.
+ * - notifyList - An array of user IDs to notify when the question is updated.
  */
 export interface Question {
   _id?: string;
@@ -110,6 +111,7 @@ export interface Question {
   upVotes: string[];
   downVotes: string[];
   comments: Comment[];
+  notifyList: string[];
 }
 
 /**
@@ -219,12 +221,14 @@ export interface Message {
  * - participants - An array of usernames of the users participating in the conversation.
  * - lastMessage - The most recent message sent for the conversation.
  * - updatedAt - The date and time when the conversation was last updated.
+ * - notifyList - An array of user IDs to notify when a new message is sent.
  */
 export interface Conversation {
   _id?: string;
   participants: User[];
   lastMessage: string;
   updatedAt: Date;
+  notifyList: User[];
 }
 
 /**

@@ -19,6 +19,7 @@ const conversationSchema: Schema = new Schema(
       type: Date,
       default: Date.now,
     },
+    notifyList: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   },
   { collection: 'Conversation' },
 );

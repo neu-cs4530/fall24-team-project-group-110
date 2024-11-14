@@ -55,6 +55,7 @@ describe('POST /addConversation', () => {
       participants: [user1._id!, user2._id!],
       lastMessage: '',
       updatedAt: new Date(),
+      notifyList: [],
     };
 
     const mockPopulatedConversation: Conversation = {
@@ -95,6 +96,7 @@ describe('POST /addConversation', () => {
       ],
       lastMessage: '',
       updatedAt: new Date(),
+      notifyList: [],
     };
 
     jest.spyOn(util, 'getUsersByUsernames').mockResolvedValue([user1, user2]);
@@ -129,6 +131,7 @@ describe('POST /addConversation', () => {
       participants: [new ObjectId('64e9b58910afe6e94fc6e6fe')],
       lastMessage: '',
       updatedAt: new Date(),
+      notifyList: [],
     };
 
     const response = await supertest(app)
@@ -147,6 +150,7 @@ describe('POST /addConversation', () => {
       ],
       lastMessage: '',
       updatedAt: new Date(),
+      notifyList: [],
     };
 
     jest.spyOn(util, 'getConversationById').mockResolvedValueOnce({ error: 'Error' });
@@ -167,6 +171,7 @@ describe('POST /addConversation', () => {
       ],
       lastMessage: '',
       updatedAt: new Date(),
+      notifyList: [],
     };
 
     jest.spyOn(util, 'getUsersByUsernames').mockResolvedValueOnce([user1]);
@@ -187,6 +192,7 @@ describe('POST /addConversation', () => {
       ],
       lastMessage: '',
       updatedAt: new Date(),
+      notifyList: [],
     };
 
     jest.spyOn(util, 'getUsersByUsernames').mockResolvedValueOnce([user1, user2]);
