@@ -105,6 +105,7 @@ const QUESTIONS: Question[] = [
     upVotes: [],
     downVotes: [],
     comments: [],
+    notifyList: [],
   },
   {
     _id: new ObjectId('65e9b5a995b6c7045a30d823'),
@@ -118,6 +119,7 @@ const QUESTIONS: Question[] = [
     upVotes: [],
     downVotes: [],
     comments: [],
+    notifyList: [],
   },
   {
     _id: new ObjectId('65e9b9b44c052f0a08ecade0'),
@@ -131,6 +133,7 @@ const QUESTIONS: Question[] = [
     upVotes: [],
     downVotes: [],
     comments: [],
+    notifyList: [],
   },
   {
     _id: new ObjectId('65e9b716ff0e892116b2de09'),
@@ -144,6 +147,7 @@ const QUESTIONS: Question[] = [
     upVotes: [],
     downVotes: [],
     comments: [],
+    notifyList: [],
   },
 ];
 
