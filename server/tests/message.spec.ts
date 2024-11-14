@@ -33,6 +33,7 @@ describe('POST /addMessage', () => {
       ],
       lastMessage: '',
       updatedAt: now,
+      notifyList: [],
     };
 
     const mockUpdatedConversation: Conversation = {
@@ -43,6 +44,7 @@ describe('POST /addMessage', () => {
       ],
       lastMessage: 'Hello, world!',
       updatedAt: now,
+      notifyList: [],
     };
 
     const mockPopulatedConversation: Conversation = {
@@ -83,6 +85,7 @@ describe('POST /addMessage', () => {
       ],
       lastMessage: '',
       updatedAt: new Date(),
+      notifyList: [],
     };
 
     jest.spyOn(util, 'getConversationById').mockResolvedValue(mockConversation);
@@ -155,6 +158,7 @@ describe('POST /addMessage', () => {
       ],
       lastMessage: '',
       updatedAt: now,
+      notifyList: [],
     };
 
     jest.spyOn(util, 'getConversationById').mockResolvedValueOnce(mockConversation);

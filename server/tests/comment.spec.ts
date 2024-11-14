@@ -352,6 +352,7 @@ describe('POST /addComment', () => {
       downVotes: [],
       answers: [],
       comments: [mockComment._id],
+      notifyList: [],
     };
 
     saveCommentSpy.mockResolvedValueOnce(mockComment);
