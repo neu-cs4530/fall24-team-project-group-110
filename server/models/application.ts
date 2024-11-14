@@ -656,7 +656,7 @@ export const addNotificationToUser = async (
     }
     const result = await UserModel.findOneAndUpdate(
       { _id: userId },
-      { $push: { notifications: { $each: [notification._id] } } },
+      { $push: { notifications: notification._id } },
       { new: true },
     );
     if (result === null) {

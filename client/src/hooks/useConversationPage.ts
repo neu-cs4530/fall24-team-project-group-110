@@ -19,7 +19,7 @@ const useConversationPage = () => {
       navigate(`/conversation/${c._id}`);
     }
   };
-
+  
   /**
    * Function to handle creating a new conversation
    */

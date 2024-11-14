@@ -143,7 +143,7 @@ const messageController = (socket: FakeSOSocket) => {
         'You have received a message.',
         populatedUpdatedConversation._id!.toString(),
       );
-
+      
       socket.to(req.body.conversationId).emit('newMessage', result);
       socket.emit('conversationUpdate', populatedUpdatedConversation);
       res.json(result);

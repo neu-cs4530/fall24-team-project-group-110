@@ -35,6 +35,59 @@ describe('POST /addMessage', () => {
       ],
       lastMessage: '',
       updatedAt: now,
+      notifyList: [],
+    };
+
+    const mockUpdatedConversation: Conversation = {
+      _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
+      participants: [
+        new ObjectId('64e9b58910afe6e94fc6e6fe'),
+        new ObjectId('63e9b58910afe6e94fc6e6fe'),
+      ],
+      lastMessage: 'Hello, world!',
+      updatedAt: now,
+      notifyList: [],
+    };
+
+    const mockPopulatedConversation: Conversation = {
+      _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
+      participants: [
+        {
+          _id: new ObjectId('65e9b716ff0e892116b2de19'),
+          username: 'testUser',
+          firstName: 'Test',
+          lastName: 'User',
+          email: 'testuser@example.com',
+          password: 'password123',
+          bio: 'Test user bio',
+          picture: 'http://example.com/picture.jpg',
+          comments: [],
+          questions: [],
+          answers: [],
+          followers: [],
+          following: [],
+          notifications: [],
+        },
+        {
+          _id: new ObjectId('65e9b716ff0e892116b2de12'),
+          username: 'testUser2',
+          firstName: 'Test',
+          lastName: 'User',
+          email: 'testuser@example.com',
+          password: 'password123',
+          bio: 'Test user bio',
+          picture: 'http://example.com/picture.jpg',
+          comments: [],
+          questions: [],
+          answers: [],
+          followers: [],
+          following: [],
+          notifications: [],
+        },
+      ],
+      lastMessage: '',
+      updatedAt: new Date(),
+      notifyList: [],
     };
 
     const mockUpdatedConversation: Conversation = {
@@ -161,6 +214,7 @@ describe('POST /addMessage', () => {
       ],
       lastMessage: '',
       updatedAt: now,
+      notifyList: [],
     };
 
     jest.spyOn(util, 'getConversationById').mockResolvedValueOnce(mockConversation);
