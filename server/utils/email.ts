@@ -21,26 +21,41 @@ class EmailService {
   private _transporter: nodemailer.Transporter;
 
   constructor() {
-    if (
-      !process.env.SMTP_HOST ||
-      !process.env.SMTP_PORT ||
-      !process.env.SMTP_SECURE ||
-      !process.env.SMTP_USER ||
-      !process.env.SMTP_PASS ||
-      !process.env.EMAIL_FROM
-    ) {
-      throw new Error('Email configuration is missing');
-    }
+    let config: EmailConfig;
 
-    const config: EmailConfig = {
-      host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT, 10),
-      secure: process.env.SMTP_SECURE === 'true',
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    };
+    if (process.env.MODE === 'development' || process.env.MODE === 'production') {
+      if (
+        !process.env.SMTP_HOST ||
+        !process.env.SMTP_PORT ||
+        !process.env.SMTP_SECURE ||
+        !process.env.SMTP_USER ||
+        !process.env.SMTP_PASS ||
+        !process.env.EMAIL_FROM
+      ) {
+        throw new Error('Email configuration is missing');
+      }
+
+      config = {
+        host: process.env.SMTP_HOST,
+        port: parseInt(process.env.SMTP_PORT, 10),
+        secure: process.env.SMTP_SECURE === 'true',
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      };
+    } else {
+      // if code gets here, it means we are in test mode
+      config = {
+        host: 'test',
+        port: 587,
+        secure: false,
+        auth: {
+          user: 'test',
+          pass: 'test',
+        }
+      }
+    }
 
     this._transporter = nodemailer.createTransport(config);
   }
