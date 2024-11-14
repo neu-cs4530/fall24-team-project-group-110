@@ -9,8 +9,9 @@ import {
 } from '../types';
 import {
   getConversationById,
-  getConversationsByUsernameSortedByDateDesc,
+  getConversationsByUserIdSortedByDateDesc,
   getUsersByUsernames,
+  populateConversation,
   saveConversation,
 } from '../models/application';
 
@@ -30,16 +31,27 @@ const conversationController = (socket: FakeSOSocket) => {
     req: FindConversationsByUsernameRequest,
     res: Response,
   ): Promise<void> => {
-    const { username } = req.query;
+    const { userId } = req.query;
 
-    if (username === undefined) {
+    if (userId === undefined) {
       res.status(400).send('Invalid username requesting conversations.');
       return;
     }
 
     try {
-      const clist: Conversation[] = await getConversationsByUsernameSortedByDateDesc(username);
-      res.json(clist);
+      const clist: Conversation[] = await getConversationsByUserIdSortedByDateDesc(userId);
+
+      const promises = clist.map(async conversation => {
+        const populatedConversation = await populateConversation(conversation._id?.toString());
+        if ('error' in populatedConversation) {
+          throw new Error(populatedConversation.error);
+        }
+        return populatedConversation;
+      });
+
+      const populatedList = await Promise.all(promises);
+
+      res.json(populatedList);
     } catch (err: unknown) {
       if (err instanceof Error) {
         res.status(500).send(`Error when fetching questions by filter: ${err.message}`);
@@ -73,7 +85,12 @@ const conversationController = (socket: FakeSOSocket) => {
       const c = await getConversationById(cid);
 
       if (c && !('error' in c)) {
-        res.json(c);
+        const populatedConversation = await populateConversation(c._id?.toString());
+        if ('error' in populatedConversation) {
+          throw new Error(populatedConversation.error);
+        }
+
+        res.json(populatedConversation);
         return;
       }
 
@@ -110,13 +127,25 @@ const conversationController = (socket: FakeSOSocket) => {
         return;
       }
 
-      const result = await saveConversation(req.body);
+      const participants = users.map(u => u._id!);
+      const conversation: Conversation = {
+        participants,
+        lastMessage: '',
+        updatedAt: new Date(),
+      };
+
+      const result = await saveConversation(conversation);
       if ('error' in result) {
         throw new Error(result.error);
       }
 
-      socket.emit('conversationUpdate', result);
-      res.json(result);
+      const populatedConversation = await populateConversation(result._id?.toString());
+      if ('error' in populatedConversation) {
+        throw new Error(populatedConversation.error);
+      }
+
+      socket.emit('conversationUpdate', populatedConversation);
+      res.json(populatedConversation);
     } catch (error) {
       res.status(500).send('Error adding conversation');
     }

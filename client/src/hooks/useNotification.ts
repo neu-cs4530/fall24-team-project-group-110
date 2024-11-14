@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useUserContext from './useUserContext';
 import { Notification } from '../types';
-import deleteNotification from '../services/notificationService';
+import { deleteNotification } from '../services/notificationService';
+import { getUser } from '../services/userService';
 
 const useNotification = () => {
   const navigate = useNavigate();
-  const { user } = useUserContext();
+  const { user, socket } = useUserContext();
   const [isNotifOpen, setIsNotifOpen] = useState<boolean>(false);
   const [notificationCount, setNotificationCount] = useState(0);
   const [nlist, setNlist] = useState<Notification[]>([]);
@@ -27,14 +28,41 @@ const useNotification = () => {
       setNotificationCount(0);
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('Error adding comment:', error);
+      console.error('Error deleting notifications:', error);
     }
   };
 
+  const fetchUserNotifs = useCallback(async () => {
+    try {
+      const res = await getUser(user._id);
+      setNlist(res.notifications);
+      setNotificationCount(res.notifications.length);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error deleting notifications:', error);
+    }
+  }, [user._id]);
+
   useEffect(() => {
-    setNlist(user.notifications);
-    setNotificationCount(user.notifications.length);
-  }, [user.notifications]);
+    fetchUserNotifs();
+  }, [fetchUserNotifs, user._id]);
+
+  useEffect(() => {
+    /**
+     *
+     */
+    const handleNewNotifications = (uid: string) => {
+      if (user._id === uid) {
+        fetchUserNotifs();
+      }
+    };
+
+    socket.on('notificationUpdate', handleNewNotifications);
+
+    return () => {
+      socket.off('notificationUpdate', handleNewNotifications);
+    };
+  }, [fetchUserNotifs, user._id, socket]);
 
   return {
     isNotifOpen,

@@ -144,6 +144,7 @@ export interface ServerToClientEvents {
   leaveRoom: (conversationId: string) => void;
   newMessage: (message: Message) => void;
   conversationUpdate: (conversation: Conversation) => void;
+  notificationUpdate: (uid: string) => void;
 }
 
 export interface ClientToServerEvents {
@@ -171,6 +172,14 @@ export interface User {
   notifications: Notification[];
 }
 
+export interface EditableUserFields {
+  firstName: string;
+  lastName: string;
+  email: string;
+  bio: string;
+  picture: string;
+}
+
 /**
  * Interface representing a notification object.
  * - _id - The unique identifier for the notification.
@@ -188,10 +197,10 @@ export interface Notification {
 }
 
 /**
- * Interface representing the structure of a Message object:
- *
+ * Interface representing a message document, which contains:
  * - _id - The unique identifier for the message. Optional field.
  * - conversationId - The unique identifier for the conversation the message belongs to.
+ * - senderId - The unqiue identifier of the user who sent the message.
  * - sender - The username of the user who sent the message.
  * - text - The content of the message.
  * - sentAt - The date and time when the message was sent.
@@ -199,6 +208,7 @@ export interface Notification {
 export interface Message {
   _id?: string;
   conversationId: string;
+  senderId: string;
   sender: string;
   text: string;
   sentAt: Date;
@@ -214,7 +224,16 @@ export interface Message {
  */
 export interface Conversation {
   _id?: string;
-  participants: string[];
+  participants: User[];
   lastMessage: string;
   updatedAt: Date;
+}
+
+/**
+ * Interface representing the payload for a new conversation request
+ *
+ * participants - An array of usernames of the users participating in the conversation.
+ */
+export interface NewConversationPayload {
+  participants: string[];
 }

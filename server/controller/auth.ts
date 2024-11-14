@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import { LoginRequest } from '../types';
-import { getUserByUsername } from '../models/application';
+import { getUserById, getUserByUsername } from '../models/application';
 
 const authController = () => {
   const router = express.Router();
@@ -39,7 +39,8 @@ const authController = () => {
         throw new Error('invalid username or password');
       }
 
-      req.session.username = req.body.username;
+      // _id is guaranteed to be set at this point
+      req.session.userId = result._id!.toString();
       res.status(200).send(result);
     } catch (err) {
       res.status(500).send(`Error when logging in`);
@@ -54,10 +55,10 @@ const authController = () => {
    *
    * @returns A Promise that resolves to void.
    */
-  // req.session.username should be set at this point since auth middleware is called before this
   const validate = async (req: Request, res: Response): Promise<void> => {
     try {
-      const result = await getUserByUsername(req.session.username!);
+      // req.session.userId should be set at this point since auth middleware is called before this
+      const result = await getUserById(req.session.userId!);
       if ('error' in result) {
         throw new Error(result.error);
       }

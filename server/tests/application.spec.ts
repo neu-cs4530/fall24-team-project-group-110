@@ -25,6 +25,7 @@ import {
   getUsersByUsernames,
   getUserByUsername,
   checkConversationAccess,
+  getUserById,
 } from '../models/application';
 import { Answer, Question, Tag, Comment, User, Conversation, Message } from '../types';
 import { T1_DESC, T2_DESC, T3_DESC } from '../data/posts_strings';
@@ -182,21 +183,30 @@ const user2: User = {
 
 const conv1: Conversation = {
   _id: new ObjectId('65e9b716ff0e892116b2de19'),
-  participants: ['user1', 'user2'],
+  participants: [
+    new ObjectId('65e9b716ff0e892116b2de19'),
+    new ObjectId('65e9b716ff0e892116b2de12'),
+  ],
   lastMessage: '',
   updatedAt: new Date('2023-11-20T09:24:00'),
 };
 
 const conv2: Conversation = {
   _id: new ObjectId('65e9b716ff0e892116b2de18'),
-  participants: ['john', 'jane'],
+  participants: [
+    new ObjectId('65e9b716ff0e892116b2da19'),
+    new ObjectId('65e9b716ff0e892116b2db12'),
+  ],
   lastMessage: '',
   updatedAt: new Date('2023-11-20T09:24:00'),
 };
 
 const conv3: Conversation = {
   _id: new ObjectId('65e9b716ff0e892116b2de18'),
-  participants: ['testUser', 'testUser2'],
+  participants: [
+    new ObjectId('65e9b716ff0e892116b2de19'),
+    new ObjectId('65e9b716ff0e892116b2dc12'),
+  ],
   lastMessage: '',
   updatedAt: new Date('2023-11-20T09:24:00'),
 };
@@ -204,6 +214,7 @@ const conv3: Conversation = {
 const msg1: Message = {
   _id: new ObjectId('65e9b716ff0e892116b2de19'),
   conversationId: '65e9b716ff0e892116b2de19',
+  senderId: '65e9b716ff0e892116b2dc12',
   sender: 'user1',
   text: 'Hello!',
   sentAt: new Date('2023-11-20T09:24:00'),
@@ -1106,6 +1117,28 @@ describe('application module', () => {
         }
       });
     });
+
+    describe('getUserById', () => {
+      test('getUserById should return the user with the given id', async () => {
+        mockingoose(UserModel).toReturn(user1, 'findOne');
+
+        const result = await getUserById(user1._id!.toString());
+
+        expect(result).toEqual(user1);
+      });
+
+      test('getUserById should return an object with error if findOne throws an error', async () => {
+        mockingoose(UserModel).toReturn(new Error('error'), 'findOne');
+
+        const result = await getUserById(user1._id!.toString());
+
+        if ('error' in result) {
+          expect(true).toBeTruthy();
+        } else {
+          expect(false).toBeTruthy();
+        }
+      });
+    });
   });
   describe('Conversation model', () => {
     describe('saveConversation', () => {
@@ -1156,7 +1189,7 @@ describe('application module', () => {
       test('checkConversationAccess should return false if ConversationModel throws an error', async () => {
         jest.spyOn(ConversationModel, 'findOne').mockRejectedValueOnce(new Error('error'));
 
-        const result = await checkConversationAccess(user1.username, conv3._id!.toString());
+        const result = await checkConversationAccess(user1._id!.toString(), conv3._id!.toString());
 
         expect(result).toEqual(false);
       });
@@ -1164,7 +1197,7 @@ describe('application module', () => {
       test('checkConversationAccess should return false if the room does not exist', async () => {
         jest.spyOn(ConversationModel, 'findOne').mockResolvedValueOnce(null);
 
-        const result = await checkConversationAccess(user1.username, conv3._id!.toString());
+        const result = await checkConversationAccess(user1._id!.toString(), conv3._id!.toString());
 
         expect(result).toEqual(false);
       });
@@ -1172,7 +1205,7 @@ describe('application module', () => {
       test('checkConversationAccess should return false if the user is not in the room', async () => {
         jest.spyOn(ConversationModel, 'findOne').mockResolvedValueOnce(conv2);
 
-        const result = await checkConversationAccess(user1.username, conv3._id!.toString());
+        const result = await checkConversationAccess(user1._id!.toString(), conv3._id!.toString());
 
         expect(result).toEqual(false);
       });
@@ -1180,7 +1213,7 @@ describe('application module', () => {
       test('checkConversationAccess should return true if the user is in the room', async () => {
         jest.spyOn(ConversationModel, 'findOne').mockResolvedValueOnce(conv3);
 
-        const result = await checkConversationAccess(user1.username, conv3._id!.toString());
+        const result = await checkConversationAccess(user1._id!.toString(), conv3._id!.toString());
 
         expect(result).toEqual(true);
       });

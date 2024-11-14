@@ -6,7 +6,7 @@ import { app } from '../app';
 
 declare module 'express-session' {
   interface SessionData {
-    username?: string;
+    userId?: string;
   }
 }
 
@@ -150,7 +150,7 @@ describe('GET /validate', () => {
       notifications: [],
     };
 
-    jest.spyOn(util, 'getUserByUsername').mockResolvedValueOnce(mockUser);
+    jest.spyOn(util, 'getUserById').mockResolvedValueOnce(mockUser);
 
     const response = await request(app).get('/auth/validate');
 

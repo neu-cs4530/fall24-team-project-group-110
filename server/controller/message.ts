@@ -5,13 +5,16 @@ import {
   FakeSOSocket,
   FindMessagesByConversationIdRequest,
   Message,
+  User,
 } from '../types';
 import {
   saveMessage,
   getConversationById,
   getMessagesSortedByDateAsc,
   updateConversationWithMessage,
+  populateConversation,
 } from '../models/application';
+import { sendNotification } from '../service/notificationService';
 
 const messageController = (socket: FakeSOSocket) => {
   const router = express.Router();
@@ -72,6 +75,10 @@ const messageController = (socket: FakeSOSocket) => {
       errors.error.conversationId = 'Conversation ID is required';
     }
 
+    if (!message.senderId || message.senderId === '') {
+      errors.error.sender = 'SenderId is required';
+    }
+
     if (!message.sender || message.sender === '') {
       errors.error.sender = 'Sender is required';
     }
@@ -88,7 +95,7 @@ const messageController = (socket: FakeSOSocket) => {
    * If successful, the message is associated with the corresponding conversation. If there is an error,
    * the HTTP response's status is updated.
    *
-   * @param req The AnswerRequest object containing the question ID and answer data.
+   * @param req The AddMessageRequest object containing the conversation ID and message data.
    * @param res The HTTP response object used to send back the result of the operation.
    *
    * @returns A Promise that resolves to void.
@@ -121,8 +128,24 @@ const messageController = (socket: FakeSOSocket) => {
         throw new Error(updatedConversation.error);
       }
 
+      const populatedUpdatedConversation = await populateConversation(req.body.conversationId);
+      if ('error' in populatedUpdatedConversation) {
+        throw new Error(populatedUpdatedConversation.error);
+      }
+
+      const recipients = populatedUpdatedConversation.participants.filter(
+        user => user._id !== undefined && user._id!.toString() !== result.senderId,
+      ) as User[];
+      sendNotification(
+        socket,
+        recipients,
+        'conversation',
+        'You have received a message.',
+        populatedUpdatedConversation._id!.toString(),
+      );
+
       socket.to(req.body.conversationId).emit('newMessage', result);
-      socket.emit('conversationUpdate', updatedConversation);
+      socket.emit('conversationUpdate', populatedUpdatedConversation);
       res.json(result);
     } catch (error) {
       res.status(500).send('Error adding message');

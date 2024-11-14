@@ -1,0 +1,48 @@
+.edit-container {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.edit-basic-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.edit-bio-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-buttons-container {
+  display: flex;
+  justify-content: center;
+}
+
+.edit-basic-field-container {
+  display: flex;
+}
+
+.basic-picture-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  width: 100%;
+}
+
+.profile-picture {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  line-height: 100px;
+  text-align: center;
+}

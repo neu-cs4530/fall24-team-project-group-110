@@ -3,6 +3,7 @@ import supertest from 'supertest';
 import { ObjectId } from 'mongodb';
 import { app } from '../app';
 import * as util from '../models/application';
+import * as service from '../service/notificationService';
 import { Conversation, Message } from '../types';
 
 describe('POST /addMessage', () => {
@@ -20,6 +21,7 @@ describe('POST /addMessage', () => {
     const mockMessage: Message = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
       conversationId: '65e9b58910afe6e94fc6e6fe',
+      senderId: '65e9b716ff0e892116b2de19',
       sender: 'testUser',
       text: 'Hello, world!',
       sentAt: now,
@@ -27,21 +29,69 @@ describe('POST /addMessage', () => {
 
     const mockConversation: Conversation = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
-      participants: ['testUser', 'anotherUser'],
+      participants: [
+        new ObjectId('64e9b58910afe6e94fc6e6fe'),
+        new ObjectId('63e9b58910afe6e94fc6e6fe'),
+      ],
       lastMessage: '',
       updatedAt: now,
     };
 
     const mockUpdatedConversation: Conversation = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
-      participants: ['testUser', 'anotherUser'],
+      participants: [
+        new ObjectId('64e9b58910afe6e94fc6e6fe'),
+        new ObjectId('63e9b58910afe6e94fc6e6fe'),
+      ],
       lastMessage: 'Hello, world!',
       updatedAt: now,
+    };
+
+    const mockPopulatedConversation: Conversation = {
+      _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
+      participants: [
+        {
+          _id: new ObjectId('65e9b716ff0e892116b2de19'),
+          username: 'testUser',
+          firstName: 'Test',
+          lastName: 'User',
+          email: 'testuser@example.com',
+          password: 'password123',
+          bio: 'Test user bio',
+          picture: 'http://example.com/picture.jpg',
+          comments: [],
+          questions: [],
+          answers: [],
+          followers: [],
+          following: [],
+          notifications: [],
+        },
+        {
+          _id: new ObjectId('65e9b716ff0e892116b2de12'),
+          username: 'testUser2',
+          firstName: 'Test',
+          lastName: 'User',
+          email: 'testuser@example.com',
+          password: 'password123',
+          bio: 'Test user bio',
+          picture: 'http://example.com/picture.jpg',
+          comments: [],
+          questions: [],
+          answers: [],
+          followers: [],
+          following: [],
+          notifications: [],
+        },
+      ],
+      lastMessage: '',
+      updatedAt: new Date(),
     };
 
     jest.spyOn(util, 'getConversationById').mockResolvedValue(mockConversation);
     jest.spyOn(util, 'saveMessage').mockResolvedValue(mockMessage);
     jest.spyOn(util, 'updateConversationWithMessage').mockResolvedValue(mockUpdatedConversation);
+    jest.spyOn(util, 'populateConversation').mockResolvedValue(mockPopulatedConversation);
+    jest.spyOn(service, 'sendNotification').mockResolvedValue(undefined);
 
     const response = await supertest(app).post('/message/addMessage').send(mockMessage);
 
@@ -63,6 +113,7 @@ describe('POST /addMessage', () => {
     const mockMessage: Message = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
       conversationId: '',
+      senderId: '',
       sender: '',
       text: '',
       sentAt: new Date(),
@@ -77,6 +128,7 @@ describe('POST /addMessage', () => {
     const mockMessage: Message = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
       conversationId: '65e9b58910afe6e94fc6e6fe',
+      senderId: '65e9b716ff0e892116b2de19',
       sender: 'testUser',
       text: 'Hello, world!',
       sentAt: new Date(),
@@ -95,6 +147,7 @@ describe('POST /addMessage', () => {
     const mockMessage: Message = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
       conversationId: '65e9b58910afe6e94fc6e6fe',
+      senderId: '65e9b716ff0e892116b2de19',
       sender: 'testUser',
       text: 'Hello, world!',
       sentAt: now,
@@ -102,7 +155,10 @@ describe('POST /addMessage', () => {
 
     const mockConversation: Conversation = {
       _id: new ObjectId('65e9b58910afe6e94fc6e6fe'),
-      participants: ['testUser', 'anotherUser'],
+      participants: [
+        new ObjectId('64e9b58910afe6e94fc6e6fe'),
+        new ObjectId('63e9b58910afe6e94fc6e6fe'),
+      ],
       lastMessage: '',
       updatedAt: now,
     };

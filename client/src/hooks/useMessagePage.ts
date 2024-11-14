@@ -30,6 +30,7 @@ const useMessagePage = (conversationId: string) => {
 
     const newMessage: Message = {
       conversationId,
+      senderId: user._id,
       sender: user.username,
       text: message,
       sentAt: new Date(),

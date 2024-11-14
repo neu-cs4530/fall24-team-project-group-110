@@ -52,7 +52,10 @@ const ConversationPage = () => {
                 navigateChat(c);
               }}>
               <div className='convo-participants'>
-                {c.participants.filter(username => username !== user.username).join(', ')}
+                {c.participants
+                  .map(participant => participant.username)
+                  .filter(username => username !== user.username)
+                  .join(', ')}
               </div>
               <div className='convo-meta'>
                 {c.lastMessage} {getMetaData(new Date(c.updatedAt))}

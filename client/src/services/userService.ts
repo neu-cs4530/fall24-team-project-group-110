@@ -1,5 +1,5 @@
 import api from './config';
-import { User } from '../types';
+import { EditableUserFields, User } from '../types';
 
 const USER_API_URL = `${process.env.REACT_APP_SERVER_URL}/user`;
 
@@ -21,4 +21,25 @@ const addUser = async (username: string, password: string): Promise<User> => {
   return res.data;
 };
 
-export default addUser;
+const getUser = async (id: string): Promise<User> => {
+  const res = await api.get(`${USER_API_URL}/getUser/${id}`);
+  if (res.status !== 200) {
+    throw new Error('Error while fetching user');
+  }
+
+  return res.data;
+};
+
+const updateUser = async (id: string, updatedFields: EditableUserFields): Promise<User> => {
+  const res = await api.put(`${USER_API_URL}/updateUser`, {
+    uid: id,
+    newUserData: updatedFields,
+  });
+  if (res.status !== 200) {
+    throw new Error('Error while updating user');
+  }
+
+  return res.data;
+};
+
+export { addUser, getUser, updateUser };

@@ -241,14 +241,20 @@ export interface AddUserRequest extends Request {
 
 /**
  * Interface extending the request body when editing a user, which contains:
- * - qid - The unique identifier of the user being edited
+ * - uid - The unique identifier of the user being edited
  * - newUserData - The new user fields that has been edited
  */
 export interface EditUserRequest extends Request {
   body: {
-    qid: string,
+    uid: string,
     newUserData: Partial<User>,
   }
+}
+
+export interface GetUserRequest extends Request {
+  params: {
+    uid: string;
+  };
 }
 
 /**
@@ -331,6 +337,7 @@ export interface ServerToClientEvents {
   leaveRoom: (conversationId: string) => void;
   newMessage: (message: MessageResponse) => void;
   conversationUpdate: (conversation: ConversationResponse) => void;
+  notificationUpdate: (uid: string) => void;
 }
 
 export interface ClientToServerEvents {
@@ -352,10 +359,12 @@ export interface LoginRequest extends Request {
 
 /**
  * Interface extending the request body when adding a new conversation, which contains:
- * - body - The conversation being added.
+ * - body - The usernames of the participants of the conversation.
  */
 export interface AddConversationRequest extends Request {
-  body: Conversation;
+  body: {
+    participants: string[];
+  }
 }
 
 /**
@@ -372,7 +381,7 @@ export interface AddMessageRequest extends Request {
  */
 export interface FindConversationsByUsernameRequest extends Request {
   query: {
-    username: string,
+    userId: string,
   };
 }
 
@@ -400,6 +409,7 @@ export interface FindMessagesByConversationIdRequest extends Request {
  * Interface representing a message document, which contains:
  * - _id - The unique identifier for the message. Optional field.
  * - conversationId - The unique identifier for the conversation the message belongs to.
+ * - senderId - The unqiue identifier of the user who sent the message.
  * - sender - The username of the user who sent the message.
  * - text - The content of the message.
  * - sentAt - The date and time when the message was sent.
@@ -407,6 +417,7 @@ export interface FindMessagesByConversationIdRequest extends Request {
 export interface Message {
   _id?: ObjectId;
   conversationId: string;
+  senderId: string;
   sender: string;
   text: string;
   sentAt: Date;
@@ -415,13 +426,13 @@ export interface Message {
 /**
  * Interface representing a conversation document, which contains:
  * - _id - The unique identifier for the conversation. Optional field.
- * - participants - An array of usernames of the users participating in the conversation.
+ * - participants - An array of users participating in the conversation.
  * - lastMessage - The most recent message sent for the conversation.
  * - updatedAt - The date and time when the conversation was last updated.
  */
 export interface Conversation {
   _id?: ObjectId;
-  participants: string[];
+  participants: User[] | ObjectId[];
   lastMessage: string;
   updatedAt: Date;
 }

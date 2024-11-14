@@ -15,6 +15,9 @@ const messageSchema: Schema = new Schema(
     conversationId: {
       type: String,
     },
+    senderId: {
+      type: String,
+    },
     sender: {
       type: String,
     },
