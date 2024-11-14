@@ -53,8 +53,8 @@ class EmailService {
         auth: {
           user: 'test',
           pass: 'test',
-        }
-      }
+        },
+      };
     }
 
     this._transporter = nodemailer.createTransport(config);
