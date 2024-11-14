@@ -193,6 +193,7 @@ const conv1: Conversation = {
   ],
   lastMessage: '',
   updatedAt: new Date('2023-11-20T09:24:00'),
+  notifyList: [],
 };
 
 const conv2: Conversation = {
@@ -203,6 +204,7 @@ const conv2: Conversation = {
   ],
   lastMessage: '',
   updatedAt: new Date('2023-11-20T09:24:00'),
+  notifyList: [],
 };
 
 const conv3: Conversation = {
@@ -213,6 +215,7 @@ const conv3: Conversation = {
   ],
   lastMessage: '',
   updatedAt: new Date('2023-11-20T09:24:00'),
+  notifyList: [],
 };
 
 const msg1: Message = {
@@ -501,6 +504,7 @@ describe('application module', () => {
           upVotes: [],
           downVotes: [],
           comments: [],
+          notifyList: [],
         };
 
         const result = (await saveQuestion(mockQn)) as Question;
