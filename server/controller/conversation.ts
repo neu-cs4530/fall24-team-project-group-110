@@ -132,6 +132,7 @@ const conversationController = (socket: FakeSOSocket) => {
         participants,
         lastMessage: '',
         updatedAt: new Date(),
+        notifyList: [],
       };
 
       const result = await saveConversation(conversation);

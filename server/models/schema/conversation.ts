@@ -7,6 +7,7 @@ import { Schema } from 'mongoose';
  * Each conversation includes the following fields:
  * - `participants`: An array of the usernames of the users participating in the conversation.
  * - `updatedAt`: The date the conversation was last updated.
+ * - 'notifyList': An array of user IDs to notify when a new message is sent.
  */
 const conversationSchema: Schema = new Schema(
   {
@@ -19,6 +20,7 @@ const conversationSchema: Schema = new Schema(
       type: Date,
       default: Date.now,
     },
+    notifyList: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   },
   { collection: 'Conversation' },
 );

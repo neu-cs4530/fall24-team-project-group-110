@@ -66,6 +66,7 @@ const MOCK_QUESTIONS = [
     upVotes: [],
     downVotes: [],
     comments: [],
+    notifyList: [],
   },
   {
     _id: '65e9b5a995b6c7045a30d823',
@@ -79,6 +80,7 @@ const MOCK_QUESTIONS = [
     upVotes: [],
     downVotes: [],
     comments: [],
+    notifyList: [],
   },
   {
     _id: '34e9b58910afe6e94fc6e99f',
@@ -92,6 +94,7 @@ const MOCK_QUESTIONS = [
     upVotes: [],
     downVotes: [],
     comments: [],
+    notifyList: [],
   },
 ];
 

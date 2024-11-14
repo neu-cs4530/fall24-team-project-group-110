@@ -14,6 +14,7 @@ import { Schema } from 'mongoose';
  * - `upVotes`: An array of usernames that have upvoted the question.
  * - `downVotes`: An array of usernames that have downvoted the question.
  * - `comments`: Comments that have been added to the question by users.
+ * - `notifyList`: An array of user IDs to notify when the question is updated.
  */
 const questionSchema: Schema = new Schema(
   {
@@ -35,6 +36,7 @@ const questionSchema: Schema = new Schema(
     upVotes: [{ type: String }],
     downVotes: [{ type: String }],
     comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+    notifyList: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   },
   { collection: 'Question' },
 );

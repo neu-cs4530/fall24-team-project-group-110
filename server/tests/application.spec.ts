@@ -105,6 +105,7 @@ const QUESTIONS: Question[] = [
     upVotes: [],
     downVotes: [],
     comments: [],
+    notifyList: [],
   },
   {
     _id: new ObjectId('65e9b5a995b6c7045a30d823'),
@@ -118,6 +119,7 @@ const QUESTIONS: Question[] = [
     upVotes: [],
     downVotes: [],
     comments: [],
+    notifyList: [],
   },
   {
     _id: new ObjectId('65e9b9b44c052f0a08ecade0'),
@@ -131,6 +133,7 @@ const QUESTIONS: Question[] = [
     upVotes: [],
     downVotes: [],
     comments: [],
+    notifyList: [],
   },
   {
     _id: new ObjectId('65e9b716ff0e892116b2de09'),
@@ -144,6 +147,7 @@ const QUESTIONS: Question[] = [
     upVotes: [],
     downVotes: [],
     comments: [],
+    notifyList: [],
   },
 ];
 
@@ -189,6 +193,7 @@ const conv1: Conversation = {
   ],
   lastMessage: '',
   updatedAt: new Date('2023-11-20T09:24:00'),
+  notifyList: [],
 };
 
 const conv2: Conversation = {
@@ -199,6 +204,7 @@ const conv2: Conversation = {
   ],
   lastMessage: '',
   updatedAt: new Date('2023-11-20T09:24:00'),
+  notifyList: [],
 };
 
 const conv3: Conversation = {
@@ -209,6 +215,7 @@ const conv3: Conversation = {
   ],
   lastMessage: '',
   updatedAt: new Date('2023-11-20T09:24:00'),
+  notifyList: [],
 };
 
 const msg1: Message = {
@@ -497,6 +504,7 @@ describe('application module', () => {
           upVotes: [],
           downVotes: [],
           comments: [],
+          notifyList: [],
         };
 
         const result = (await saveQuestion(mockQn)) as Question;
