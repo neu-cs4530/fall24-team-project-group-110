@@ -257,6 +257,13 @@ export interface GetUserRequest extends Request {
   };
 }
 
+export interface AddFollowToUserRequest extends Request {
+  body: {
+    uid: string;
+    targetId: string;
+  };
+}
+
 /**
  * Interface extending the request body when adding a comment to a question or an answer, which contains:
  * - id - The unique identifier of the question or answer being commented on.

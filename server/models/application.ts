@@ -862,37 +862,48 @@ export const updateUserProfile = async (
   }
 };
 
-/** TODO: Other user following must be changed accordingly */
 /**
- * Adds follower to user.
+ * Adds following to user and follower to followed user.
  *
- * @param qid The ID of the current user.
- * @param user The user being followed.
+ * @param uid The Id of the current user.
+ * @param targetId The Id of the user being followed.
  * @returns {Promise<UserResponse>} - The new user, or an error message if the update failed
  */
-export const addFollowToUser = async (qid: string, user: User): Promise<UserResponse> => {
+export const addFollowToUser = async (uid: string, targetId: string): Promise<UserResponse> => {
   try {
-    // if (!user || !user.username || !user.email) {
-    //   throw new Error('Invalid user');
-    // }
-
-    const result = await UserModel.findOneAndUpdate(
-      { _id: qid },
+    const followingUser = await UserModel.findOneAndUpdate(
+      { _id: uid },
       {
         $cond: [
-          { $in: [user._id, '$followees'] },
-          { $filter: { input: '$followees', as: 'f', cond: { $ne: ['$$f', user._id] } } },
-          { $concatArrays: ['$followees', [user._id]] },
+          { $in: [targetId, '$following'] },
+          { $filter: { input: '$following', as: 'f', cond: { $ne: ['$$f', targetId] } } },
+          { $concatArrays: ['$following', [targetId]] },
         ],
       },
       { new: true },
     );
 
-    if (result == null) {
-      throw new Error('Failed to follow user');
+    if (followingUser == null) {
+      throw new Error('Failed to update user following');
     }
 
-    return result;
+    const followerUser = await UserModel.findOneAndUpdate(
+      { _id: targetId },
+      {
+        $cond: [
+          { $in: [uid, '$follower'] },
+          { $filter: { input: '$follower', as: 'f', cond: { $ne: ['$$f', uid] } } },
+          { $concatArrays: ['$follower', [uid]] },
+        ],
+      },
+      { new: true },
+    );
+
+    if (followerUser == null) {
+      throw new Error('Failed to update followed user');
+    }
+
+    return followingUser;
   } catch (error) {
     return { error: `Error when following: ${(error as Error).message}` };
   }

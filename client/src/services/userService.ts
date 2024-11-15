@@ -42,4 +42,12 @@ const updateUser = async (id: string, updatedFields: EditableUserFields): Promis
   return res.data;
 };
 
-export { addUser, getUser, updateUser };
+const followUser = async (uid: string, targetId: string): Promise<User> => {
+  const res = await api.put(`${USER_API_URL}/followUser`, { uid, targetId });
+  if (res.status !== 200) {
+    throw new Error('Error while following user');
+  }
+  return res.data;
+};
+
+export { addUser, getUser, updateUser, followUser };

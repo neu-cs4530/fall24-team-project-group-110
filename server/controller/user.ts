@@ -1,7 +1,14 @@
 import express, { Response } from 'express';
 import bcrypt from 'bcryptjs';
-import { User, AddUserRequest, FakeSOSocket, EditUserRequest, GetUserRequest } from '../types';
-import { populateUser, saveUser, updateUserProfile } from '../models/application';
+import {
+  User,
+  AddUserRequest,
+  FakeSOSocket,
+  EditUserRequest,
+  GetUserRequest,
+  AddFollowToUserRequest,
+} from '../types';
+import { addFollowToUser, populateUser, saveUser, updateUserProfile } from '../models/application';
 
 const userController = (socket: FakeSOSocket) => {
   const router = express.Router();
@@ -173,9 +180,40 @@ const userController = (socket: FakeSOSocket) => {
     }
   };
 
+  /**
+   * Adds following to user and follower to target user.
+   *
+   * @param req - The AddFollowToUserRequest object containing the user Id and target user Id.
+   * @param res - The HTTP response object used to send back the result of the operation.
+   *
+   * @returns A Promise that resolves to void.
+   */
+  const followUser = async (req: AddFollowToUserRequest, res: Response): Promise<void> => {
+    const { uid, targetId } = req.body;
+
+    try {
+      const followingUser = await addFollowToUser(uid, targetId);
+
+      if ('error' in followingUser) {
+        throw new Error(followingUser.error);
+      }
+
+      const populatedUser = await populateUser(uid);
+
+      if ('error' in populatedUser) {
+        throw new Error(populatedUser.error);
+      }
+
+      res.json(populatedUser);
+    } catch (err) {
+      res.status(500).send('Error following user');
+    }
+  };
+
   router.post('/addUser', addUser);
   router.put('/updateUser', updateUser);
   router.get('/getUser/:uid', getUser);
+  router.put('/followUser', followUser);
 
   return router;
 };
