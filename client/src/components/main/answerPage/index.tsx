@@ -29,6 +29,8 @@ const AnswerPage = () => {
         text={question.text}
         askby={question.askedBy}
         meta={getMetaData(new Date(question.askDateTime))}
+        qid={questionID}
+        notifyList={question.notifyList}
       />
       <CommentSection
         comments={question.comments}

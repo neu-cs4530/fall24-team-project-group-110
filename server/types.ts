@@ -137,6 +137,19 @@ export interface VoteRequest extends Request {
 }
 
 /**
+ * Interface for the request body when adding a new tag.
+ * - body - The tag being added.
+ * - name - The name of the tag.
+ * - description - The description of the tag.
+ */
+export interface changeUserToNotifyListRequest extends Request {
+  body: {
+    qid: string;
+    uid: string;
+  };
+}
+
+/**
  * Interface representing a Comment, which contains:
  * - _id - The unique identifier for the comment. Optional field.
  * - text - The content of the comment.

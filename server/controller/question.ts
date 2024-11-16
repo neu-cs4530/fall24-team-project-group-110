@@ -7,8 +7,10 @@ import {
   AddQuestionRequest,
   VoteRequest,
   FakeSOSocket,
+  changeUserToNotifyListRequest,
 } from '../types';
 import {
+  changeUserToNotifyListQuestion,
   addVoteToQuestion,
   fetchAndIncrementQuestionViewsById,
   filterQuestionsByAskedBy,
@@ -227,12 +229,63 @@ const questionController = (socket: FakeSOSocket) => {
     voteQuestion(req, res, 'downvote');
   };
 
+  const changeUserToNotifyList = async (
+    req: changeUserToNotifyListRequest,
+    res: Response,
+    type: 'add' | 'remove',
+  ): Promise<void> => {
+    if (!req.body.qid || !req.body.uid) {
+      res.status(400).send('Invalid request');
+      return;
+    }
+
+    const { qid, uid } = req.body;
+
+    try {
+      const result = await changeUserToNotifyListQuestion(uid, qid, type);
+
+      if (result && 'error' in result) {
+        throw new Error(result.error as string);
+      }
+
+      res.json(result);
+    } catch (err) {
+      res.status(500).send(`Error when ${type}ing user to notify list: ${(err as Error).message}`);
+    }
+  };
+
+  /**
+   * Handles adding a user to the notify list of a question.
+   * @param req - The request object containing the question ID and the username.
+   * @param res - The response object used to send back the result of the operation.
+   */
+  const addUserToNotifyList = async (
+    req: changeUserToNotifyListRequest,
+    res: Response,
+  ): Promise<void> => {
+    changeUserToNotifyList(req, res, 'add');
+  };
+
+  /**
+   * Handles removing a user from the notify list of a question.
+   * @param req - The request object containing the question ID and the username.
+   * @param res - The response object used to send back the result of the operation.
+   */
+  const removeUserToNotifyList = async (
+    req: changeUserToNotifyListRequest,
+    res: Response,
+  ): Promise<void> => {
+    changeUserToNotifyList(req, res, 'remove');
+  };
+
   // add appropriate HTTP verbs and their endpoints to the router
   router.get('/getQuestion', getQuestionsByFilter);
   router.get('/getQuestionById/:qid', getQuestionById);
   router.post('/addQuestion', addQuestion);
   router.post('/upvoteQuestion', upvoteQuestion);
   router.post('/downvoteQuestion', downvoteQuestion);
+  router.post('/addUserToNotifyList', addUserToNotifyList);
+  router.post('/removeUserToNotifyList', removeUserToNotifyList);
 
   return router;
 };
