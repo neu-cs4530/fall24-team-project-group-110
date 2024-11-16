@@ -15,6 +15,7 @@ import Register from './register';
 import { validate } from '../services/authService';
 import ProfilePage from './main/profilePage';
 import Verify from './verify';
+import PreLoginContext from '../contexts/PreLoginContext';
 
 const ProtectedRoute = ({
   user,
@@ -38,6 +39,7 @@ const ProtectedRoute = ({
  */
 const FakeStackOverflow = ({ socket }: { socket: FakeSOSocket | null }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [preLoginUser, setPreLoginUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
@@ -60,30 +62,32 @@ const FakeStackOverflow = ({ socket }: { socket: FakeSOSocket | null }) => {
 
   return !loading ? (
     <LoginContext.Provider value={{ setUser }}>
-      <Routes>
-        {/* Public Route */}
-        <Route path='/' element={<Login />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/verify' element={<Verify />} />
+      <PreLoginContext.Provider value={{ user: preLoginUser, setUser: setPreLoginUser }}>
+        <Routes>
+          {/* Public Route */}
+          <Route path='/' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/verify' element={<Verify />} />
 
-        {/* Protected Routes */}
-        {
-          <Route
-            element={
-              <ProtectedRoute user={user} socket={socket}>
-                <Layout />
-              </ProtectedRoute>
-            }>
-            <Route path='/home' element={<QuestionPage />} />
-            <Route path='tags' element={<TagPage />} />
-            <Route path='/question/:qid' element={<AnswerPage />} />
-            <Route path='/new/question' element={<NewQuestionPage />} />
-            <Route path='/new/answer/:qid' element={<NewAnswerPage />} />
-            <Route path='/conversation' element={<ConversationPage />} />
-            <Route path='/profile/:uid' element={<ProfilePage />} />
-          </Route>
-        }
-      </Routes>
+          {/* Protected Routes */}
+          {
+            <Route
+              element={
+                <ProtectedRoute user={user} socket={socket}>
+                  <Layout />
+                </ProtectedRoute>
+              }>
+              <Route path='/home' element={<QuestionPage />} />
+              <Route path='tags' element={<TagPage />} />
+              <Route path='/question/:qid' element={<AnswerPage />} />
+              <Route path='/new/question' element={<NewQuestionPage />} />
+              <Route path='/new/answer/:qid' element={<NewAnswerPage />} />
+              <Route path='/conversation' element={<ConversationPage />} />
+              <Route path='/profile/:uid' element={<ProfilePage />} />
+            </Route>
+          }
+        </Routes>
+      </PreLoginContext.Provider>
     </LoginContext.Provider>
   ) : null;
 };

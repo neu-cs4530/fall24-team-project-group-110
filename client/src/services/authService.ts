@@ -53,6 +53,18 @@ const logout = async (): Promise<void> => {
 };
 
 /**
+ * Sends a request to the server to resend a verification code to the user's email.
+ *
+ * @throws Error Throws an error if the request fails or the response status is not 204.
+ */
+const resendCode = async (email: string): Promise<void> => {
+  const res = await api.get(`${AUTH_API_URL}/resendCode?email=${email}`);
+  if (res.status !== 204) {
+    throw new Error('Error logging out');
+  }
+};
+
+/**
  * Sends a request to the server to verify a user's code that they got from their email.
  *
  * @returns The user object of the validated user.
@@ -67,4 +79,4 @@ const verify = async (code: string): Promise<User> => {
   return res.data;
 };
 
-export { login, validate, logout, verify };
+export { login, validate, logout, verify, resendCode };

@@ -97,9 +97,9 @@ const userController = (emailService: EmailService) => {
       req.session.code = Math.floor(1000 + Math.random() * 9000).toString();
 
       if (process.env.MODE === 'development' || process.env.MODE === 'production') {
-        await emailService.sendEmail({
+        emailService.sendEmail({
           to: user.email,
-          subject: 'Verification Code',
+          subject: 'FakeSO Verification Code',
           text: `Your verification code is: ${req.session.code}`,
         });
 

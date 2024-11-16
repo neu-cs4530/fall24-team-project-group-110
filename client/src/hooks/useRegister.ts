@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ChangeEvent, useState } from 'react';
-import useLoginContext from './useLoginContext';
 import { addUser } from '../services/userService';
+import usePreLoginContext from './usePreLoginContext';
 
 /**
  * Custom hook to handle login input and submission.
@@ -18,7 +18,7 @@ const useRegister = () => {
   const [password, setPassword] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [error, setError] = useState<string>('');
-  const { setUser } = useLoginContext();
+  const { setUser } = usePreLoginContext();
   const navigate = useNavigate();
 
   /**

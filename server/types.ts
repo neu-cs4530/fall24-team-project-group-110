@@ -454,3 +454,9 @@ export interface VerificationRequest extends Request {
     code: string;
   }
 }
+
+export interface ResendCodeRequest extends Request {
+  query: {
+    email: string;
+  }
+}

@@ -13,6 +13,7 @@ declare module 'express-session' {
   interface SessionData {
     userId?: string;
     code?: string;
+    verified?: boolean;
   }
 }
 
@@ -119,13 +120,16 @@ app.use((req: Request, res: Response, next) => {
   const unprotectedRoutes = new Set([
     '/user/addUser',
     '/auth/login',
+    '/auth/verify',
+    '/auth/logout',
+    '/auth/resendCode',
   ])
 
   if (unprotectedRoutes.has(req.path)) {
     return next();
   }
 
-  if (!req.session.userId) {
+  if (!req.session.userId || !req.session.verified) {
     return res.status(401).send('unauthorized');
   }
 
@@ -137,7 +141,7 @@ app.get('/', (req: Request, res: Response) => {
   res.end();
 });
 
-app.use('/auth', authController());
+app.use('/auth', authController(emailService));
 app.use('/question', questionController(socket));
 app.use('/tag', tagController());
 app.use('/answer', answerController(socket));

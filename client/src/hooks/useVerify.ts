@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { ChangeEvent, useState } from 'react';
 import useLoginContext from './useLoginContext';
-import { verify } from '../services/authService';
+import { verify, resendCode } from '../services/authService';
+import usePreLoginContext from './usePreLoginContext';
 
 /**
  * Custom hook to handle login input and submission.
@@ -16,6 +17,8 @@ const useVerify = () => {
   const [error, setError] = useState<string>('');
   const { setUser } = useLoginContext();
   const navigate = useNavigate();
+  const [resendText, setResendText] = useState<string>('');
+  const { user } = usePreLoginContext();
 
   /**
    * Function to handle the input change event for the code.
@@ -32,15 +35,29 @@ const useVerify = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const user = await verify(code);
-      setUser(user);
+      const verifiedUser = await verify(code);
+      setUser(verifiedUser);
       navigate('/home');
     } catch (e) {
       setError('Error while verifying user');
     }
   };
 
-  return { code, error, handleCodeChange, handleSubmit };
+  const handleResendCode = async () => {
+    try {
+      if (!user) {
+        navigate('/register');
+        return;
+      }
+
+      await resendCode(user.email);
+      setResendText('Code sent');
+    } catch (e) {
+      setResendText('Error while resending code');
+    }
+  };
+
+  return { code, error, resendText, handleCodeChange, handleSubmit, handleResendCode };
 };
 
 export default useVerify;

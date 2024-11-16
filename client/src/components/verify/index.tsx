@@ -9,7 +9,7 @@ import useVerify from '../../hooks/useVerify';
  * otherwise, an error message is displayed.
  */
 const Verify = () => {
-  const { code, error, handleCodeChange, handleSubmit } = useVerify();
+  const { code, error, resendText, handleCodeChange, handleSubmit, handleResendCode } = useVerify();
   const navigate = useNavigate();
 
   return (
@@ -38,6 +38,10 @@ const Verify = () => {
           </div>
         </div>
       </form>
+      <div>
+        <button onClick={() => handleResendCode()}>Click here to resend code</button>
+        <p>{resendText}</p>
+      </div>
     </div>
   );
 };

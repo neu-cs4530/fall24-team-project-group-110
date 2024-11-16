@@ -1,9 +1,10 @@
 import express, { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
-import { LoginRequest, VerificationRequest } from '../types';
+import { LoginRequest, ResendCodeRequest, VerificationRequest } from '../types';
 import { getUserById, getUserByUsername, verifyUser } from '../models/application';
+import { EmailService } from '../utils/email';
 
-const authController = () => {
+const authController = (emailService: EmailService) => {
   const router = express.Router();
 
   /**
@@ -49,6 +50,7 @@ const authController = () => {
 
       // _id is guaranteed to be set at this point
       req.session.userId = result._id!.toString();
+      req.session.verified = result.verified;
       res.status(200).send(result);
     } catch (err) {
       res.status(500).send(`Error when logging in`);
@@ -108,7 +110,40 @@ const authController = () => {
         throw new Error(result.error);
       }
 
+      req.session.verified = true;
       res.status(200).send(result);
+    } catch (err) {
+      res.status(500).send('Error verifying user');
+    }
+  };
+
+  /**
+   * Resends the verification code to the user's email.
+   *
+   * @param req The Request object containing the email and the session data.
+   * @param res The HTTP response object used to send back the result of the operation.
+   *
+   * @returns A Promise that resolves to void.
+   */
+  const resendCode = async (req: ResendCodeRequest, res: Response): Promise<void> => {
+    if (!req.query.email) {
+      res.status(400).send('Missing email');
+      return;
+    }
+
+    if (!req.session.code) {
+      res.status(400).send('Verification code no longer exists');
+      return;
+    }
+
+    try {
+      await emailService.sendEmail({
+        to: req.query.email,
+        subject: 'FakeSO Verification Code',
+        text: `Your verification code is: ${req.session.code}`,
+      });
+
+      res.sendStatus(204);
     } catch (err) {
       res.status(500).send('Error verifying user');
     }
@@ -136,6 +171,7 @@ const authController = () => {
   router.get('/validate', validate);
   router.post('/logout', logout);
   router.post('/verify', verify);
+  router.get('/resendCode', resendCode);
 
   return router;
 };
