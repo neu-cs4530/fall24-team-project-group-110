@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { getMetaData } from '../../../tool';
 import useMessagePage from '../../../hooks/useMessagePage';
 import './index.css';
+import NotificationCheckbox from '../notificationCheckbox';
+import { getConversationById } from '../../../services/conversationService';
+import { Conversation } from '../../../types';
 
 /**
  * Interface representing the props for the Chat Section component.
@@ -18,8 +21,26 @@ interface ChatSectionProps {
  * @param param conversationId: The id of the conversation.
  */
 const ChatSection = ({ conversationId }: ChatSectionProps) => {
+  const [notifyList, setNotifyList] = useState<string[]>([]);
   const { user, messagesEndRef, messages, message, setMessage, textErr, handleNewMessage } =
     useMessagePage(conversationId);
+
+  useEffect(() => {
+    /**
+     * Function to fetch notifyList based on the conversation id.
+     */
+    const fetchData = async () => {
+      try {
+        const res = await getConversationById(conversationId);
+        setNotifyList(res.notifyList);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, [conversationId]);
 
   return (
     <div className='chat-body'>
@@ -51,6 +72,11 @@ const ChatSection = ({ conversationId }: ChatSectionProps) => {
           <button className='send-message-button' onClick={handleNewMessage}>
             Send
           </button>
+          <NotificationCheckbox
+            targetId={conversationId}
+            notifyList={notifyList}
+            type='conversation'
+          />
         </div>
         {textErr && <small className='error'>{textErr}</small>}
       </div>

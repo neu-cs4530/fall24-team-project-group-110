@@ -144,7 +144,7 @@ export interface VoteRequest extends Request {
  */
 export interface changeUserToNotifyListRequest extends Request {
   body: {
-    qid: string;
+    targetId: string;
     uid: string;
   };
 }

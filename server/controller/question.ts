@@ -234,15 +234,15 @@ const questionController = (socket: FakeSOSocket) => {
     res: Response,
     type: 'add' | 'remove',
   ): Promise<void> => {
-    if (!req.body.qid || !req.body.uid) {
+    if (!req.body.targetId || !req.body.uid) {
       res.status(400).send('Invalid request');
       return;
     }
 
-    const { qid, uid } = req.body;
+    const { targetId, uid } = req.body;
 
     try {
-      const result = await changeUserToNotifyListQuestion(uid, qid, type);
+      const result = await changeUserToNotifyListQuestion(uid, targetId, type);
 
       if (result && 'error' in result) {
         throw new Error(result.error as string);

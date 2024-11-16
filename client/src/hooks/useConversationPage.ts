@@ -8,6 +8,7 @@ const useConversationPage = () => {
   const [clist, setClist] = useState<Conversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<string>('');
   const [participants, setParticipants] = useState<string>('');
+  const [notifyList, setNotifyList] = useState<string[]>([]);
   const [textErr, setTextErr] = useState<string>('');
 
   /**
@@ -45,7 +46,7 @@ const useConversationPage = () => {
 
   useEffect(() => {
     /**
-     * Function to fetch conversations based on the username and update the question list.
+     * Function to fetch conversations based on the username and update the conversation list.
      */
     const fetchData = async () => {
       try {
@@ -78,7 +79,10 @@ const useConversationPage = () => {
       }
 
       if (hasUser) {
-        setClist(prevList => [conversation, ...prevList.filter(c => c._id !== conversation._id)]);
+        setClist(prevList => [
+          { ...conversation, notifyList: conversation.notifyList || [] },
+          ...prevList.filter(c => c._id !== conversation._id),
+        ]);
       }
     };
 
@@ -96,6 +100,8 @@ const useConversationPage = () => {
     setSelectedConversation,
     participants,
     setParticipants,
+    notifyList,
+    setNotifyList,
     textErr,
     handleCreateConversation,
   };

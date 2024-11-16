@@ -2,12 +2,14 @@ import express, { Response } from 'express';
 import { ObjectId } from 'mongodb';
 import {
   AddConversationRequest,
+  changeUserToNotifyListRequest,
   Conversation,
   FakeSOSocket,
   FindConversationByIdRequest,
   FindConversationsByUsernameRequest,
 } from '../types';
 import {
+  changeUserToNotifyListConversation,
   getConversationById,
   getConversationsByUserIdSortedByDateDesc,
   getUsersByUsernames,
@@ -152,9 +154,60 @@ const conversationController = (socket: FakeSOSocket) => {
     }
   };
 
+  const changeUserToNotifyList = async (
+    req: changeUserToNotifyListRequest,
+    res: Response,
+    type: 'add' | 'remove',
+  ): Promise<void> => {
+    if (!req.body.targetId || !req.body.uid) {
+      res.status(400).send('Invalid request');
+      return;
+    }
+
+    const { targetId, uid } = req.body;
+
+    try {
+      const result = await changeUserToNotifyListConversation(uid, targetId, type);
+
+      if (result && 'error' in result) {
+        throw new Error(result.error as string);
+      }
+
+      res.json(result);
+    } catch (err) {
+      res.status(500).send(`Error when ${type}ing user to notify list: ${(err as Error).message}`);
+    }
+  };
+
+  /**
+   * Handles adding a user to the notify list of a question.
+   * @param req - The request object containing the question ID and the username.
+   * @param res - The response object used to send back the result of the operation.
+   */
+  const addUserToNotifyList = async (
+    req: changeUserToNotifyListRequest,
+    res: Response,
+  ): Promise<void> => {
+    changeUserToNotifyList(req, res, 'add');
+  };
+
+  /**
+   * Handles removing a user from the notify list of a question.
+   * @param req - The request object containing the question ID and the username.
+   * @param res - The response object used to send back the result of the operation.
+   */
+  const removeUserToNotifyList = async (
+    req: changeUserToNotifyListRequest,
+    res: Response,
+  ): Promise<void> => {
+    changeUserToNotifyList(req, res, 'remove');
+  };
+
   router.get('/getConversations', getConversationsByUsername);
   router.get('/getConversation/:cid', getConversation);
   router.post('/addConversation', addConversation);
+  router.post('/addUserToNotifyList', addUserToNotifyList);
+  router.post('/removeUserToNotifyList', removeUserToNotifyList);
 
   return router;
 };

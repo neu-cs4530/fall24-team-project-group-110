@@ -228,7 +228,7 @@ export interface Conversation {
   participants: User[];
   lastMessage: string;
   updatedAt: Date;
-  notifyList: User[];
+  notifyList: string[];
 }
 
 /**

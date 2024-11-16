@@ -252,7 +252,7 @@ export const changeUserToNotifyListConversation = async (
     if (addOrRemove === 'add') {
       result = await ConversationModel.findOneAndUpdate(
         { _id: conversationId },
-        { $push: { participants: userId } },
+        { $push: { notifyList: userId } },
         { new: true },
       );
       if (result === null) {
@@ -261,7 +261,7 @@ export const changeUserToNotifyListConversation = async (
     } else {
       result = await ConversationModel.findOneAndUpdate(
         { _id: conversationId },
-        { $pull: { participants: userId } },
+        { $pull: { notifyList: userId } },
         { new: true },
       );
       if (result === null) {
@@ -287,8 +287,6 @@ export const changeUserToNotifyListQuestion = async (
   addOrRemove: string,
 ): Promise<QuestionResponse> => {
   try {
-    console.log('userId', userId);
-    console.log('questionId', questionId);
     let result;
     if (addOrRemove === 'add') {
       result = await QuestionModel.findOneAndUpdate(
@@ -311,7 +309,6 @@ export const changeUserToNotifyListQuestion = async (
     }
     return result;
   } catch (error) {
-    console.log(error);
     return { error: 'Error when changing user to question' };
   }
 };

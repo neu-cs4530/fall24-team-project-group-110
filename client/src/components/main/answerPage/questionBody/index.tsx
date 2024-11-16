@@ -37,7 +37,7 @@ const QuestionBody = ({ views, text, askby, meta, qid, notifyList }: QuestionBod
     <div className='answer_question_right'>
       <div className='question_author'>{askby}</div>
       <div className='answer_question_meta'>asked {meta}</div>
-      <NotificationCheckbox qid={qid} notifyList={notifyList} />
+      <NotificationCheckbox targetId={qid} notifyList={notifyList} type='question' />
     </div>
   </div>
 );

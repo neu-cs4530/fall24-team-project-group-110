@@ -1,24 +1,50 @@
 import React, { useState } from 'react';
 import useUserContext from '../../../hooks/useUserContext';
-import { addUserToNotifyList, removeUserToNotifiyList as removeUserToNotifyList } from '../../../services/questionService';
+import {
+  addUserToNotifyListQuestion,
+  removeUserToNotifyListQuestion,
+} from '../../../services/questionService';
+import {
+  removeUserToNotifyListConversation,
+  addUserToNotifyListConversation,
+} from '../../../services/conversationService';
 
 interface NotificationCheckboxProps {
-  qid: string;
+  targetId: string;
   notifyList: string[];
+  type: 'question' | 'conversation';
 }
 
-const NotificationCheckbox: React.FC<NotificationCheckboxProps> = ({ qid, notifyList }) => {
+const NotificationCheckbox: React.FC<NotificationCheckboxProps> = ({
+  targetId,
+  notifyList,
+  type,
+}) => {
   const { user } = useUserContext();
   const [checked, setChecked] = useState(notifyList.includes(user._id));
 
   const handleChange = () => {
     setChecked(!checked);
-    if (qid) {
-      if (checked) {
-        removeUserToNotifyList(qid, user._id);
-      } else {
-        addUserToNotifyList(qid, user._id);
-      }
+    switch (type) {
+      case 'question':
+        if (targetId) {
+          if (checked) {
+            removeUserToNotifyListQuestion(targetId, user._id);
+          } else {
+            addUserToNotifyListQuestion(targetId, user._id);
+          }
+        }
+        break;
+      case 'conversation':
+        if (targetId) {
+          if (checked) {
+            removeUserToNotifyListConversation(targetId, user._id);
+          } else {
+            addUserToNotifyListConversation(targetId, user._id);
+          }
+        }
+        break;
+      default:
     }
   };
 
