@@ -66,7 +66,6 @@ const useAnswerForm = () => {
     const res = await addAnswer(questionID, answer);
 
     const newNotification = {
-      // _id: new ObjectId(new Date().getTime().toString()),
       type: 'question',
       text: `New answer has been made by ${user.username}`,
       targetId: questionID,
