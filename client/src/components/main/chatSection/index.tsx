@@ -4,7 +4,6 @@ import useMessagePage from '../../../hooks/useMessagePage';
 import './index.css';
 import NotificationCheckbox from '../notificationCheckbox';
 import { getConversationById } from '../../../services/conversationService';
-import { Conversation } from '../../../types';
 
 /**
  * Interface representing the props for the Chat Section component.

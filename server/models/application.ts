@@ -501,7 +501,6 @@ export const saveNotification = async (
     const result = await NotificationModel.create(notification);
     return result;
   } catch (error) {
-    console.log('Error when saving a notification:', error);
     return { error: 'Error when saving a notification' };
   }
 };

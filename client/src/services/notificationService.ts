@@ -13,9 +13,7 @@ const NOTIFCATION_API_URL = `${process.env.REACT_APP_SERVER_URL}/notification`;
 const addNotification = async (uid: string, notif: Notification): Promise<Notification> => {
   const data = { uid, notif };
 
-  console.log(data.toString());
   const res = await api.post(`${NOTIFCATION_API_URL}/addNotification`, data);
-  console.log(res);
   if (res.status !== 200) {
     throw new Error('Error while creating a new notification');
   }

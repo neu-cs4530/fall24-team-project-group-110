@@ -65,10 +65,8 @@ const notificationController = () => {
       res.status(400).send('Invalid notification body');
       return;
     }
-    console.log('Request body:', req.body);
     const { uid } = req.body;
     const notifInfo: Notification = req.body.notif;
-    console.log('UID:', uid, 'Notification:', notifInfo);
 
     try {
       const notFromDb = await saveNotification(notifInfo);
@@ -81,7 +79,6 @@ const notificationController = () => {
       }
       res.json(notFromDb);
     } catch (error) {
-      console.log('Error:', error);
       res.status(500).send('Error adding notification');
     }
   };
