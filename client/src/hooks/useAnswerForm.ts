@@ -73,7 +73,8 @@ const useAnswerForm = () => {
     };
     const question = await getQuestionById(questionID, user.username);
     const { notifyList } = question;
-    notifyList.forEach(async uid => addNotification(uid, newNotification));
+    const willNotify = notifyList.filter(uid => uid !== user._id);
+    willNotify.forEach(async uid => addNotification(uid, newNotification));
 
     if (res && res._id) {
       // navigate to the question that was answered
