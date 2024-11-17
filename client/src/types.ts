@@ -190,7 +190,7 @@ export interface EditableUserFields {
  * - dateTime - The date and time when the notification was created.
  */
 export interface Notification {
-  _id: string;
+  _id?: string;
   type: string;
   text: string;
   targetId: string;
