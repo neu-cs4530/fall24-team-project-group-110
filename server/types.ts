@@ -323,6 +323,11 @@ export interface AnswerUpdatePayload {
   answer: AnswerResponse;
 }
 
+export interface NotificationUpdatePayload {
+  uid: string;
+  notification: Notification;
+}
+
 /**
  * Interface representing the possible events that the server can emit to the client.
  */
@@ -337,7 +342,7 @@ export interface ServerToClientEvents {
   leaveRoom: (conversationId: string) => void;
   newMessage: (message: MessageResponse) => void;
   conversationUpdate: (conversation: ConversationResponse) => void;
-  notificationUpdate: (uid: string) => void;
+  notificationUpdate: (notification: NotificationUpdatePayload) => void;
 }
 
 export interface ClientToServerEvents {

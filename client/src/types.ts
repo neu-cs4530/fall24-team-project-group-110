@@ -131,6 +131,11 @@ export interface CommentUpdatePayload {
   type: 'question' | 'answer';
 }
 
+export interface NotificationUpdatePayload {
+  uid: string;
+  notification: Notification;
+}
+
 /**
  * Interface representing the possible events that the server can emit to the client.
  */
@@ -144,7 +149,7 @@ export interface ServerToClientEvents {
   leaveRoom: (conversationId: string) => void;
   newMessage: (message: Message) => void;
   conversationUpdate: (conversation: Conversation) => void;
-  notificationUpdate: (uid: string) => void;
+  notificationUpdate: (notification: NotificationUpdatePayload) => void;
 }
 
 export interface ClientToServerEvents {

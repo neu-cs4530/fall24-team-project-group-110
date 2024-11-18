@@ -48,12 +48,15 @@ const useNotification = () => {
   }, [fetchUserNotifs, user._id]);
 
   useEffect(() => {
-    /**
-     *
-     */
-    const handleNewNotifications = (uid: string) => {
+    const handleNewNotifications = ({
+      uid,
+      notification,
+    }: {
+      uid: string;
+      notification: Notification;
+    }) => {
       if (user._id === uid) {
-        fetchUserNotifs();
+        setNlist(prevList => [notification, ...prevList]);
       }
     };
 

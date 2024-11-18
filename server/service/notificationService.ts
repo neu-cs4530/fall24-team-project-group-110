@@ -18,21 +18,18 @@ export const sendNotification = async (
 ): Promise<void> => {
   try {
     await Promise.all(
-      recipients.map(user => {
-        if (user._id) {
-          return createNotification(user._id.toString(), type, text, targetId);
-        }
-        return Promise.resolve();
-      }),
-    );
-    await Promise.all(
       recipients.map(async user => {
         if (user._id) {
-          const populatedUser = await populateUser(user._id.toString());
-          if ('error' in populatedUser) {
-            throw new Error('Error fetching and populating user');
+          const notification = await createNotification(user._id.toString(), type, text, targetId);
+
+          if ('error' in notification) {
+            throw new Error('Error creating notification');
           }
-          socket.emit('notificationUpdate', user._id.toString());
+
+          socket.emit('notificationUpdate', {
+            uid: user._id.toString(),
+            notification,
+          });
         }
       }),
     );
