@@ -169,6 +169,7 @@ async function questionCreate(
     upVotes: [],
     downVotes: [],
     comments: comments,
+    notifyList: [],
   };
   return await QuestionModel.create(questionDetail);
 }

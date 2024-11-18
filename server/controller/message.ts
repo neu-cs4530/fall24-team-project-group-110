@@ -13,6 +13,7 @@ import {
   getMessagesSortedByDateAsc,
   updateConversationWithMessage,
   populateConversation,
+  populateMessage,
 } from '../models/application';
 import { sendNotification } from '../service/notificationService';
 
@@ -75,11 +76,7 @@ const messageController = (socket: FakeSOSocket) => {
       errors.error.conversationId = 'Conversation ID is required';
     }
 
-    if (!message.senderId || message.senderId === '') {
-      errors.error.sender = 'SenderId is required';
-    }
-
-    if (!message.sender || message.sender === '') {
+    if (!message.sender) {
       errors.error.sender = 'Sender is required';
     }
 
@@ -123,6 +120,11 @@ const messageController = (socket: FakeSOSocket) => {
         throw new Error(result.error);
       }
 
+      const populatedMessage = await populateMessage(result._id!.toString());
+      if ('error' in populatedMessage) {
+        throw new Error(populatedMessage.error);
+      }
+
       const updatedConversation = await updateConversationWithMessage(result);
       if ('error' in updatedConversation) {
         throw new Error(updatedConversation.error);
@@ -134,7 +136,7 @@ const messageController = (socket: FakeSOSocket) => {
       }
 
       const recipients = populatedUpdatedConversation.participants.filter(
-        user => user._id !== undefined && user._id!.toString() !== result.senderId,
+        user => user._id && user._id.toString() !== result.sender._id!.toString(),
       ) as User[];
       sendNotification(
         socket,
@@ -144,7 +146,7 @@ const messageController = (socket: FakeSOSocket) => {
         populatedUpdatedConversation._id!.toString(),
       );
 
-      socket.to(req.body.conversationId).emit('newMessage', result);
+      socket.to(req.body.conversationId).emit('newMessage', populatedMessage);
       socket.emit('conversationUpdate', populatedUpdatedConversation);
       res.json(result);
     } catch (error) {

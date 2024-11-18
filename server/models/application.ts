@@ -656,7 +656,7 @@ export const addNotificationToUser = async (
     }
     const result = await UserModel.findOneAndUpdate(
       { _id: userId },
-      { $push: { notifications: { $each: [notification._id] } } },
+      { $push: { notifications: notification._id } },
       { new: true },
     );
     if (result === null) {
@@ -1100,7 +1100,9 @@ export const updateConversationWithMessage = async (
  */
 export const getMessagesSortedByDateAsc = async (c_id: string): Promise<Message[]> => {
   try {
-    const result = await MessageModel.find({ conversationId: c_id }).sort({ sentAt: 1 });
+    const result = await MessageModel.find({ conversationId: c_id })
+      .populate({ path: 'sender', model: UserModel })
+      .sort({ sentAt: 1 });
 
     return result;
   } catch (error) {
@@ -1131,5 +1133,32 @@ export const checkConversationAccess = async (
     return participantIdStrings.includes(id);
   } catch (error) {
     return false;
+  }
+};
+
+/**
+ * Fetches and populates a message document based on the message ID.
+ *
+ * @param {string} mid - The ID of the message to fetch.
+ *
+ * @returns {Promise<MessageResponse>} - Promise that resolves to the populated message,
+ *                                    or an error message if the operation fails
+ */
+export const populateMessage = async (mid: string): Promise<MessageResponse> => {
+  try {
+    const result = await MessageModel.findOne({ _id: mid }).populate([
+      {
+        path: 'sender',
+        model: UserModel,
+      },
+    ]);
+
+    if (!result) {
+      throw new Error(`Failed to fetch and populate a message`);
+    }
+
+    return result;
+  } catch (error) {
+    return { error: `Error when fetching and populating a message: ${(error as Error).message}` };
   }
 };

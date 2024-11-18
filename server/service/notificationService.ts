@@ -1,4 +1,4 @@
-import { createNotification, populateUser } from '../models/application';
+import { createNotification } from '../models/application';
 import { FakeSOSocket, User } from '../types';
 
 /**

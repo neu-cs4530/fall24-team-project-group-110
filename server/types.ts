@@ -66,6 +66,7 @@ export interface Tag {
  * - upVotes - An array of usernames that have upvoted the question.
  * - downVotes - An array of usernames that have downvoted the question.
  * - comments - Object IDs of comments that have been added to the question by users, or comments themselves if populated.
+ * - notifyList - An array of user IDs to notify when the question is updated.
  */
 export interface Question {
   _id?: ObjectId;
@@ -79,6 +80,7 @@ export interface Question {
   upVotes: string[];
   downVotes: string[];
   comments: Comment[] | ObjectId[];
+  notifyList: User[] | ObjectId[];
 }
 
 /**
@@ -414,16 +416,14 @@ export interface FindMessagesByConversationIdRequest extends Request {
  * Interface representing a message document, which contains:
  * - _id - The unique identifier for the message. Optional field.
  * - conversationId - The unique identifier for the conversation the message belongs to.
- * - senderId - The unqiue identifier of the user who sent the message.
- * - sender - The username of the user who sent the message.
+ * - sender - The user who sent the message.
  * - text - The content of the message.
  * - sentAt - The date and time when the message was sent.
  */
 export interface Message {
   _id?: ObjectId;
   conversationId: string;
-  senderId: string;
-  sender: string;
+  sender: User | ObjectId;
   text: string;
   sentAt: Date;
 }
@@ -434,12 +434,14 @@ export interface Message {
  * - participants - An array of users participating in the conversation.
  * - lastMessage - The most recent message sent for the conversation.
  * - updatedAt - The date and time when the conversation was last updated.
+ * - notifyList - An array of user IDs to notify when a new message is sent.
  */
 export interface Conversation {
   _id?: ObjectId;
   participants: User[] | ObjectId[];
   lastMessage: string;
   updatedAt: Date;
+  notifyList: User[] | ObjectId[];
 }
 
 /**

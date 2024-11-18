@@ -97,6 +97,7 @@ export interface Answer {
  * - upVotes - An array of usernames who upvoted the question.
  * - downVotes - An array of usernames who downvoted the question.
  * - comments - Comments associated with the question.
+ * - notifyList - An array of user IDs to notify when the question is updated.
  */
 export interface Question {
   _id?: string;
@@ -110,6 +111,7 @@ export interface Question {
   upVotes: string[];
   downVotes: string[];
   comments: Comment[];
+  notifyList: string[];
 }
 
 /**
@@ -205,16 +207,14 @@ export interface Notification {
  * Interface representing a message document, which contains:
  * - _id - The unique identifier for the message. Optional field.
  * - conversationId - The unique identifier for the conversation the message belongs to.
- * - senderId - The unqiue identifier of the user who sent the message.
- * - sender - The username of the user who sent the message.
+ * - sender - The user who sent the message.
  * - text - The content of the message.
  * - sentAt - The date and time when the message was sent.
  */
 export interface Message {
   _id?: string;
   conversationId: string;
-  senderId: string;
-  sender: string;
+  sender: User;
   text: string;
   sentAt: Date;
 }
@@ -226,12 +226,14 @@ export interface Message {
  * - participants - An array of usernames of the users participating in the conversation.
  * - lastMessage - The most recent message sent for the conversation.
  * - updatedAt - The date and time when the conversation was last updated.
+ * - notifyList - An array of user IDs to notify when a new message is sent.
  */
 export interface Conversation {
   _id?: string;
   participants: User[];
   lastMessage: string;
   updatedAt: Date;
+  notifyList: User[];
 }
 
 /**
