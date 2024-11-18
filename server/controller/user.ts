@@ -1,7 +1,13 @@
 import express, { Response } from 'express';
 import bcrypt from 'bcryptjs';
 import { User, AddUserRequest, EditUserRequest, GetUserRequest } from '../types';
-import { populateUser, deleteUserById, getUserById, saveUser, updateUserProfile } from '../models/application';
+import {
+  populateUser,
+  deleteUserById,
+  getUserById,
+  saveUser,
+  updateUserProfile,
+} from '../models/application';
 import { EmailService } from '../utils/email';
 
 const userController = (emailService: EmailService) => {
