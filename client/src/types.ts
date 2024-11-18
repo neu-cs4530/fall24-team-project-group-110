@@ -237,3 +237,5 @@ export interface Conversation {
 export interface NewConversationPayload {
   participants: string[];
 }
+
+export type ProfileTabs = 'profile' | 'followers' | 'following';

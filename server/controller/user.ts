@@ -7,8 +7,15 @@ import {
   EditUserRequest,
   GetUserRequest,
   AddFollowToUserRequest,
+  GetAllUsersRequest,
 } from '../types';
-import { addFollowToUser, populateUser, saveUser, updateUserProfile } from '../models/application';
+import {
+  addFollowToUser,
+  getUsers,
+  populateUser,
+  saveUser,
+  updateUserProfile,
+} from '../models/application';
 
 const userController = (socket: FakeSOSocket) => {
   const router = express.Router();
@@ -157,6 +164,22 @@ const userController = (socket: FakeSOSocket) => {
   };
 
   /**
+   * Retrieves all user.
+   *
+   * @param res The HTTP response object used to send back the result of the operation.
+   *
+   * @returns A Promise that resolves to void.
+   */
+  const getAllUsers = async (req: GetAllUsersRequest, res: Response): Promise<void> => {
+    try {
+      const ulist: User[] = await getUsers();
+      res.json(ulist);
+    } catch (err) {
+      res.status(500).send('Error when getting all users');
+    }
+  };
+
+  /**
    * Retrieves a user by its unique ID.
    *
    * @param req The GetUserRequest object containing the user ID.
@@ -189,30 +212,35 @@ const userController = (socket: FakeSOSocket) => {
    * @returns A Promise that resolves to void.
    */
   const followUser = async (req: AddFollowToUserRequest, res: Response): Promise<void> => {
-    const { uid, targetId } = req.body;
+    const { currentUser, targetUser } = req.body;
 
     try {
-      const followingUser = await addFollowToUser(uid, targetId);
+      const followingUser = await addFollowToUser(currentUser, targetUser);
 
       if ('error' in followingUser) {
         throw new Error(followingUser.error);
       }
 
-      const populatedUser = await populateUser(uid);
+      const populatedUser = await populateUser(currentUser._id!.toString());
 
       if ('error' in populatedUser) {
         throw new Error(populatedUser.error);
       }
 
       res.json(populatedUser);
-    } catch (err) {
-      res.status(500).send('Error following user');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        res.status(500).send(`Error following user: ${err.message}`);
+      } else {
+        res.status(500).send(`Error following user`);
+      }
     }
   };
 
   router.post('/addUser', addUser);
   router.put('/updateUser', updateUser);
   router.get('/getUser/:uid', getUser);
+  router.get('/getAllUsers', getAllUsers);
   router.put('/followUser', followUser);
 
   return router;

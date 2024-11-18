@@ -68,3 +68,30 @@
 .edit-basic-field-container {
   display: flex;
 }
+
+.tab-container {
+  margin-top: 20px;
+}
+
+.tablinks button {
+  background-color: #f1f1f1;
+  border: none;
+  padding: 10px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tablinks button.active {
+  background-color: #ccc;
+  font-weight: bold;
+}
+
+.tabcontent {
+  display: none;
+  padding-top: 10px;
+}
+
+.tabcontent.active {
+  display: block;
+}

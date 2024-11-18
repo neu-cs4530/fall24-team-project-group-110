@@ -1,4 +1,5 @@
 import { User } from '../../../../types';
+import FollowComponent from '../../followComponent';
 
 interface ViewProfileProps {
   profile: User;
@@ -8,6 +9,7 @@ interface ViewProfileProps {
 
 const ViewProfile = ({ profile, canEdit, onEdit }: ViewProfileProps) => (
   <div className='view-container'>
+    {!canEdit && <FollowComponent profile={profile} />}
     <div className='basic-picture-container'>
       <div className='basic-container'>
         <p>Username: {profile.username}</p>
@@ -23,6 +25,7 @@ const ViewProfile = ({ profile, canEdit, onEdit }: ViewProfileProps) => (
       <h2>Bio:</h2>
       <p>{profile.bio}</p>
     </div>
+    <div></div>
     <div className='view-buttons-container'>
       {canEdit && <button onClick={onEdit}>Edit Profile</button>}
     </div>

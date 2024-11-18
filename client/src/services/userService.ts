@@ -12,12 +12,18 @@ const USER_API_URL = `${process.env.REACT_APP_SERVER_URL}/user`;
  */
 const addUser = async (username: string, password: string): Promise<User> => {
   const data = { username, password };
-
   const res = await api.post(`${USER_API_URL}/addUser`, data);
   if (res.status !== 200) {
     throw new Error('Error while creating a new user');
   }
+  return res.data;
+};
 
+const getAllUsers = async (): Promise<User[]> => {
+  const res = await api.get(`${USER_API_URL}/getAllUsers`);
+  if (res.status !== 200) {
+    throw new Error('Error while fetching all users');
+  }
   return res.data;
 };
 
@@ -26,7 +32,6 @@ const getUser = async (id: string): Promise<User> => {
   if (res.status !== 200) {
     throw new Error('Error while fetching user');
   }
-
   return res.data;
 };
 
@@ -38,16 +43,15 @@ const updateUser = async (id: string, updatedFields: EditableUserFields): Promis
   if (res.status !== 200) {
     throw new Error('Error while updating user');
   }
-
   return res.data;
 };
 
-const followUser = async (uid: string, targetId: string): Promise<User> => {
-  const res = await api.put(`${USER_API_URL}/followUser`, { uid, targetId });
+const followUser = async (currentUser: User, targetUser: User): Promise<User> => {
+  const res = await api.put(`${USER_API_URL}/followUser`, { currentUser, targetUser });
   if (res.status !== 200) {
     throw new Error('Error while following user');
   }
   return res.data;
 };
 
-export { addUser, getUser, updateUser, followUser };
+export { addUser, getAllUsers, getUser, updateUser, followUser };

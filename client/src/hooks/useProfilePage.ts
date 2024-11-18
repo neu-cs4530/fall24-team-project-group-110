@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { EditableUserFields, User } from '../types';
+import { EditableUserFields, User, ProfileTabs } from '../types';
 import { getUser, updateUser } from '../services/userService';
 import useLoginContext from './useLoginContext';
 import useUserContext from './useUserContext';
@@ -9,6 +9,7 @@ const useProfilePage = () => {
   const { uid } = useParams();
   const navigate = useNavigate();
   const [profile, setProfile] = useState<User | null>(null);
+  const [activeTab, setActiveTab] = useState<ProfileTabs>('profile');
   const [textErr, setTextErr] = useState<string>('');
   const { setUser } = useLoginContext();
   const { user } = useUserContext();
@@ -31,6 +32,10 @@ const useProfilePage = () => {
     }
   }, [uid, navigate]);
 
+  const navigateProfile = (targetId: string) => {
+    navigate(`/profile/${targetId}`);
+  };
+
   const saveProfile = async () => {
     if (profile) {
       try {
@@ -51,7 +56,16 @@ const useProfilePage = () => {
     }
   };
 
-  return { profile, textErr, canEdit, setProfile, saveProfile };
+  return {
+    profile,
+    activeTab,
+    textErr,
+    canEdit,
+    setProfile,
+    setActiveTab,
+    navigateProfile,
+    saveProfile,
+  };
 };
 
 export default useProfilePage;

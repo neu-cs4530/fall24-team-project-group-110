@@ -259,9 +259,15 @@ export interface GetUserRequest extends Request {
 
 export interface AddFollowToUserRequest extends Request {
   body: {
-    uid: string;
-    targetId: string;
+    currentUser: User;
+    targetUser: User;
   };
+}
+
+export interface GetAllUsersRequest extends Request {
+  query: {
+
+  }
 }
 
 /**

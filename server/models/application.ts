@@ -745,6 +745,14 @@ export const populateUser = async (uid: string): Promise<UserResponse> => {
   try {
     const result = await UserModel.findOne({ _id: uid }).populate([
       {
+        path: 'followers',
+        model: UserModel,
+      },
+      {
+        path: 'following',
+        model: UserModel,
+      },
+      {
         path: 'notifications',
         model: NotificationModel,
       },
@@ -865,47 +873,58 @@ export const updateUserProfile = async (
 /**
  * Adds following to user and follower to followed user.
  *
- * @param uid The Id of the current user.
- * @param targetId The Id of the user being followed.
+ * @param currentUser - The current user following target user.
+ * @param targetUser - The user being followed.
  * @returns {Promise<UserResponse>} - The new user, or an error message if the update failed
  */
-export const addFollowToUser = async (uid: string, targetId: string): Promise<UserResponse> => {
+export const addFollowToUser = async (
+  currentUser: User,
+  targetUser: User,
+): Promise<UserResponse> => {
   try {
+    const isFollowing = await UserModel.exists({ _id: currentUser._id, following: targetUser._id });
+
     const followingUser = await UserModel.findOneAndUpdate(
-      { _id: uid },
-      {
-        $cond: [
-          { $in: [targetId, '$following'] },
-          { $filter: { input: '$following', as: 'f', cond: { $ne: ['$$f', targetId] } } },
-          { $concatArrays: ['$following', [targetId]] },
-        ],
-      },
+      { _id: currentUser._id },
+      isFollowing
+        ? { $pull: { following: targetUser._id } }
+        : { $push: { following: { $each: [targetUser._id] } } },
       { new: true },
     );
 
     if (followingUser == null) {
-      throw new Error('Failed to update user following');
+      throw new Error(`Failed to update user following: ${followingUser}`);
     }
 
     const followerUser = await UserModel.findOneAndUpdate(
-      { _id: targetId },
-      {
-        $cond: [
-          { $in: [uid, '$follower'] },
-          { $filter: { input: '$follower', as: 'f', cond: { $ne: ['$$f', uid] } } },
-          { $concatArrays: ['$follower', [uid]] },
-        ],
-      },
+      { _id: targetUser._id },
+      isFollowing
+        ? { $pull: { followers: currentUser._id } }
+        : { $push: { followers: { $each: [currentUser._id] } } },
       { new: true },
     );
 
     if (followerUser == null) {
-      throw new Error('Failed to update followed user');
+      throw new Error('Failed to update user following');
     }
 
     return followingUser;
   } catch (error) {
     return { error: `Error when following: ${(error as Error).message}` };
+  }
+};
+
+/**
+ * Gets users based on search filter.
+ *
+ * @returns {User[]} - The list of users.
+ */
+export const getUsers = async (): Promise<User[]> => {
+  try {
+    const ulist = await UserModel.find();
+    return ulist;
+  } catch (error) {
+    return [];
   }
 };
 

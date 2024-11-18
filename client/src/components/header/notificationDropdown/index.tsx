@@ -9,13 +9,14 @@ const NotificationDropdown = () => {
     isNotifOpen,
     notificationCount,
     nlist,
+    dropdownRef,
     handleToggle,
     navigateNotification,
     handleDeleteAllNotifications,
   } = useNotification();
 
   return (
-    <div className='notification-container'>
+    <div className='notification-container' ref={dropdownRef}>
       <div className='notification-icon' onClick={handleToggle}>
         <FaBell />
         {notificationCount > 0 && <span className='notification-badge'>{notificationCount}</span>}
