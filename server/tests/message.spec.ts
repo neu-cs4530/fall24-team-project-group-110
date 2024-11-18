@@ -21,6 +21,7 @@ const testUser: User = {
   followers: [],
   following: [],
   notifications: [],
+  verified: false,
 };
 
 describe('POST /addMessage', () => {
