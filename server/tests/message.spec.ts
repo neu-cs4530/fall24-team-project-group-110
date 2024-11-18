@@ -3,10 +3,7 @@ import supertest from 'supertest';
 import { ObjectId } from 'mongodb';
 import { app } from '../app';
 import * as util from '../models/application';
-import NotificationService from '../services/notification';
 import { Conversation, Message, User } from '../types';
-
-const notificationService = new NotificationService({} as any);
 
 const testUser: User = {
   _id: new ObjectId('65e9b716ff0e892116b2de19'),

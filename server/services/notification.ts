@@ -26,7 +26,12 @@ class NotificationService {
       await Promise.all(
         recipients.map(async user => {
           if (user._id) {
-            const notification = await createNotification(user._id.toString(), type, text, targetId);
+            const notification = await createNotification(
+              user._id.toString(),
+              type,
+              text,
+              targetId,
+            );
 
             if ('error' in notification) {
               throw new Error('Error creating notification');
