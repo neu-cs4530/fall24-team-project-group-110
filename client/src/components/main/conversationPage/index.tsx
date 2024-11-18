@@ -12,10 +12,10 @@ const ConversationPage = () => {
     user,
     clist,
     selectedConversation,
-    setSelectedConversation,
     participants,
     setParticipants,
     textErr,
+    navigateChat,
     handleCreateConversation,
   } = useConversationPage();
 
@@ -49,9 +49,7 @@ const ConversationPage = () => {
             <div
               className='conversation'
               onClick={() => {
-                if (c._id) {
-                  setSelectedConversation(c._id);
-                }
+                navigateChat(c);
               }}>
               <div className='convo-participants'>
                 {c.participants

@@ -10,8 +10,8 @@ const USER_API_URL = `${process.env.REACT_APP_SERVER_URL}/user`;
  * @param password - The password of the new user.
  * @throws Error Throws an error if the request fails or the response status is not 200.
  */
-const addUser = async (username: string, password: string): Promise<User> => {
-  const data = { username, password };
+const addUser = async (username: string, email: string, password: string): Promise<User> => {
+  const data = { username, email, password };
 
   const res = await api.post(`${USER_API_URL}/addUser`, data);
   if (res.status !== 200) {

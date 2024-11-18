@@ -1,9 +1,16 @@
 import express, { Response } from 'express';
 import bcrypt from 'bcryptjs';
-import { User, AddUserRequest, FakeSOSocket, EditUserRequest, GetUserRequest } from '../types';
-import { getUserById, saveUser, updateUserProfile } from '../models/application';
+import { User, AddUserRequest, EditUserRequest, GetUserRequest } from '../types';
+import {
+  populateUser,
+  deleteUserById,
+  getUserById,
+  saveUser,
+  updateUserProfile,
+} from '../models/application';
+import { EmailService } from '../services/email';
 
-const userController = (socket: FakeSOSocket) => {
+const userController = (emailService: EmailService) => {
   const router = express.Router();
 
   /**
@@ -16,6 +23,8 @@ const userController = (socket: FakeSOSocket) => {
   const isUserValid = (user: User): boolean =>
     user.password !== undefined &&
     user.password !== '' &&
+    user.email !== undefined &&
+    user.email !== '' &&
     user.username !== undefined &&
     user.username !== '';
 
@@ -40,6 +49,10 @@ const userController = (socket: FakeSOSocket) => {
 
     if (user.username !== undefined && user.username === '') {
       errors.error.username = 'Username cannot be empty';
+    }
+
+    if (user.email !== undefined && user.email === '') {
+      errors.error.email = 'Email cannot be empty';
     }
 
     if (user.password !== undefined && user.password === '') {
@@ -71,7 +84,6 @@ const userController = (socket: FakeSOSocket) => {
       password: hashedPassword,
       firstName: '',
       lastName: '',
-      email: '',
       bio: '',
       picture: '',
       comments: [],
@@ -88,6 +100,31 @@ const userController = (socket: FakeSOSocket) => {
       }
 
       req.session.userId = result._id!.toString();
+      req.session.code = Math.floor(1000 + Math.random() * 9000).toString();
+
+      if (process.env.MODE === 'development' || process.env.MODE === 'production') {
+        emailService.sendEmail({
+          to: user.email,
+          subject: 'FakeSO Verification Code',
+          text: `Your verification code is: ${req.session.code}`,
+        });
+
+        setTimeout(
+          async () => {
+            const u = await getUserById(result._id!.toString());
+            if ('error' in u) {
+              await deleteUserById(result._id!.toString());
+              return;
+            }
+
+            if (u.verified === false) {
+              await deleteUserById(result._id!.toString());
+            }
+          },
+          5 * 60 * 1000,
+        );
+      }
+
       res.json(result);
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -149,17 +186,25 @@ const userController = (socket: FakeSOSocket) => {
     }
   };
 
+  /**
+   * Retrieves a user by its unique ID.
+   *
+   * @param req The GetUserRequest object containing the user ID.
+   * @param res The HTTP response object used to send back the result of the operation.
+   *
+   * @returns A Promise that resolves to void.
+   */
   const getUser = async (req: GetUserRequest, res: Response): Promise<void> => {
     const { uid } = req.params;
 
     try {
-      const result = await getUserById(uid);
+      const populatedUser = await populateUser(uid);
 
-      if ('error' in result) {
-        throw new Error(result.error);
+      if ('error' in populatedUser) {
+        throw new Error(populatedUser.error);
       }
 
-      res.json(result);
+      res.json(populatedUser);
     } catch (err) {
       res.status(500).send('Error when getting user');
     }

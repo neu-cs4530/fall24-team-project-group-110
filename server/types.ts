@@ -196,6 +196,7 @@ export interface User {
   followers: User[] | ObjectId[];
   following: User[] | ObjectId[];
   notifications: Notification[] | ObjectId[];
+  verified: boolean;
 }
 
 /**
@@ -272,10 +273,6 @@ export interface GetUserRequest extends Request {
   };
 }
 
-export interface AddUserRequest extends Request {
-  body: User;
-}
-
 /**
  * Interface extending the request body when adding a comment to a question or an answer, which contains:
  * - id - The unique identifier of the question or answer being commented on.
@@ -342,6 +339,11 @@ export interface AnswerUpdatePayload {
   answer: AnswerResponse;
 }
 
+export interface NotificationUpdatePayload {
+  uid: string;
+  notification: Notification;
+}
+
 /**
  * Interface representing the possible events that the server can emit to the client.
  */
@@ -356,6 +358,7 @@ export interface ServerToClientEvents {
   leaveRoom: (conversationId: string) => void;
   newMessage: (message: MessageResponse) => void;
   conversationUpdate: (conversation: ConversationResponse) => void;
+  notificationUpdate: (notification: NotificationUpdatePayload) => void;
 }
 
 export interface ClientToServerEvents {
@@ -427,14 +430,14 @@ export interface FindMessagesByConversationIdRequest extends Request {
  * Interface representing a message document, which contains:
  * - _id - The unique identifier for the message. Optional field.
  * - conversationId - The unique identifier for the conversation the message belongs to.
- * - sender - The username of the user who sent the message.
+ * - sender - The user who sent the message.
  * - text - The content of the message.
  * - sentAt - The date and time when the message was sent.
  */
 export interface Message {
   _id?: ObjectId;
   conversationId: string;
-  sender: string;
+  sender: User | ObjectId;
   text: string;
   sentAt: Date;
 }
@@ -442,7 +445,7 @@ export interface Message {
 /**
  * Interface representing a conversation document, which contains:
  * - _id - The unique identifier for the conversation. Optional field.
- * - participants - An array of usernames of the users participating in the conversation.
+ * - participants - An array of users participating in the conversation.
  * - lastMessage - The most recent message sent for the conversation.
  * - updatedAt - The date and time when the conversation was last updated.
  * - notifyList - An array of user IDs to notify when a new message is sent.
@@ -464,3 +467,15 @@ export type ConversationResponse = Conversation | { error: string };
  * Type representing the possible responses for a Message-related operation.
  */
 export type MessageResponse = Message | { error: string };
+
+export interface VerificationRequest extends Request {
+  query: {
+    code: string;
+  }
+}
+
+export interface ResendCodeRequest extends Request {
+  query: {
+    email: string;
+  }
+}

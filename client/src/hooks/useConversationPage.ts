@@ -1,15 +1,25 @@
 import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import useUserContext from './useUserContext';
 import { Conversation, NewConversationPayload } from '../types';
 import { addConversation, getConversationsByUserId } from '../services/conversationService';
 
 const useConversationPage = () => {
+  const navigate = useNavigate();
+  const { cid } = useParams();
   const { user, socket } = useUserContext();
   const [clist, setClist] = useState<Conversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<string>('');
   const [participants, setParticipants] = useState<string>('');
   const [notifyList, setNotifyList] = useState<string[]>([]);
   const [textErr, setTextErr] = useState<string>('');
+
+  const navigateChat = (c: Conversation) => {
+    if (c._id) {
+      setSelectedConversation(c._id);
+      navigate(`/conversation/${c._id}`);
+    }
+  };
 
   /**
    * Function to handle creating a new conversation
@@ -43,6 +53,12 @@ const useConversationPage = () => {
       console.error('Error adding conversation:', error);
     }
   };
+
+  useEffect(() => {
+    if (cid) {
+      setSelectedConversation(cid);
+    }
+  }, [cid]);
 
   useEffect(() => {
     /**
@@ -97,12 +113,12 @@ const useConversationPage = () => {
     user,
     clist,
     selectedConversation,
-    setSelectedConversation,
     participants,
     setParticipants,
     notifyList,
     setNotifyList,
     textErr,
+    navigateChat,
     handleCreateConversation,
   };
 };
