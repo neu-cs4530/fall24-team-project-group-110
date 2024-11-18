@@ -215,19 +215,23 @@ const userController = (socket: FakeSOSocket) => {
     const { currentUser, targetUser } = req.body;
 
     try {
-      const followingUser = await addFollowToUser(currentUser, targetUser);
+      const followerUser = await addFollowToUser(currentUser, targetUser);
 
-      if ('error' in followingUser) {
-        throw new Error(followingUser.error);
+      if ('error' in followerUser) {
+        throw new Error(followerUser.error);
       }
 
-      const populatedUser = await populateUser(currentUser._id!.toString());
+      const populatedUser = await populateUser(targetUser._id!.toString());
 
       if ('error' in populatedUser) {
         throw new Error(populatedUser.error);
       }
 
-      res.json(populatedUser);
+      socket.emit('followUpdate', {
+        uid: targetUser._id!.toString(),
+        followers: populatedUser.followers as User[],
+      });
+      res.json(followerUser);
     } catch (err: unknown) {
       if (err instanceof Error) {
         res.status(500).send(`Error following user: ${err.message}`);

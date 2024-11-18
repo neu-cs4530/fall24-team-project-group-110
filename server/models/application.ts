@@ -908,7 +908,7 @@ export const addFollowToUser = async (
       throw new Error('Failed to update user following');
     }
 
-    return followingUser;
+    return followerUser;
   } catch (error) {
     return { error: `Error when following: ${(error as Error).message}` };
   }

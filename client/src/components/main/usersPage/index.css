@@ -1,0 +1,50 @@
+.users-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.users-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  background-color: #f9f9f9;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  overflow-y: auto;
+}
+
+.user-item {
+  max-width: 75%;
+  padding: 0.5em 0.75em;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  line-height: 1.3;
+  word-wrap: break-word;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-item:hover {
+
+}
+
+.user-info {
+  
+}
+
+.user-picture {
+
+}
+
+.user-meta-name {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 0.2em;
+}

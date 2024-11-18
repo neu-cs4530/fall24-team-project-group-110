@@ -336,6 +336,11 @@ export interface AnswerUpdatePayload {
   answer: AnswerResponse;
 }
 
+export interface FollowUpdatePayload {
+  uid: string;
+  followers: User[];
+}
+
 /**
  * Interface representing the possible events that the server can emit to the client.
  */
@@ -351,6 +356,7 @@ export interface ServerToClientEvents {
   newMessage: (message: MessageResponse) => void;
   conversationUpdate: (conversation: ConversationResponse) => void;
   notificationUpdate: (uid: string) => void;
+  followUpdate: (user: FollowUpdatePayload) => void;
 }
 
 export interface ClientToServerEvents {

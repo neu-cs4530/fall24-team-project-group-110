@@ -68,6 +68,16 @@ export interface VoteData {
 }
 
 /**
+ * Interface representing the follower data for a user, which contains:
+ * - uid - The ID of the user being followed
+ * - followrs - An array of user IDs who followed the user
+ */
+export interface FollowData {
+  uid: string;
+  followers: User[];
+}
+
+/**
  * Interface representing an Answer document, which contains:
  * - _id - The unique identifier for the answer. Optional field
  * - text - The content of the answer
@@ -131,6 +141,11 @@ export interface CommentUpdatePayload {
   type: 'question' | 'answer';
 }
 
+export interface FollowUpdatePayload {
+  uid: string;
+  followers: User[];
+}
+
 /**
  * Interface representing the possible events that the server can emit to the client.
  */
@@ -145,6 +160,7 @@ export interface ServerToClientEvents {
   newMessage: (message: Message) => void;
   conversationUpdate: (conversation: Conversation) => void;
   notificationUpdate: (uid: string) => void;
+  followUpdate: (user: FollowUpdatePayload) => void;
 }
 
 export interface ClientToServerEvents {

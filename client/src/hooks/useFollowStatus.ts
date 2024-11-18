@@ -6,7 +6,7 @@ import { User } from '../types';
 
 const useFollowStatus = ({ profile }: { profile: User }) => {
   const { uid } = useParams();
-  const { user } = useUserContext();
+  const { user, socket } = useUserContext();
   const [targetId, setTargetId] = useState<string>('');
   const [targetUser, setTargetUser] = useState<User>();
   const [isFollowed, setIsFollowed] = useState<boolean>();
@@ -35,14 +35,14 @@ const useFollowStatus = ({ profile }: { profile: User }) => {
 
     if (uid) {
       setTargetId(uid);
-      if (profile.following.some(u => u._id === uid)) {
+      if (profile.followers.some(u => u._id === user._id)) {
         setIsFollowed(true);
       } else {
         setIsFollowed(false);
       }
       fetchTargetUser(uid);
     }
-  }, [uid, profile.following]);
+  }, [uid, user._id, profile.followers, socket]);
 
   return {
     isFollowed,

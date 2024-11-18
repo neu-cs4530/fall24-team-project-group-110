@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { FaUser } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { User } from '../../../types';
 import { getAllUsers } from '../../../services/userService';
@@ -26,11 +27,22 @@ const UsersPage = () => {
   }, []);
 
   return (
-    <div>
-      <ul>
+    <div className='users-container'>
+      <ul className='users-list'>
         {ulist?.map((u, idx) => (
-          <li key={idx} onClick={() => navigateProfile(u)}>
-            {u.username}
+          <li key={idx} className='user-item' onClick={() => navigateProfile(u)}>
+            <div className='user-info'>
+              <div className='user-picture'>
+                <FaUser />
+                <img className='user-picture' src={u.picture} alt='profile picture' />
+              </div>
+              <div>
+                {u.username}
+                <small className='user-meta-name'>
+                  {u.firstName} {u.lastName}
+                </small>
+              </div>
+            </div>
           </li>
         ))}
       </ul>
