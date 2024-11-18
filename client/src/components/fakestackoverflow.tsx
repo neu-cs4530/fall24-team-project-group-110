@@ -14,6 +14,8 @@ import ConversationPage from './main/conversationPage';
 import Register from './register';
 import { validate } from '../services/authService';
 import ProfilePage from './main/profilePage';
+import Verify from './verify';
+import PreLoginContext from '../contexts/PreLoginContext';
 
 const ProtectedRoute = ({
   user,
@@ -24,7 +26,7 @@ const ProtectedRoute = ({
   socket: FakeSOSocket | null;
   children: JSX.Element;
 }) => {
-  if (!user || !socket) {
+  if (!user || !socket || !user.verified) {
     return <Navigate to='/' />;
   }
 
@@ -37,6 +39,7 @@ const ProtectedRoute = ({
  */
 const FakeStackOverflow = ({ socket }: { socket: FakeSOSocket | null }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [preLoginUser, setPreLoginUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
@@ -59,10 +62,12 @@ const FakeStackOverflow = ({ socket }: { socket: FakeSOSocket | null }) => {
 
   return !loading ? (
     <LoginContext.Provider value={{ setUser }}>
-      <Routes>
-        {/* Public Route */}
-        <Route path='/' element={<Login />} />
-        <Route path='/register' element={<Register />} />
+      <PreLoginContext.Provider value={{ user: preLoginUser, setUser: setPreLoginUser }}>
+        <Routes>
+          {/* Public Route */}
+          <Route path='/' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/verify' element={<Verify />} />
 
         {/* Protected Routes */}
         {

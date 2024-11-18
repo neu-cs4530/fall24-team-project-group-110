@@ -33,6 +33,7 @@ describe('POST /addUser', () => {
     followers: [],
     following: [],
     notifications: [],
+    verified: false,
   });
 
   const setupMockReqBody = () => ({
@@ -49,6 +50,7 @@ describe('POST /addUser', () => {
     followers: [],
     following: [],
     notifications: [],
+    verified: false,
   });
 
   const assertErrorResponse = async (
@@ -85,6 +87,7 @@ describe('POST /addUser', () => {
         followers: [],
         following: [],
         notifications: [],
+        verified: false,
       });
     });
 
@@ -148,6 +151,7 @@ describe('POST /addUser', () => {
         followers: [],
         following: [],
         notifications: [],
+        verified: false,
       });
     });
 

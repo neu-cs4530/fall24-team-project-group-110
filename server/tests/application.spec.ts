@@ -166,6 +166,7 @@ const user1: User = {
   followers: [],
   following: [],
   notifications: [],
+  verified: false,
 };
 
 const user2: User = {
@@ -183,6 +184,7 @@ const user2: User = {
   followers: [],
   following: [],
   notifications: [],
+  verified: false,
 };
 
 const conv1: Conversation = {

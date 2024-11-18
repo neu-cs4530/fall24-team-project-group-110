@@ -183,6 +183,7 @@ export interface User {
   followers: User[] | ObjectId[];
   following: User[] | ObjectId[];
   notifications: Notification[] | ObjectId[];
+  verified: boolean;
 }
 
 /**
@@ -453,3 +454,15 @@ export type ConversationResponse = Conversation | { error: string };
  * Type representing the possible responses for a Message-related operation.
  */
 export type MessageResponse = Message | { error: string };
+
+export interface VerificationRequest extends Request {
+  query: {
+    code: string;
+  }
+}
+
+export interface ResendCodeRequest extends Request {
+  query: {
+    email: string;
+  }
+}

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ChangeEvent, useState } from 'react';
-import useLoginContext from './useLoginContext';
 import { addUser } from '../services/userService';
+import usePreLoginContext from './usePreLoginContext';
 
 /**
  * Custom hook to handle login input and submission.
@@ -16,8 +16,9 @@ import { addUser } from '../services/userService';
 const useRegister = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [error, setError] = useState<string>('');
-  const { setUser } = useLoginContext();
+  const { setUser } = usePreLoginContext();
   const navigate = useNavigate();
 
   /**
@@ -39,6 +40,15 @@ const useRegister = () => {
   };
 
   /**
+   * Function to handle the input change event for the email field.
+   *
+   * @param e - the event object.
+   */
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  /**
    * Function to handle the form submission event.
    * This function will call the backend to register the user.
    * If the registration is successful, the user will be set in the context
@@ -50,15 +60,24 @@ const useRegister = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const user = await addUser(username, password);
+      const user = await addUser(username, email, password);
       setUser(user);
-      navigate('/home');
+      navigate('/verify');
     } catch (e) {
       setError('Error while registering user');
     }
   };
 
-  return { username, password, error, handleUsernameChange, handlePasswordChange, handleSubmit };
+  return {
+    username,
+    email,
+    password,
+    error,
+    handleUsernameChange,
+    handleEmailChange,
+    handlePasswordChange,
+    handleSubmit,
+  };
 };
 
 export default useRegister;

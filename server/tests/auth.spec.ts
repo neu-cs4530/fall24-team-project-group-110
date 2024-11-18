@@ -73,6 +73,7 @@ describe('POST /login', () => {
       followers: [],
       following: [],
       notifications: [],
+      verified: false,
     };
 
     jest.spyOn(util, 'getUserByUsername').mockResolvedValueOnce(mockUser);
@@ -104,6 +105,7 @@ describe('POST /login', () => {
       followers: [],
       following: [],
       notifications: [],
+      verified: false,
     };
 
     jest.spyOn(util, 'getUserByUsername').mockResolvedValueOnce(mockUser);
@@ -148,6 +150,7 @@ describe('GET /validate', () => {
       followers: [],
       following: [],
       notifications: [],
+      verified: false,
     };
 
     jest.spyOn(util, 'getUserById').mockResolvedValueOnce(mockUser);
