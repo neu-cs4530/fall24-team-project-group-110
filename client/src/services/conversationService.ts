@@ -53,7 +53,7 @@ const addConversation = async (c: NewConversationPayload): Promise<Conversation>
  */
 const addUserToNotifyListConversation = async (targetId: string, uid: string) => {
   const data = { targetId, uid };
-  const res = await api.post(`${CONVERSATION_API_URL}/addUserToNotifyList`, data);
+  const res = await api.patch(`${CONVERSATION_API_URL}/addUserToNotifyList`, data);
   if (res.status !== 200) {
     throw new Error('Error while adding user to notify list');
   }
@@ -68,7 +68,7 @@ const addUserToNotifyListConversation = async (targetId: string, uid: string) =>
  */
 const removeUserToNotifyListConversation = async (targetId: string, uid: string) => {
   const data = { targetId, uid };
-  const res = await api.post(`${CONVERSATION_API_URL}/removeUserToNotifyList`, data);
+  const res = await api.patch(`${CONVERSATION_API_URL}/removeUserToNotifyList`, data);
   if (res.status !== 200) {
     throw new Error('Error while removing user from notify list');
   }

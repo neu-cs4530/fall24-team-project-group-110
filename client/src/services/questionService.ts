@@ -92,7 +92,7 @@ const downvoteQuestion = async (qid: string, username: string) => {
  */
 const addUserToNotifyListQuestion = async (targetId: string, uid: string) => {
   const data = { targetId, uid };
-  const res = await api.post(`${QUESTION_API_URL}/addUserToNotifyList`, data);
+  const res = await api.patch(`${QUESTION_API_URL}/addUserToNotifyList`, data);
   if (res.status !== 200) {
     throw new Error('Error while adding user to notify list');
   }
@@ -107,7 +107,7 @@ const addUserToNotifyListQuestion = async (targetId: string, uid: string) => {
  */
 const removeUserToNotifyListQuestion = async (targetId: string, uid: string) => {
   const data = { targetId, uid };
-  const res = await api.post(`${QUESTION_API_URL}/removeUserToNotifyList`, data);
+  const res = await api.patch(`${QUESTION_API_URL}/removeUserToNotifyList`, data);
   if (res.status !== 200) {
     throw new Error('Error while removing user from notify list');
   }
