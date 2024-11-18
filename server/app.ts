@@ -28,7 +28,8 @@ import messageController from './controller/message';
 import authController from './controller/auth';
 import notificationController from './controller/notification';
 import { checkConversationAccess } from './models/application';
-import { EmailService } from './utils/email';
+import { EmailService } from './services/email';
+import NotificationService from './services/notification';
 
 dotenv.config();
 
@@ -110,6 +111,8 @@ app.use(
 app.use(express.json());
 app.use(sessionMiddleware);
 
+const notificationService = new NotificationService(socket);
+
 // authentication middleware that excludes unprotected routes
 // only include in development and production modes so that tests can run
 app.use((req: Request, res: Response, next) => {
@@ -148,7 +151,7 @@ app.use('/answer', answerController(socket));
 app.use('/comment', commentController(socket));
 app.use('/user', userController(emailService));
 app.use('/conversation', conversationController(socket));
-app.use('/message', messageController(socket));
+app.use('/message', messageController(socket, notificationService));
 app.use('/notification', notificationController());
 
 // Export the app instance

@@ -60,12 +60,7 @@
   display: flex;
   align-items: center;
   padding: 10px 0;
-  border-bottom: 1px solid #dbdaff;
   cursor: pointer;
-}
-
-.notification-item:last-child {
-  border-bottom: none;
 }
 
 .notification-item:hover {
@@ -100,4 +95,18 @@
 
 .notification-clear-button:hover {
   background-color: #d9363e;
+}
+
+.notification-item-container {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #dbdaff;
+}
+
+.notification-item-container:last-child {
+  border-bottom: none;
+}
+
+.trash-icon {
+  cursor: pointer;
 }

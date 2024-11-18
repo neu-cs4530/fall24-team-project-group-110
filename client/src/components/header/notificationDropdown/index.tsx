@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaBell } from 'react-icons/fa';
+import { FaBell, FaTrash } from 'react-icons/fa';
 import { getMetaData } from '../../../tool';
 import useNotification from '../../../hooks/useNotification';
 import './index.css';
@@ -7,18 +7,18 @@ import './index.css';
 const NotificationDropdown = () => {
   const {
     isNotifOpen,
-    notificationCount,
     nlist,
     handleToggle,
     navigateNotification,
     handleDeleteAllNotifications,
+    handleDeleteNotification,
   } = useNotification();
 
   return (
     <div className='notification-container'>
       <div className='notification-icon' onClick={handleToggle}>
         <FaBell />
-        {notificationCount > 0 && <span className='notification-badge'>{notificationCount}</span>}
+        {nlist.length > 0 && <span className='notification-badge'>{nlist.length}</span>}
       </div>
       {isNotifOpen && (
         <div className='dropdown active'>
@@ -29,12 +29,18 @@ const NotificationDropdown = () => {
               </button>
               <ul className='notification-list'>
                 {nlist.map((n, idx) => (
-                  <li
-                    key={idx}
-                    className='notification-item'
-                    onClick={() => navigateNotification(n)}>
-                    {n.text}{' '}
-                    <span className='notification-time'>{getMetaData(new Date(n.dateTime))}</span>
+                  <li className='notification-item-container' key={idx}>
+                    <div
+                      key={idx}
+                      className='notification-item'
+                      onClick={() => navigateNotification(n)}>
+                      {n.text}{' '}
+                      <span className='notification-time'>{getMetaData(new Date(n.dateTime))}</span>
+                    </div>
+                    <FaTrash
+                      className='trash-icon'
+                      onClick={() => handleDeleteNotification(n._id)}
+                    />
                   </li>
                 ))}
               </ul>

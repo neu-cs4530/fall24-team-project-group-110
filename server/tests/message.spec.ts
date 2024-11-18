@@ -3,8 +3,10 @@ import supertest from 'supertest';
 import { ObjectId } from 'mongodb';
 import { app } from '../app';
 import * as util from '../models/application';
-import * as service from '../service/notificationService';
+import NotificationService from '../services/notification';
 import { Conversation, Message, User } from '../types';
+
+const notificationService = new NotificationService({} as any);
 
 const testUser: User = {
   _id: new ObjectId('65e9b716ff0e892116b2de19'),
@@ -122,7 +124,6 @@ describe('POST /addMessage', () => {
     jest.spyOn(util, 'populateMessage').mockResolvedValue(mockPopulatedMessage);
     jest.spyOn(util, 'updateConversationWithMessage').mockResolvedValue(mockUpdatedConversation);
     jest.spyOn(util, 'populateConversation').mockResolvedValue(mockPopulatedConversation);
-    jest.spyOn(service, 'sendNotification').mockResolvedValue(undefined);
 
     const response = await supertest(app).post('/message/addMessage').send(mockMessage);
 

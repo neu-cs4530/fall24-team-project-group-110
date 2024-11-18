@@ -1,16 +1,14 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useUserContext from './useUserContext';
 import { Notification } from '../types';
 import { deleteNotification } from '../services/notificationService';
-import { getUser } from '../services/userService';
 
 const useNotification = () => {
   const navigate = useNavigate();
   const { user, socket } = useUserContext();
   const [isNotifOpen, setIsNotifOpen] = useState<boolean>(false);
-  const [notificationCount, setNotificationCount] = useState(0);
-  const [nlist, setNlist] = useState<Notification[]>([]);
+  const [nlist, setNlist] = useState<Notification[]>(user.notifications);
 
   const handleToggle = () => {
     setIsNotifOpen(prev => !prev);
@@ -25,27 +23,21 @@ const useNotification = () => {
     try {
       await Promise.all(nlist.map(n => deleteNotification(user._id, n._id)));
       setNlist([]);
-      setNotificationCount(0);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error deleting notifications:', error);
     }
   };
 
-  const fetchUserNotifs = useCallback(async () => {
+  const handleDeleteNotification = async (nid: string) => {
     try {
-      const res = await getUser(user._id);
-      setNlist(res.notifications);
-      setNotificationCount(res.notifications.length);
+      await deleteNotification(user._id, nid);
+      setNlist(prevList => prevList.filter(n => n._id !== nid));
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('Error deleting notifications:', error);
+      console.error('Error deleting notification:', error);
     }
-  }, [user._id]);
-
-  useEffect(() => {
-    fetchUserNotifs();
-  }, [fetchUserNotifs, user._id]);
+  };
 
   useEffect(() => {
     const handleNewNotifications = ({
@@ -65,15 +57,15 @@ const useNotification = () => {
     return () => {
       socket.off('notificationUpdate', handleNewNotifications);
     };
-  }, [fetchUserNotifs, user._id, socket]);
+  }, [user._id, socket]);
 
   return {
     isNotifOpen,
-    notificationCount,
     nlist,
     handleToggle,
     navigateNotification,
     handleDeleteAllNotifications,
+    handleDeleteNotification,
   };
 };
 

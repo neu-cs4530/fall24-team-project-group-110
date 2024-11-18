@@ -15,9 +15,9 @@ import {
   populateConversation,
   populateMessage,
 } from '../models/application';
-import { sendNotification } from '../service/notificationService';
+import NotificationService from '../services/notification';
 
-const messageController = (socket: FakeSOSocket) => {
+const messageController = (socket: FakeSOSocket, notificationService: NotificationService) => {
   const router = express.Router();
 
   /**
@@ -138,13 +138,14 @@ const messageController = (socket: FakeSOSocket) => {
       const recipients = populatedUpdatedConversation.participants.filter(
         user => user._id && user._id.toString() !== result.sender._id!.toString(),
       ) as User[];
-      sendNotification(
-        socket,
-        recipients,
-        'conversation',
-        'You have received a message.',
-        populatedUpdatedConversation._id!.toString(),
-      );
+      if (process.env.MODE === 'production' || process.env.MODE === 'development') {
+        notificationService.sendNotifications(
+          recipients,
+          'conversation',
+          'You have received a message.',
+          populatedUpdatedConversation._id!.toString(),
+        );
+      }
 
       socket.to(req.body.conversationId).emit('newMessage', populatedMessage);
       socket.emit('conversationUpdate', populatedUpdatedConversation);

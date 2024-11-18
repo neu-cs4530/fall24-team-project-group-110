@@ -8,7 +8,7 @@ import {
   saveUser,
   updateUserProfile,
 } from '../models/application';
-import { EmailService } from '../utils/email';
+import { EmailService } from '../services/email';
 
 const userController = (emailService: EmailService) => {
   const router = express.Router();
