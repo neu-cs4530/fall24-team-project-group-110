@@ -206,8 +206,8 @@ const conversationController = (socket: FakeSOSocket) => {
   router.get('/getConversations', getConversationsByUsername);
   router.get('/getConversation/:cid', getConversation);
   router.post('/addConversation', addConversation);
-  router.post('/addUserToNotifyList', addUserToNotifyList);
-  router.post('/removeUserToNotifyList', removeUserToNotifyList);
+  router.patch('/addUserToNotifyList', addUserToNotifyList);
+  router.patch('/removeUserToNotifyList', removeUserToNotifyList);
 
   return router;
 };

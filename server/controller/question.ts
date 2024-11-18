@@ -284,8 +284,8 @@ const questionController = (socket: FakeSOSocket) => {
   router.post('/addQuestion', addQuestion);
   router.post('/upvoteQuestion', upvoteQuestion);
   router.post('/downvoteQuestion', downvoteQuestion);
-  router.post('/addUserToNotifyList', addUserToNotifyList);
-  router.post('/removeUserToNotifyList', removeUserToNotifyList);
+  router.patch('/addUserToNotifyList', addUserToNotifyList);
+  router.patch('/removeUserToNotifyList', removeUserToNotifyList);
 
   return router;
 };
