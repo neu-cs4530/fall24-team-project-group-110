@@ -110,6 +110,7 @@ describe('POST /login', () => {
 
     jest.spyOn(util, 'getUserByUsername').mockResolvedValueOnce(mockUser);
     jest.spyOn(bcrypt, 'compareSync').mockReturnValueOnce(true);
+    jest.spyOn(util, 'populateUser').mockResolvedValueOnce(mockUser);
 
     const response = await request(app).post('/auth/login').send(mockReqBody);
 
@@ -154,6 +155,7 @@ describe('GET /validate', () => {
     };
 
     jest.spyOn(util, 'getUserById').mockResolvedValueOnce(mockUser);
+    jest.spyOn(util, 'populateUser').mockResolvedValueOnce(mockUser);
 
     const response = await request(app).get('/auth/validate');
 

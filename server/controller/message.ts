@@ -5,6 +5,7 @@ import {
   FakeSOSocket,
   FindMessagesByConversationIdRequest,
   Message,
+  User,
 } from '../types';
 import {
   saveMessage,
@@ -12,9 +13,11 @@ import {
   getMessagesSortedByDateAsc,
   updateConversationWithMessage,
   populateConversation,
+  populateMessage,
 } from '../models/application';
+import NotificationService from '../services/notification';
 
-const messageController = (socket: FakeSOSocket) => {
+const messageController = (socket: FakeSOSocket, notificationService: NotificationService) => {
   const router = express.Router();
 
   /**
@@ -73,7 +76,7 @@ const messageController = (socket: FakeSOSocket) => {
       errors.error.conversationId = 'Conversation ID is required';
     }
 
-    if (!message.sender || message.sender === '') {
+    if (!message.sender) {
       errors.error.sender = 'Sender is required';
     }
 
@@ -89,7 +92,7 @@ const messageController = (socket: FakeSOSocket) => {
    * If successful, the message is associated with the corresponding conversation. If there is an error,
    * the HTTP response's status is updated.
    *
-   * @param req The AnswerRequest object containing the question ID and answer data.
+   * @param req The AddMessageRequest object containing the conversation ID and message data.
    * @param res The HTTP response object used to send back the result of the operation.
    *
    * @returns A Promise that resolves to void.
@@ -117,6 +120,11 @@ const messageController = (socket: FakeSOSocket) => {
         throw new Error(result.error);
       }
 
+      const populatedMessage = await populateMessage(result._id!.toString());
+      if ('error' in populatedMessage) {
+        throw new Error(populatedMessage.error);
+      }
+
       const updatedConversation = await updateConversationWithMessage(result);
       if ('error' in updatedConversation) {
         throw new Error(updatedConversation.error);
@@ -127,7 +135,19 @@ const messageController = (socket: FakeSOSocket) => {
         throw new Error(populatedUpdatedConversation.error);
       }
 
-      socket.to(req.body.conversationId).emit('newMessage', result);
+      const recipients = populatedUpdatedConversation.participants.filter(
+        user => user._id && user._id.toString() !== result.sender._id!.toString(),
+      ) as User[];
+      if (process.env.MODE === 'production' || process.env.MODE === 'development') {
+        notificationService.sendNotifications(
+          recipients,
+          'conversation',
+          'You have received a message.',
+          populatedUpdatedConversation._id!.toString(),
+        );
+      }
+
+      socket.to(req.body.conversationId).emit('newMessage', populatedMessage);
       socket.emit('conversationUpdate', populatedUpdatedConversation);
       res.json(result);
     } catch (error) {

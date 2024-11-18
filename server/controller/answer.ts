@@ -52,19 +52,16 @@ const answerController = (socket: FakeSOSocket) => {
 
     try {
       const ansFromDb = await saveAnswer(ansInfo);
-
       if ('error' in ansFromDb) {
         throw new Error(ansFromDb.error as string);
       }
 
       const status = await addAnswerToQuestion(qid, ansFromDb);
-
       if (status && 'error' in status) {
         throw new Error(status.error as string);
       }
 
       const populatedAns = await populateDocument(ansFromDb._id?.toString(), 'answer');
-
       if (populatedAns && 'error' in populatedAns) {
         throw new Error(populatedAns.error as string);
       }

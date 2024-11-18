@@ -1,8 +1,14 @@
 import express, { Response } from 'express';
 import bcrypt from 'bcryptjs';
 import { User, AddUserRequest, EditUserRequest, GetUserRequest } from '../types';
-import { deleteUserById, getUserById, saveUser, updateUserProfile } from '../models/application';
-import { EmailService } from '../utils/email';
+import {
+  populateUser,
+  deleteUserById,
+  getUserById,
+  saveUser,
+  updateUserProfile,
+} from '../models/application';
+import { EmailService } from '../services/email';
 
 const userController = (emailService: EmailService) => {
   const router = express.Router();
@@ -180,17 +186,25 @@ const userController = (emailService: EmailService) => {
     }
   };
 
+  /**
+   * Retrieves a user by its unique ID.
+   *
+   * @param req The GetUserRequest object containing the user ID.
+   * @param res The HTTP response object used to send back the result of the operation.
+   *
+   * @returns A Promise that resolves to void.
+   */
   const getUser = async (req: GetUserRequest, res: Response): Promise<void> => {
     const { uid } = req.params;
 
     try {
-      const result = await getUserById(uid);
+      const populatedUser = await populateUser(uid);
 
-      if ('error' in result) {
-        throw new Error(result.error);
+      if ('error' in populatedUser) {
+        throw new Error(populatedUser.error);
       }
 
-      res.json(result);
+      res.json(populatedUser);
     } catch (err) {
       res.status(500).send('Error when getting user');
     }

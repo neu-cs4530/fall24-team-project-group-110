@@ -1,14 +1,24 @@
 import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import useUserContext from './useUserContext';
 import { Conversation, NewConversationPayload } from '../types';
 import { addConversation, getConversationsByUserId } from '../services/conversationService';
 
 const useConversationPage = () => {
+  const navigate = useNavigate();
+  const { cid } = useParams();
   const { user, socket } = useUserContext();
   const [clist, setClist] = useState<Conversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<string>('');
   const [participants, setParticipants] = useState<string>('');
   const [textErr, setTextErr] = useState<string>('');
+
+  const navigateChat = (c: Conversation) => {
+    if (c._id) {
+      setSelectedConversation(c._id);
+      navigate(`/conversation/${c._id}`);
+    }
+  };
 
   /**
    * Function to handle creating a new conversation
@@ -44,8 +54,14 @@ const useConversationPage = () => {
   };
 
   useEffect(() => {
+    if (cid) {
+      setSelectedConversation(cid);
+    }
+  }, [cid]);
+
+  useEffect(() => {
     /**
-     * Function to fetch conversations based on the username and update the question list.
+     * Function to fetch conversations based on the user id and update the question list.
      */
     const fetchData = async () => {
       try {
@@ -93,10 +109,10 @@ const useConversationPage = () => {
     user,
     clist,
     selectedConversation,
-    setSelectedConversation,
     participants,
     setParticipants,
     textErr,
+    navigateChat,
     handleCreateConversation,
   };
 };

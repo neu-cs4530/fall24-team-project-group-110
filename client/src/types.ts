@@ -133,6 +133,11 @@ export interface CommentUpdatePayload {
   type: 'question' | 'answer';
 }
 
+export interface NotificationUpdatePayload {
+  uid: string;
+  notification: Notification;
+}
+
 /**
  * Interface representing the possible events that the server can emit to the client.
  */
@@ -146,6 +151,7 @@ export interface ServerToClientEvents {
   leaveRoom: (conversationId: string) => void;
   newMessage: (message: Message) => void;
   conversationUpdate: (conversation: Conversation) => void;
+  notificationUpdate: (notification: NotificationUpdatePayload) => void;
 }
 
 export interface ClientToServerEvents {
@@ -199,18 +205,17 @@ export interface Notification {
 }
 
 /**
- * Interface representing the structure of a Message object:
- *
+ * Interface representing a message document, which contains:
  * - _id - The unique identifier for the message. Optional field.
  * - conversationId - The unique identifier for the conversation the message belongs to.
- * - sender - The username of the user who sent the message.
+ * - sender - The user who sent the message.
  * - text - The content of the message.
  * - sentAt - The date and time when the message was sent.
  */
 export interface Message {
   _id?: string;
   conversationId: string;
-  sender: string;
+  sender: User;
   text: string;
   sentAt: Date;
 }

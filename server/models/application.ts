@@ -697,6 +697,70 @@ export const deleteNotificationFromUser = async (
 };
 
 /**
+ * Creates notification object to be saved and added to the given user
+ *
+ * @param uid - The id of the user receiving the notification.
+ * @param type - The type of the notification.
+ * @param text - The text content of the notification.
+ * @param targetId - The id associated with the notification.
+ *
+ * @returns {Promise<NotificationResponse>} - The notification, or an error message if the operation fails
+ */
+export const createNotification = async (
+  uid: string,
+  type: string,
+  text: string,
+  targetId: string,
+): Promise<NotificationResponse> => {
+  const newNotification = {
+    type,
+    text,
+    targetId,
+    dateTime: new Date(),
+  };
+  try {
+    const result = await saveNotification(newNotification);
+    if ('error' in result) {
+      throw new Error('Failed to save notification');
+    }
+    const userRes = await addNotificationToUser(uid, result);
+    if ('error' in userRes) {
+      throw new Error('Failed to add notification to user');
+    }
+    return result;
+  } catch (error) {
+    return { error: `Error when creating notification for user: ${(error as Error).message}` };
+  }
+};
+
+/**
+ * Fetches and populates a user document based on the user ID.
+ *
+ * @param {string} uid - The ID of the user to fetch.
+ *
+ * @returns {Promise<UserResponse>} - Promise that resolves to the populated user,
+ *                                    or an error message if the operation fails
+ */
+export const populateUser = async (uid: string): Promise<UserResponse> => {
+  try {
+    const result = await UserModel.findOne({ _id: uid }).populate([
+      {
+        path: 'notifications',
+        model: NotificationModel,
+      },
+    ]);
+
+    if (!result) {
+      throw new Error(`Failed to fetch and populate a user`);
+    }
+
+    return result;
+  } catch (error) {
+    return { error: `Error when fetching and populating a user: ${(error as Error).message}` };
+  }
+};
+
+/**
  * Adds a comment to a question or answer.
  *
  * @param id The ID of the question or answer to add a comment to
@@ -1024,7 +1088,7 @@ export const getConversationById = async (id: string): Promise<ConversationRespo
 };
 
 /**
- * Gets conversations based on if username is a participant of them and sorts them by date in descending order.
+ * Gets conversations based on if user is a participant of them and sorts them by date in descending order.
  *
  * @param userId - The ID of the user to fetch conversations for.
  * @returns {Promise<Conversation[]>} - The list of conversation, or an empty array if the fetch fails.
@@ -1080,7 +1144,9 @@ export const updateConversationWithMessage = async (
  */
 export const getMessagesSortedByDateAsc = async (c_id: string): Promise<Message[]> => {
   try {
-    const result = await MessageModel.find({ conversationId: c_id }).sort({ sentAt: 1 });
+    const result = await MessageModel.find({ conversationId: c_id })
+      .populate({ path: 'sender', model: UserModel })
+      .sort({ sentAt: 1 });
 
     return result;
   } catch (error) {
@@ -1111,5 +1177,32 @@ export const checkConversationAccess = async (
     return participantIdStrings.includes(id);
   } catch (error) {
     return false;
+  }
+};
+
+/**
+ * Fetches and populates a message document based on the message ID.
+ *
+ * @param {string} mid - The ID of the message to fetch.
+ *
+ * @returns {Promise<MessageResponse>} - Promise that resolves to the populated message,
+ *                                    or an error message if the operation fails
+ */
+export const populateMessage = async (mid: string): Promise<MessageResponse> => {
+  try {
+    const result = await MessageModel.findOne({ _id: mid }).populate([
+      {
+        path: 'sender',
+        model: UserModel,
+      },
+    ]);
+
+    if (!result) {
+      throw new Error(`Failed to fetch and populate a message`);
+    }
+
+    return result;
+  } catch (error) {
+    return { error: `Error when fetching and populating a message: ${(error as Error).message}` };
   }
 };

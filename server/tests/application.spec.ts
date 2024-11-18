@@ -223,7 +223,7 @@ const conv3: Conversation = {
 const msg1: Message = {
   _id: new ObjectId('65e9b716ff0e892116b2de19'),
   conversationId: '65e9b716ff0e892116b2de19',
-  sender: 'user1',
+  sender: new ObjectId('65e9b716ff0e892116b2de19'),
   text: 'Hello!',
   sentAt: new Date('2023-11-20T09:24:00'),
 };

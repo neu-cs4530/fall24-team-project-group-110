@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import useHeader from '../../hooks/useHeader';
 import './index.css';
 import useUserContext from '../../hooks/useUserContext';
+import NotificationDropdown from './notificationDropdown';
 
 /**
  * Header component that renders the main title and a search bar.
@@ -31,6 +32,7 @@ const Header = () => {
       <button className='username-button' onClick={() => navigate(`/profile/${user._id}`)}>
         {user.username}
       </button>
+      <NotificationDropdown />
       <button className='logout-button' onClick={handleLogout}>
         Logout
       </button>

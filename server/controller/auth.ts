@@ -1,8 +1,8 @@
 import express, { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import { LoginRequest, ResendCodeRequest, VerificationRequest } from '../types';
-import { getUserById, getUserByUsername, verifyUser } from '../models/application';
-import { EmailService } from '../utils/email';
+import { getUserById, getUserByUsername, populateUser, verifyUser } from '../models/application';
+import { EmailService } from '../services/email';
 
 const authController = (emailService: EmailService) => {
   const router = express.Router();
@@ -49,9 +49,15 @@ const authController = (emailService: EmailService) => {
       }
 
       // _id is guaranteed to be set at this point
-      req.session.userId = result._id!.toString();
-      req.session.verified = result.verified;
-      res.status(200).send(result);
+      const populatedUser = await populateUser(result._id!.toString());
+      if ('error' in populatedUser) {
+        throw new Error(populatedUser.error);
+      }
+
+      // _id is guaranteed to be set at this point
+      req.session.userId = populatedUser._id!.toString();
+      req.session.verified = populatedUser.verified;
+      res.status(200).send(populatedUser);
     } catch (err) {
       res.status(500).send(`Error when logging in`);
     }
@@ -73,7 +79,12 @@ const authController = (emailService: EmailService) => {
         throw new Error(result.error);
       }
 
-      res.status(200).send(result);
+      const populatedUser = await populateUser(result._id!.toString());
+      if ('error' in populatedUser) {
+        throw new Error(populatedUser.error);
+      }
+
+      res.status(200).send(populatedUser);
     } catch (err) {
       res.status(500).send('Error validating session');
     }
@@ -110,8 +121,13 @@ const authController = (emailService: EmailService) => {
         throw new Error(result.error);
       }
 
+      const populatedUser = await populateUser(result._id!.toString());
+      if ('error' in populatedUser) {
+        throw new Error(populatedUser.error);
+      }
+
       req.session.verified = true;
-      res.status(200).send(result);
+      res.status(200).send(populatedUser);
     } catch (err) {
       res.status(500).send('Error verifying user');
     }

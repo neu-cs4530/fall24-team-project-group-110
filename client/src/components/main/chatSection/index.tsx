@@ -28,12 +28,14 @@ const ChatSection = ({ conversationId }: ChatSectionProps) => {
           <li
             key={idx}
             className={`message-block ${
-              user.username === m.sender ? 'message-sent-by-sender' : 'message-sent-by-receiver'
+              user.username === m.sender.username
+                ? 'message-sent-by-sender'
+                : 'message-sent-by-receiver'
             }`}>
             <p className='message-text'>{m.text}</p>
             <small
-              className={`${user.username === m.sender ? 'message-meta-by-sender' : 'message-meta-by-receiver'}`}>
-              {m.sender}, {getMetaData(new Date(m.sentAt))}
+              className={`${user.username === m.sender.username ? 'message-meta-by-sender' : 'message-meta-by-receiver'}`}>
+              {m.sender.username}, {getMetaData(new Date(m.sentAt))}
             </small>
           </li>
         ))}
