@@ -69,24 +69,25 @@ const FakeStackOverflow = ({ socket }: { socket: FakeSOSocket | null }) => {
           <Route path='/register' element={<Register />} />
           <Route path='/verify' element={<Verify />} />
 
-        {/* Protected Routes */}
-        {
-          <Route
-            element={
-              <ProtectedRoute user={user} socket={socket}>
-                <Layout />
-              </ProtectedRoute>
-            }>
-            <Route path='/home' element={<QuestionPage />} />
-            <Route path='tags' element={<TagPage />} />
-            <Route path='/question/:qid' element={<AnswerPage />} />
-            <Route path='/new/question' element={<NewQuestionPage />} />
-            <Route path='/new/answer/:qid' element={<NewAnswerPage />} />
-            <Route path='/conversation/:cid?' element={<ConversationPage />} />
-            <Route path='/profile/:uid' element={<ProfilePage />} />
-          </Route>
-        }
-      </Routes>
+          {/* Protected Routes */}
+          {
+            <Route
+              element={
+                <ProtectedRoute user={user} socket={socket}>
+                  <Layout />
+                </ProtectedRoute>
+              }>
+              <Route path='/home' element={<QuestionPage />} />
+              <Route path='tags' element={<TagPage />} />
+              <Route path='/question/:qid' element={<AnswerPage />} />
+              <Route path='/new/question' element={<NewQuestionPage />} />
+              <Route path='/new/answer/:qid' element={<NewAnswerPage />} />
+              <Route path='/conversation/:cid?' element={<ConversationPage />} />
+              <Route path='/profile/:uid' element={<ProfilePage />} />
+            </Route>
+          }
+        </Routes>
+      </PreLoginContext.Provider>
     </LoginContext.Provider>
   ) : null;
 };
