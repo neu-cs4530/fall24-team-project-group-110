@@ -11,8 +11,16 @@ import useRegister from '../../hooks/useRegister';
  */
 const Register = () => {
   const navigate = useNavigate();
-  const { username, password, error, handleUsernameChange, handlePasswordChange, handleSubmit } =
-    useRegister();
+  const {
+    username,
+    email,
+    password,
+    error,
+    handleUsernameChange,
+    handleEmailChange,
+    handlePasswordChange,
+    handleSubmit,
+  } = useRegister();
 
   return (
     <div className='container'>
@@ -28,6 +36,15 @@ const Register = () => {
             required
             className='input-text'
             id={'usernameInput'}
+          />
+          <input
+            type='text'
+            value={email}
+            onChange={handleEmailChange}
+            placeholder='Enter your email'
+            required
+            className='input-text'
+            id={'emailInput'}
           />
           <input
             type='text'

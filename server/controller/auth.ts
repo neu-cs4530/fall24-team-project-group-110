@@ -1,9 +1,10 @@
 import express, { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
-import { LoginRequest } from '../types';
-import { getUserById, getUserByUsername } from '../models/application';
+import { LoginRequest, ResendCodeRequest, VerificationRequest } from '../types';
+import { getUserById, getUserByUsername, verifyUser } from '../models/application';
+import { EmailService } from '../utils/email';
 
-const authController = () => {
+const authController = (emailService: EmailService) => {
   const router = express.Router();
 
   /**
@@ -35,12 +36,21 @@ const authController = () => {
         throw new Error(result.error);
       }
 
+      if (
+        (process.env.MODE === 'development' || process.env.MODE === 'production') &&
+        result.verified === false
+      ) {
+        res.status(403).send('User is not verified');
+        return;
+      }
+
       if (!bcrypt.compareSync(req.body.password, result.password)) {
         throw new Error('invalid username or password');
       }
 
       // _id is guaranteed to be set at this point
       req.session.userId = result._id!.toString();
+      req.session.verified = result.verified;
       res.status(200).send(result);
     } catch (err) {
       res.status(500).send(`Error when logging in`);
@@ -70,6 +80,76 @@ const authController = () => {
   };
 
   /**
+   * Attempts to verify a user by checking if the provided code matches the stored code in the session.
+   *
+   * @param req The Request object containing the code and the session data.
+   * @param res The HTTP response object used to send back the result of the operation.
+   *
+   * @returns A Promise that resolves to void.
+   */
+  const verify = async (req: VerificationRequest, res: Response): Promise<void> => {
+    const { code } = req.query;
+    if (!code) {
+      res.status(400).send('Missing verification code');
+      return;
+    }
+
+    if (!req.session.code) {
+      res.status(400).send('No verification code stored in session');
+      return;
+    }
+
+    if (req.session.code !== code) {
+      res.status(400).send('Invalid verification code');
+      return;
+    }
+
+    try {
+      const result = await verifyUser(req.session.userId!);
+      if ('error' in result) {
+        throw new Error(result.error);
+      }
+
+      req.session.verified = true;
+      res.status(200).send(result);
+    } catch (err) {
+      res.status(500).send('Error verifying user');
+    }
+  };
+
+  /**
+   * Resends the verification code to the user's email.
+   *
+   * @param req The Request object containing the email and the session data.
+   * @param res The HTTP response object used to send back the result of the operation.
+   *
+   * @returns A Promise that resolves to void.
+   */
+  const resendCode = async (req: ResendCodeRequest, res: Response): Promise<void> => {
+    if (!req.query.email) {
+      res.status(400).send('Missing email');
+      return;
+    }
+
+    if (!req.session.code) {
+      res.status(400).send('Verification code no longer exists');
+      return;
+    }
+
+    try {
+      await emailService.sendEmail({
+        to: req.query.email,
+        subject: 'FakeSO Verification Code',
+        text: `Your verification code is: ${req.session.code}`,
+      });
+
+      res.sendStatus(204);
+    } catch (err) {
+      res.status(500).send('Error verifying user');
+    }
+  };
+
+  /**
    * Logs out a user by destroying the session.
    *
    * @param req The LoginRequest object containing the user data.
@@ -90,6 +170,8 @@ const authController = () => {
   router.post('/login', login);
   router.get('/validate', validate);
   router.post('/logout', logout);
+  router.post('/verify', verify);
+  router.get('/resendCode', resendCode);
 
   return router;
 };

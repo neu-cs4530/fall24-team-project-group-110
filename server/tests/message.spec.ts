@@ -65,6 +65,7 @@ describe('POST /addMessage', () => {
           followers: [],
           following: [],
           notifications: [],
+          verified: false,
         },
         {
           _id: new ObjectId('65e9b716ff0e892116b2de12'),
@@ -81,6 +82,7 @@ describe('POST /addMessage', () => {
           followers: [],
           following: [],
           notifications: [],
+          verified: false,
         },
       ],
       lastMessage: '',

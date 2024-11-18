@@ -12,6 +12,8 @@ import session from 'express-session';
 declare module 'express-session' {
   interface SessionData {
     userId?: string;
+    code?: string;
+    verified?: boolean;
   }
 }
 
@@ -26,8 +28,11 @@ import messageController from './controller/message';
 import authController from './controller/auth';
 import notificationController from './controller/notification';
 import { checkConversationAccess } from './models/application';
+import { EmailService } from './utils/email';
 
 dotenv.config();
+
+const emailService = new EmailService();
 
 const MONGO_URL = `${process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017'}/fake_so`;
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:3000';
@@ -115,13 +120,16 @@ app.use((req: Request, res: Response, next) => {
   const unprotectedRoutes = new Set([
     '/user/addUser',
     '/auth/login',
+    '/auth/verify',
+    '/auth/logout',
+    '/auth/resendCode',
   ])
 
   if (unprotectedRoutes.has(req.path)) {
     return next();
   }
 
-  if (!req.session.userId) {
+  if (!req.session.userId || !req.session.verified) {
     return res.status(401).send('unauthorized');
   }
 
@@ -133,12 +141,12 @@ app.get('/', (req: Request, res: Response) => {
   res.end();
 });
 
-app.use('/auth', authController());
+app.use('/auth', authController(emailService));
 app.use('/question', questionController(socket));
 app.use('/tag', tagController());
 app.use('/answer', answerController(socket));
 app.use('/comment', commentController(socket));
-app.use('/user', userController(socket));
+app.use('/user', userController(emailService));
 app.use('/conversation', conversationController(socket));
 app.use('/message', messageController(socket));
 app.use('/notification', notificationController());

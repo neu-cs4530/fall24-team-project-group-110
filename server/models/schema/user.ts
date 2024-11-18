@@ -32,6 +32,8 @@ const userSchema: Schema = new Schema(
     },
     email: {
       type: String,
+      required: true,
+      unique: true,
     },
     password: {
       type: String,
@@ -49,6 +51,10 @@ const userSchema: Schema = new Schema(
     followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     notifications: [{ type: Schema.Types.ObjectId, ref: 'Notification' }],
+    verified: {
+      type: Boolean,
+      default: false,
+    },
   },
   { collection: 'User' },
 );

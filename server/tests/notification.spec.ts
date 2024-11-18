@@ -42,6 +42,7 @@ describe('Notification API Tests', () => {
         followers: [],
         following: [],
         notifications: [mockNotification._id],
+        verified: false,
       } as User);
 
       const response = await supertest(app).post('/notification/addNotification').send({
@@ -124,6 +125,7 @@ describe('Notification API Tests', () => {
         followers: [],
         following: [],
         notifications: [],
+        verified: false,
       };
 
       jest.spyOn(util, 'deleteNotificationById').mockResolvedValue({
@@ -156,6 +158,7 @@ describe('Notification API Tests', () => {
         picture: 'http://example.com/picture.jpg',
         questions: [],
         username: 'testUser',
+        verified: false,
       });
     });
 
