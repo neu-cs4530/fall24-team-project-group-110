@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useUserContext from '../../../hooks/useUserContext';
 import {
   addUserToNotifyListQuestion,
@@ -21,7 +21,11 @@ const NotificationCheckbox: React.FC<NotificationCheckboxProps> = ({
   type,
 }) => {
   const { user } = useUserContext();
-  const [checked, setChecked] = useState(notifyList.includes(user._id));
+  const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    setChecked(notifyList.includes(user._id));
+  }, [notifyList, user._id]);
 
   const handleChange = () => {
     setChecked(!checked);
