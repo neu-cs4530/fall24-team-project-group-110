@@ -5,7 +5,7 @@ import addAnswer from '../services/answerService';
 import useUserContext from './useUserContext';
 import { Answer } from '../types';
 import { getQuestionById } from '../services/questionService';
-import addNotification from '../services/notificationService';
+import { addNotification } from '../services/notificationService';
 
 /**
  * Custom hook for managing the state and logic of an answer submission form.

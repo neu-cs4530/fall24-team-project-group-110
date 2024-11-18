@@ -39,7 +39,7 @@ const NotificationDropdown = () => {
                     </div>
                     <FaTrash
                       className='trash-icon'
-                      onClick={() => handleDeleteNotification(n._id)}
+                      onClick={() => n._id && handleDeleteNotification(n._id)}
                     />
                   </li>
                 ))}
