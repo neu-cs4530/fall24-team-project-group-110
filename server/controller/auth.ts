@@ -129,7 +129,7 @@ const authController = (emailService: EmailService) => {
       req.session.verified = true;
       res.status(200).send(populatedUser);
     } catch (err) {
-      res.status(500).send('Error verifying user');
+      res.status(500).send('Error verifying user: ' + err);
     }
   };
 
