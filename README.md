@@ -12,3 +12,6 @@ The schemas for the database are documented in the directory `server/models/sche
 A class diagram for the schema definition is shown below:
 
 ![Class Diagram](class-diagram.png)
+
+## Notes
+- third-party cookies must be enabled in the browser for the app to work properly
