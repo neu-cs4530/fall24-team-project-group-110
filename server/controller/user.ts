@@ -125,6 +125,14 @@ const userController = (emailService: EmailService) => {
         );
       }
 
+      req.session.save((err) => {
+        if (err) {
+          console.error('Error saving session:', err);
+        } else {
+          console.log('Session saved');
+        }
+      });
+
       res.json(result);
     } catch (err: unknown) {
       if (err instanceof Error) {
