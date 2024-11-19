@@ -59,7 +59,6 @@ const sessionMiddleware = session({
     // 60 minutes
     maxAge: 1000 * 60 * 60,
     sameSite: 'none',
-    domain: '.onrender.com',
   },
   resave: false,
   saveUninitialized: true,
