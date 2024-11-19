@@ -1,5 +1,5 @@
 import api from './config';
-import { User } from '../types';
+import { User, Notification } from '../types';
 
 const NOTIFICATION_API_URL = `${process.env.REACT_APP_SERVER_URL}/notification`;
 
@@ -32,4 +32,21 @@ const deleteNotification = async (uid: string, nid: string): Promise<User> => {
   return res.data;
 };
 
-export { getNotificationById, deleteNotification };
+/**
+ * Adds a new answer to a specific question.
+ *
+ * @param uid - The ID of the user to which the notification is being added.
+ * @param notif - The notification object containing the notification details.
+ * @throws Error Throws an error if the request fails or the response status is not 200.
+ */
+const addNotification = async (uid: string, notif: Notification): Promise<Notification> => {
+  const data = { uid, notif };
+
+  const res = await api.post(`${NOTIFICATION_API_URL}/addNotification`, data);
+  if (res.status !== 200) {
+    throw new Error('Error while creating a new notification');
+  }
+  return res.data;
+};
+
+export { getNotificationById, deleteNotification, addNotification };

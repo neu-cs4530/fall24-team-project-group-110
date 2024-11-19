@@ -236,6 +236,84 @@ export const getQuestionsByOrder = async (order: OrderType): Promise<Question[]>
 };
 
 /**
+ * Adds or removes user from notify list of a conversation.
+ * @param userId - The user ID to add or remove
+ * @param conversationId - The conversation ID to add or remove
+ * @param addOrRemove - The action to perform, either 'add' or 'remove'
+ * @returns {Promise<ConversationResponse>} - The updated conversation or an error message
+ */
+export const changeUserToNotifyListConversation = async (
+  userId: string,
+  conversationId: string,
+  addOrRemove: string,
+): Promise<ConversationResponse> => {
+  try {
+    let result;
+    if (addOrRemove === 'add') {
+      result = await ConversationModel.findOneAndUpdate(
+        { _id: conversationId },
+        { $push: { notifyList: userId } },
+        { new: true },
+      );
+      if (result === null) {
+        throw new Error('Error when adding user to conversation');
+      }
+    } else {
+      result = await ConversationModel.findOneAndUpdate(
+        { _id: conversationId },
+        { $pull: { notifyList: userId } },
+        { new: true },
+      );
+      if (result === null) {
+        throw new Error('Error when removing user to conversation');
+      }
+    }
+    return result;
+  } catch (error) {
+    return { error: 'Error when changing user to conversation' };
+  }
+};
+
+/**
+ * Adds or removes user from notify list of a question.
+ * @param userId - The user ID to add or remove
+ * @param questionId - The question ID to add or remove
+ * @param addOrRemove - The action to perform, either 'add' or 'remove'
+ * @returns {Promise<QuestionResponse>} - The updated question or an error message
+ */
+export const changeUserToNotifyListQuestion = async (
+  userId: string,
+  questionId: string,
+  addOrRemove: string,
+): Promise<QuestionResponse> => {
+  try {
+    let result;
+    if (addOrRemove === 'add') {
+      result = await QuestionModel.findOneAndUpdate(
+        { _id: new ObjectId(questionId) },
+        { $push: { notifyList: new ObjectId(userId) } },
+        { new: true },
+      );
+      if (result === null) {
+        throw new Error('Error when adding user to question');
+      }
+    } else {
+      result = await QuestionModel.findOneAndUpdate(
+        { _id: new ObjectId(questionId) },
+        { $pull: { notifyList: new ObjectId(userId) } },
+        { new: true },
+      );
+      if (result === null) {
+        throw new Error('Error when removing user to question');
+      }
+    }
+    return result;
+  } catch (error) {
+    return { error: 'Error when changing user to question' };
+  }
+};
+
+/**
  * Filters a list of questions by the user who asked them.
  *
  * @param qlist The array of Question objects to be filtered.

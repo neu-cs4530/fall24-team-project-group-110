@@ -197,7 +197,7 @@ export interface EditableUserFields {
  * - dateTime - The date and time when the notification was created.
  */
 export interface Notification {
-  _id: string;
+  _id?: string;
   type: string;
   text: string;
   targetId: string;
@@ -234,7 +234,7 @@ export interface Conversation {
   participants: User[];
   lastMessage: string;
   updatedAt: Date;
-  notifyList: User[];
+  notifyList: string[];
 }
 
 /**

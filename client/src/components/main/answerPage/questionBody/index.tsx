@@ -1,6 +1,7 @@
 import React from 'react';
 import './index.css';
 import { handleHyperlink } from '../../../../tool';
+import NotificationCheckbox from '../../notificationCheckbox';
 
 /**
  * Interface representing the props for the QuestionBody component.
@@ -15,6 +16,8 @@ interface QuestionBodyProps {
   text: string;
   askby: string;
   meta: string;
+  qid: string;
+  notifyList: string[];
 }
 
 /**
@@ -27,13 +30,14 @@ interface QuestionBodyProps {
  * @param askby The username of the question's author.
  * @param meta Additional metadata related to the question.
  */
-const QuestionBody = ({ views, text, askby, meta }: QuestionBodyProps) => (
+const QuestionBody = ({ views, text, askby, meta, qid, notifyList }: QuestionBodyProps) => (
   <div id='questionBody' className='questionBody right_padding'>
     <div className='bold_title answer_question_view'>{views} views</div>
     <div className='answer_question_text'>{handleHyperlink(text)}</div>
     <div className='answer_question_right'>
       <div className='question_author'>{askby}</div>
       <div className='answer_question_meta'>asked {meta}</div>
+      <NotificationCheckbox targetId={qid} notifyList={notifyList} type='question' />
     </div>
   </div>
 );

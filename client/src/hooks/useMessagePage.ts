@@ -1,7 +1,9 @@
 import { useEffect, useState, useRef } from 'react';
 import useUserContext from './useUserContext';
-import { Message } from '../types';
+import { Message, Notification } from '../types';
 import { getMessagesByConvoId, addMessage } from '../services/messageService';
+import { getConversationById } from '../services/conversationService';
+import { addNotification } from '../services/notificationService';
 
 const useMessagePage = (conversationId: string) => {
   const { user, socket } = useUserContext();
@@ -43,6 +45,19 @@ const useMessagePage = (conversationId: string) => {
       // eslint-disable-next-line no-console
       console.error('Error adding message:', error);
     }
+
+    const newNotification: Notification = {
+      type: 'conversation',
+      text: `New message has been made by ${user.username}`,
+      targetId: conversationId,
+      dateTime: new Date(),
+    };
+    const conversation = await getConversationById(conversationId);
+    const { notifyList } = conversation;
+    const willNotify = notifyList.filter(uid => uid !== user._id);
+    willNotify.forEach(uid => {
+      addNotification(uid, newNotification);
+    });
   };
 
   useEffect(() => {

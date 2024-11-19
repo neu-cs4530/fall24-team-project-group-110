@@ -21,7 +21,7 @@ const useNotification = () => {
 
   const handleDeleteAllNotifications = async () => {
     try {
-      await Promise.all(nlist.map(n => deleteNotification(user._id, n._id)));
+      await Promise.all(nlist.map(n => deleteNotification(user._id, n._id || '')));
       setNlist([]);
     } catch (error) {
       // eslint-disable-next-line no-console
