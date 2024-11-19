@@ -57,7 +57,7 @@ const sessionMiddleware = session({
     secure: process.env.MODE === 'production',
     // 60 minutes
     maxAge: 1000 * 60 * 60,
-    // sameSite: 'none',
+    sameSite: 'none',
   },
   resave: false,
   saveUninitialized: true,
