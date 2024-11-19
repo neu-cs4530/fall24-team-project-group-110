@@ -16,6 +16,7 @@ import { validate } from '../services/authService';
 import ProfilePage from './main/profilePage';
 import Verify from './verify';
 import PreLoginContext from '../contexts/PreLoginContext';
+import UsersPage from './main/usersPage';
 
 const ProtectedRoute = ({
   user,
@@ -84,6 +85,7 @@ const FakeStackOverflow = ({ socket }: { socket: FakeSOSocket | null }) => {
               <Route path='/new/answer/:qid' element={<NewAnswerPage />} />
               <Route path='/conversation/:cid?' element={<ConversationPage />} />
               <Route path='/profile/:uid' element={<ProfilePage />} />
+              <Route path='/users' element={<UsersPage />} />
             </Route>
           }
         </Routes>

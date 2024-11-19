@@ -41,7 +41,7 @@ const EditProfile = ({ profile, setProfile, onCancel, onSave }: EditProfileProps
         </div>
       </div>
       <div className='image-container'>
-        <img className='profile-picture' src={profile.picture} alt='profile picture' />
+        <img className='profile-picture' src={profile.picture} alt='could not find image' />
       </div>
     </div>
 

@@ -17,7 +17,14 @@ const addUser = async (username: string, email: string, password: string): Promi
   if (res.status !== 200) {
     throw new Error('Error while creating a new user');
   }
+  return res.data;
+};
 
+const getAllUsers = async (): Promise<User[]> => {
+  const res = await api.get(`${USER_API_URL}/getAllUsers`);
+  if (res.status !== 200) {
+    throw new Error('Error while fetching all users');
+  }
   return res.data;
 };
 
@@ -26,7 +33,6 @@ const getUser = async (id: string): Promise<User> => {
   if (res.status !== 200) {
     throw new Error('Error while fetching user');
   }
-
   return res.data;
 };
 
@@ -38,8 +44,15 @@ const updateUser = async (id: string, updatedFields: EditableUserFields): Promis
   if (res.status !== 200) {
     throw new Error('Error while updating user');
   }
-
   return res.data;
 };
 
-export { addUser, getUser, updateUser };
+const followUser = async (currentUserId: string, targetUserId: string): Promise<User> => {
+  const res = await api.put(`${USER_API_URL}/followUser`, { currentUserId, targetUserId });
+  if (res.status !== 200) {
+    throw new Error('Error while following user');
+  }
+  return res.data;
+};
+
+export { addUser, getAllUsers, getUser, updateUser, followUser };

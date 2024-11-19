@@ -8,6 +8,7 @@ const NotificationDropdown = () => {
   const {
     isNotifOpen,
     nlist,
+    dropdownRef,
     handleToggle,
     navigateNotification,
     handleDeleteAllNotifications,
@@ -15,7 +16,7 @@ const NotificationDropdown = () => {
   } = useNotification();
 
   return (
-    <div className='notification-container'>
+    <div className='notification-container' ref={dropdownRef}>
       <div className='notification-icon' onClick={handleToggle}>
         <FaBell />
         {nlist.length > 0 && <span className='notification-badge'>{nlist.length}</span>}

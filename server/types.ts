@@ -273,6 +273,19 @@ export interface GetUserRequest extends Request {
   };
 }
 
+export interface AddFollowToUserRequest extends Request {
+  body: {
+    currentUserId: string;
+    targetUserId: string;
+  };
+}
+
+export interface GetAllUsersRequest extends Request {
+  query: {
+
+  }
+}
+
 /**
  * Interface extending the request body when adding a comment to a question or an answer, which contains:
  * - id - The unique identifier of the question or answer being commented on.
@@ -344,6 +357,11 @@ export interface NotificationUpdatePayload {
   notification: Notification;
 }
 
+export interface FollowUpdatePayload {
+  uid: string;
+  followers: User[];
+}
+
 /**
  * Interface representing the possible events that the server can emit to the client.
  */
@@ -359,6 +377,7 @@ export interface ServerToClientEvents {
   newMessage: (message: MessageResponse) => void;
   conversationUpdate: (conversation: ConversationResponse) => void;
   notificationUpdate: (notification: NotificationUpdatePayload) => void;
+  followUpdate: (user: FollowUpdatePayload) => void;
 }
 
 export interface ClientToServerEvents {
