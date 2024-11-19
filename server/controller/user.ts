@@ -1,16 +1,26 @@
 import express, { Response } from 'express';
 import bcrypt from 'bcryptjs';
-import { User, AddUserRequest, EditUserRequest, GetUserRequest } from '../types';
+import {
+  User,
+  AddUserRequest,
+  EditUserRequest,
+  GetUserRequest,
+  GetAllUsersRequest,
+  AddFollowToUserRequest,
+  FakeSOSocket,
+} from '../types';
 import {
   populateUser,
   deleteUserById,
   getUserById,
   saveUser,
   updateUserProfile,
+  getUsers,
+  addFollowToUser,
 } from '../models/application';
 import { EmailService } from '../services/email';
 
-const userController = (emailService: EmailService) => {
+const userController = (socket: FakeSOSocket, emailService: EmailService) => {
   const router = express.Router();
 
   /**
@@ -187,6 +197,22 @@ const userController = (emailService: EmailService) => {
   };
 
   /**
+   * Retrieves all user.
+   *
+   * @param res The HTTP response object used to send back the result of the operation.
+   *
+   * @returns A Promise that resolves to void.
+   */
+  const getAllUsers = async (req: GetAllUsersRequest, res: Response): Promise<void> => {
+    try {
+      const ulist: User[] = await getUsers();
+      res.json(ulist);
+    } catch (err) {
+      res.status(500).send('Error when getting all users');
+    }
+  };
+
+  /**
    * Retrieves a user by its unique ID.
    *
    * @param req The GetUserRequest object containing the user ID.
@@ -210,9 +236,49 @@ const userController = (emailService: EmailService) => {
     }
   };
 
+  /**
+   * Adds following to user and follower to target user.
+   *
+   * @param req - The AddFollowToUserRequest object containing the user Id and target user Id.
+   * @param res - The HTTP response object used to send back the result of the operation.
+   *
+   * @returns A Promise that resolves to void.
+   */
+  const followUser = async (req: AddFollowToUserRequest, res: Response): Promise<void> => {
+    const { currentUser, targetUser } = req.body;
+
+    try {
+      const followerUser = await addFollowToUser(currentUser, targetUser);
+
+      if ('error' in followerUser) {
+        throw new Error(followerUser.error);
+      }
+
+      const populatedUser = await populateUser(targetUser._id!.toString());
+
+      if ('error' in populatedUser) {
+        throw new Error(populatedUser.error);
+      }
+
+      socket.emit('followUpdate', {
+        uid: targetUser._id!.toString(),
+        followers: populatedUser.followers as User[],
+      });
+      res.json(followerUser);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        res.status(500).send(`Error following user: ${err.message}`);
+      } else {
+        res.status(500).send(`Error following user`);
+      }
+    }
+  };
+
   router.post('/addUser', addUser);
   router.put('/updateUser', updateUser);
   router.get('/getUser/:uid', getUser);
+  router.get('/getAllUsers', getAllUsers);
+  router.put('/followUser', followUser);
 
   return router;
 };

@@ -152,7 +152,7 @@ app.use('/question', questionController(socket));
 app.use('/tag', tagController());
 app.use('/answer', answerController(socket));
 app.use('/comment', commentController(socket));
-app.use('/user', userController(emailService));
+app.use('/user', userController(socket, emailService));
 app.use('/conversation', conversationController(socket));
 app.use('/message', messageController(socket, notificationService));
 app.use('/notification', notificationController());

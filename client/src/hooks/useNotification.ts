@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useUserContext from './useUserContext';
 import { Notification } from '../types';
@@ -8,7 +8,8 @@ const useNotification = () => {
   const navigate = useNavigate();
   const { user, socket } = useUserContext();
   const [isNotifOpen, setIsNotifOpen] = useState<boolean>(false);
-  const [nlist, setNlist] = useState<Notification[]>(user.notifications);
+  const [nlist, setNlist] = useState<Notification[]>([]);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const handleToggle = () => {
     setIsNotifOpen(prev => !prev);
@@ -40,6 +41,26 @@ const useNotification = () => {
   };
 
   useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        isNotifOpen
+      ) {
+        handleToggle();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isNotifOpen]);
+
+  useEffect(() => {
+    /**
+     * Function to fetch user notifications based on the user id and update the notification list.
+     */
     const handleNewNotifications = ({
       uid,
       notification,
@@ -62,6 +83,7 @@ const useNotification = () => {
   return {
     isNotifOpen,
     nlist,
+    dropdownRef,
     handleToggle,
     navigateNotification,
     handleDeleteAllNotifications,

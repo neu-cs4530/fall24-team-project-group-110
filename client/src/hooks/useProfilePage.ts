@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { EditableUserFields, User } from '../types';
+import { EditableUserFields, User, ProfileTabs, FollowData } from '../types';
 import { getUser, updateUser } from '../services/userService';
 import useLoginContext from './useLoginContext';
 import useUserContext from './useUserContext';
@@ -9,9 +9,10 @@ const useProfilePage = () => {
   const { uid } = useParams();
   const navigate = useNavigate();
   const [profile, setProfile] = useState<User | null>(null);
+  const [activeTab, setActiveTab] = useState<ProfileTabs>('profile');
   const [textErr, setTextErr] = useState<string>('');
   const { setUser } = useLoginContext();
-  const { user } = useUserContext();
+  const { user, socket } = useUserContext();
   const canEdit = uid === user?._id;
 
   useEffect(() => {
@@ -30,6 +31,10 @@ const useProfilePage = () => {
       fetchProfile();
     }
   }, [uid, navigate]);
+
+  const navigateProfile = (targetId: string) => {
+    navigate(`/profile/${targetId}`);
+  };
 
   const saveProfile = async () => {
     if (profile) {
@@ -51,7 +56,37 @@ const useProfilePage = () => {
     }
   };
 
-  return { profile, textErr, canEdit, setProfile, saveProfile };
+  useEffect(() => {
+    const handleFollowUpdate = (followData: FollowData) => {
+      if (followData.uid === uid) {
+        setProfile(prevProfile =>
+          prevProfile
+            ? {
+                ...prevProfile,
+                followers: followData.followers,
+              }
+            : prevProfile,
+        );
+      }
+    };
+
+    socket.on('followUpdate', handleFollowUpdate);
+
+    return () => {
+      socket.off('followUpdate', handleFollowUpdate);
+    };
+  }, [uid, socket, user._id]);
+
+  return {
+    profile,
+    activeTab,
+    textErr,
+    canEdit,
+    setProfile,
+    setActiveTab,
+    navigateProfile,
+    saveProfile,
+  };
 };
 
 export default useProfilePage;
