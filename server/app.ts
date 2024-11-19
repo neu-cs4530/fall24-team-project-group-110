@@ -54,6 +54,7 @@ const socket: FakeSOSocket = new Server(server, {
 const sessionMiddleware = session({
   secret: 'fakeso_secret',
   cookie: {
+    secure: process.env.MODE === 'production',
     // 60 minutes
     maxAge: 1000 * 60 * 60,
   },
