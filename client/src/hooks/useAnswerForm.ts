@@ -4,8 +4,6 @@ import { validateHyperlink } from '../tool';
 import addAnswer from '../services/answerService';
 import useUserContext from './useUserContext';
 import { Answer } from '../types';
-import { getQuestionById } from '../services/questionService';
-import { addNotification } from '../services/notificationService';
 
 /**
  * Custom hook for managing the state and logic of an answer submission form.
@@ -64,17 +62,6 @@ const useAnswerForm = () => {
     };
 
     const res = await addAnswer(questionID, answer);
-
-    const newNotification = {
-      type: 'question',
-      text: `New answer has been made by ${user.username}`,
-      targetId: questionID,
-      dateTime: new Date(),
-    };
-    const question = await getQuestionById(questionID, user.username);
-    const { notifyList } = question;
-    const willNotify = notifyList.filter(uid => uid !== user._id);
-    willNotify.forEach(async uid => addNotification(uid, newNotification));
 
     if (res && res._id) {
       // navigate to the question that was answered

@@ -135,7 +135,7 @@ const messageController = (socket: FakeSOSocket, notificationService: Notificati
         throw new Error(populatedUpdatedConversation.error);
       }
 
-      const recipients = populatedUpdatedConversation.participants.filter(
+      const recipients = populatedUpdatedConversation.notifyList.filter(
         user => user._id && user._id.toString() !== result.sender._id!.toString(),
       ) as User[];
       if (process.env.MODE === 'production' || process.env.MODE === 'development') {

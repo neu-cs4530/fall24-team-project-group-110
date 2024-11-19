@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useUserContext from './useUserContext';
 import { Notification } from '../types';
-import { deleteNotification } from '../services/notificationService';
+import deleteNotification from '../services/notificationService';
 
 const useNotification = () => {
   const navigate = useNavigate();

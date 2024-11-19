@@ -1104,26 +1104,6 @@ export const getUsersByUsernames = async (usernames: string[]): Promise<UserList
 };
 
 /**
- * Gets a Notification by their ID.
- *
- * @param id The ID of the Notification to fetch.
- *
- * @returns {Promise<NotificationResponse>} - The user, or an error message if the fetch failed
- */
-export const getNotificationById = async (id: string): Promise<NotificationResponse> => {
-  try {
-    const result = await NotificationModel.findOne({ _id: id });
-    if (!result) {
-      throw new Error('Notification not found');
-    }
-
-    return result.toObject();
-  } catch (error) {
-    return { error: 'Error when fetching notification' };
-  }
-};
-
-/**
  * Deletes a Notification by their ID.
  *
  * @param id The ID of the Notification to delete.
