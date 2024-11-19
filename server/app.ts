@@ -44,7 +44,7 @@ mongoose
   .catch(err => console.log('MongoDB connection error: ', err));
 
 const app = express();
-app.set('trust proxy', true);
+app.set('trust proxy', 1);
 const server = http.createServer(app);
 const socket: FakeSOSocket = new Server(server, {
   cors: { 
@@ -59,6 +59,7 @@ const sessionMiddleware = session({
     // 60 minutes
     maxAge: 1000 * 60 * 60,
     sameSite: 'none',
+    domain: '.onrender.com',
   },
   resave: false,
   saveUninitialized: true,
