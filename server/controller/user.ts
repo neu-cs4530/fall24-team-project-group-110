@@ -245,23 +245,22 @@ const userController = (socket: FakeSOSocket, emailService: EmailService) => {
    * @returns A Promise that resolves to void.
    */
   const followUser = async (req: AddFollowToUserRequest, res: Response): Promise<void> => {
-    const { currentUser, targetUser } = req.body;
+    const { currentUserId, targetUserId } = req.body;
 
     try {
-      const followerUser = await addFollowToUser(currentUser, targetUser);
+      const followerUser = await addFollowToUser(currentUserId, targetUserId);
 
       if ('error' in followerUser) {
         throw new Error(followerUser.error);
       }
 
-      const populatedUser = await populateUser(targetUser._id!.toString());
-
+      const populatedUser = await populateUser(targetUserId);
       if ('error' in populatedUser) {
         throw new Error(populatedUser.error);
       }
 
       socket.emit('followUpdate', {
-        uid: targetUser._id!.toString(),
+        uid: targetUserId,
         followers: populatedUser.followers as User[],
       });
       res.json(followerUser);

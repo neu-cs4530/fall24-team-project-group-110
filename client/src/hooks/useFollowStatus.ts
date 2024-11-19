@@ -1,21 +1,15 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { followUser, getUser } from '../services/userService';
+import { followUser } from '../services/userService';
 import useUserContext from './useUserContext';
 import { User } from '../types';
 
 const useFollowStatus = ({ profile }: { profile: User }) => {
-  const { uid } = useParams();
-  const { user, socket } = useUserContext();
-  const [targetId, setTargetId] = useState<string>('');
-  const [targetUser, setTargetUser] = useState<User>();
+  const { user } = useUserContext();
   const [isFollowed, setIsFollowed] = useState<boolean>();
 
   const handleFollowUser = async () => {
-    if (!user || !targetId || !targetUser) return;
-
     try {
-      await followUser(user, targetUser);
+      await followUser(user._id, profile._id);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error following user:', error);
@@ -23,26 +17,12 @@ const useFollowStatus = ({ profile }: { profile: User }) => {
   };
 
   useEffect(() => {
-    const fetchTargetUser = async (id: string) => {
-      try {
-        const fetchedUser = await getUser(id);
-        setTargetUser(fetchedUser);
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log(`Error fetching target user: ${error}`);
-      }
-    };
-
-    if (uid) {
-      setTargetId(uid);
-      if (profile.followers.some(u => u._id === user._id)) {
-        setIsFollowed(true);
-      } else {
-        setIsFollowed(false);
-      }
-      fetchTargetUser(uid);
+    if (profile.followers.some(u => u._id === user._id)) {
+      setIsFollowed(true);
+    } else {
+      setIsFollowed(false);
     }
-  }, [uid, user._id, profile.followers, socket]);
+  }, [user._id, profile.followers]);
 
   return {
     isFollowed,

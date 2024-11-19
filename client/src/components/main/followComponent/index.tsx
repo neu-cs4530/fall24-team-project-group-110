@@ -7,11 +7,11 @@ import useFollowStatus from '../../../hooks/useFollowStatus';
  *
  * question - The question object containing voting information.
  */
-interface VoteComponentProps {
+interface FollowComponentProps {
   profile: User;
 }
 
-const FollowComponent = ({ profile }: VoteComponentProps) => {
+const FollowComponent = ({ profile }: FollowComponentProps) => {
   const { isFollowed, handleFollowUser } = useFollowStatus({ profile });
 
   return (

@@ -956,17 +956,15 @@ export const updateUserProfile = async (
  * @returns {Promise<UserResponse>} - The new user, or an error message if the update failed
  */
 export const addFollowToUser = async (
-  currentUser: User,
-  targetUser: User,
+  currentUserId: string,
+  targetUserId: string,
 ): Promise<UserResponse> => {
   try {
-    const isFollowing = await UserModel.exists({ _id: currentUser._id, following: targetUser._id });
+    const isFollowing = await UserModel.exists({ _id: currentUserId, following: targetUserId });
 
     const followingUser = await UserModel.findOneAndUpdate(
-      { _id: currentUser._id },
-      isFollowing
-        ? { $pull: { following: targetUser._id } }
-        : { $push: { following: { $each: [targetUser._id] } } },
+      { _id: currentUserId },
+      isFollowing ? { $pull: { following: targetUserId } } : { $push: { following: targetUserId } },
       { new: true },
     );
 
@@ -975,10 +973,10 @@ export const addFollowToUser = async (
     }
 
     const followerUser = await UserModel.findOneAndUpdate(
-      { _id: targetUser._id },
+      { _id: targetUserId },
       isFollowing
-        ? { $pull: { followers: currentUser._id } }
-        : { $push: { followers: { $each: [currentUser._id] } } },
+        ? { $pull: { followers: currentUserId } }
+        : { $push: { followers: currentUserId } },
       { new: true },
     );
 

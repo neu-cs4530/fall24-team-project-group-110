@@ -23,6 +23,7 @@ const useProfilePage = () => {
         try {
           const fetchedUser = await getUser(uid);
           setProfile(fetchedUser);
+          setActiveTab('profile');
         } catch (error) {
           setTextErr('Error while fetching profile');
         }

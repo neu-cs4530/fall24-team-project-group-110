@@ -275,8 +275,8 @@ export interface GetUserRequest extends Request {
 
 export interface AddFollowToUserRequest extends Request {
   body: {
-    currentUser: User;
-    targetUser: User;
+    currentUserId: string;
+    targetUserId: string;
   };
 }
 

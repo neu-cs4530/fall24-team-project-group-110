@@ -47,8 +47,8 @@ const updateUser = async (id: string, updatedFields: EditableUserFields): Promis
   return res.data;
 };
 
-const followUser = async (currentUser: User, targetUser: User): Promise<User> => {
-  const res = await api.put(`${USER_API_URL}/followUser`, { currentUser, targetUser });
+const followUser = async (currentUserId: string, targetUserId: string): Promise<User> => {
+  const res = await api.put(`${USER_API_URL}/followUser`, { currentUserId, targetUserId });
   if (res.status !== 200) {
     throw new Error('Error while following user');
   }
