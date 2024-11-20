@@ -31,6 +31,12 @@ const ViewProfile = ({ profile, canEdit, onEdit }: ViewProfileProps) => {
           <img className='profile-picture' src={profilePic} onError={handleError} />
         </div>
       </div>
+      {canEdit && (
+        <div>
+          <label>Email Notifications:</label>
+          <input type='checkbox' checked={profile.emailNotifications} disabled />
+        </div>
+      )}
       <div className='bio-container'>
         <h2>Bio:</h2>
         <p>{profile.bio}</p>
