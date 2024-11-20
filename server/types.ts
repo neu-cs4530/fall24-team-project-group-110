@@ -259,9 +259,9 @@ export interface AddFollowToUserRequest extends Request {
   };
 }
 
-export interface GetAllUsersRequest extends Request {
+export interface GetUsersRequest extends Request {
   query: {
-
+    search: string;
   }
 }
 

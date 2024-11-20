@@ -5,7 +5,7 @@ import {
   AddUserRequest,
   EditUserRequest,
   GetUserRequest,
-  GetAllUsersRequest,
+  GetUsersRequest,
   AddFollowToUserRequest,
   FakeSOSocket,
 } from '../types';
@@ -15,8 +15,8 @@ import {
   getUserById,
   saveUser,
   updateUserProfile,
-  getUsers,
   addFollowToUser,
+  findUsers,
 } from '../models/application';
 import { EmailService } from '../services/email';
 
@@ -203,9 +203,14 @@ const userController = (socket: FakeSOSocket, emailService: EmailService) => {
    *
    * @returns A Promise that resolves to void.
    */
-  const getAllUsers = async (req: GetAllUsersRequest, res: Response): Promise<void> => {
+  const getUsers = async (req: GetUsersRequest, res: Response): Promise<void> => {
+    if (!req.query.search) {
+      res.status(400).send('Invalid search query');
+      return;
+    }
+
     try {
-      const ulist: User[] = await getUsers();
+      const ulist: User[] = await findUsers(req.query.search);
       res.json(ulist);
     } catch (err) {
       res.status(500).send('Error when getting all users');
@@ -276,7 +281,7 @@ const userController = (socket: FakeSOSocket, emailService: EmailService) => {
   router.post('/addUser', addUser);
   router.put('/updateUser', updateUser);
   router.get('/getUser/:uid', getUser);
-  router.get('/getAllUsers', getAllUsers);
+  router.get('/getUsers', getUsers);
   router.put('/followUser', followUser);
 
   return router;
