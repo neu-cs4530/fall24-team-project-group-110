@@ -68,6 +68,14 @@ describe('POST /addAnswer', () => {
       notifyList: [],
     });
 
+    popDocSpy.mockResolvedValueOnce({
+      _id: validAid,
+      text: 'This is a test answer',
+      ansBy: 'dummyUserId',
+      ansDateTime: new Date('2024-06-03'),
+      comments: [],
+    });
+
     const response = await supertest(app).post('/answer/addAnswer').send(mockReqBody);
 
     expect(response.status).toBe(200);
