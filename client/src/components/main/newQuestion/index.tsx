@@ -1,9 +1,12 @@
 import React from 'react';
+import { Button, Typography } from 'antd';
 import useNewQuestion from '../../../hooks/useNewQuestion';
 import Form from '../baseComponents/form';
 import Input from '../baseComponents/input';
 import TextArea from '../baseComponents/textarea';
 import './index.css';
+
+const { Text } = Typography;
 
 /**
  * NewQuestionPage component allows users to submit a new question with a title,
@@ -49,15 +52,19 @@ const NewQuestionPage = () => {
         setState={setTagNames}
         err={tagErr}
       />
-      <div className='btn_indicator_container'>
-        <button
+      {/* btn_indicator_container */}
+      <div className='form-footer'>
+        <Button
           className='form_postBtn'
           onClick={() => {
             postQuestion();
           }}>
           Post Question
-        </button>
+        </Button>
         <div className='mandatory_indicator'>* indicates mandatory fields</div>
+        <Text type='secondary' className='mandatory-indicator'>
+          * indicates mandatory fields
+        </Text>
       </div>
     </Form>
   );

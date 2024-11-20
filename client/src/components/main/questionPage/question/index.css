@@ -1,4 +1,4 @@
-.question {
+/* .question {
   display: flex;
   flex-direction: row;
   border-top: #000000 1px dashed;
@@ -47,4 +47,24 @@
 
 .question_meta {
   color: #bbbbbb;
+} */
+
+.question_meta {
+  text-align: right;
+  color: #888888;
+}
+
+.question_author {
+  color: #f56a00;
+  font-weight: bold;
+}
+
+.postTitle {
+  font-size: 18px;
+  font-weight: bold;
+  color: #0050b3;
+}
+
+.question_tags {
+  margin-top: 8px;
 }

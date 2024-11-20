@@ -1,0 +1,37 @@
+.ant-card {
+  border-radius: 12px; /* Rounded corners for the card */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: #ffffff; /* White background */
+}
+
+.ant-card:hover {
+  transform: translateY(-4px); /* Subtle hover effect */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Elevation on hover */
+}
+
+.ant-card-body {
+  text-align: center; /* Center-align text */
+  padding: 16px;
+}
+
+.ant-avatar {
+  margin-bottom: 8px;
+  border: 2px solid #e0e0e0; /* Light border around avatar */
+}
+
+.ant-avatar img {
+  object-fit: cover; /* Ensure images are properly scaled */
+}
+
+.user-meta-name {
+  font-size: 14px;
+  color: #888; /* Gray for secondary text */
+  margin-top: 4px;
+}
+
+/* Empty State Styling */
+.ant-empty {
+  margin-top: 40px;
+  font-size: 16px;
+  color: #888; /* Muted color for empty state text */
+}

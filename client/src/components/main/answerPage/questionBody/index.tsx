@@ -1,7 +1,12 @@
 import React from 'react';
+import { Col, Divider, Row, Space, Typography } from 'antd';
+import { FiUser } from 'react-icons/fi';
+import { CiCalendar } from 'react-icons/ci';
 import './index.css';
 import { handleHyperlink } from '../../../../tool';
 import NotificationCheckbox from '../../notificationCheckbox';
+
+const { Text, Paragraph } = Typography;
 
 /**
  * Interface representing the props for the QuestionBody component.
@@ -31,14 +36,47 @@ interface QuestionBodyProps {
  * @param meta Additional metadata related to the question.
  */
 const QuestionBody = ({ views, text, askby, meta, qid, notifyList }: QuestionBodyProps) => (
-  <div id='questionBody' className='questionBody right_padding'>
-    <div className='bold_title answer_question_view'>{views} views</div>
-    <div className='answer_question_text'>{handleHyperlink(text)}</div>
-    <div className='answer_question_right'>
-      <div className='question_author'>{askby}</div>
-      <div className='answer_question_meta'>asked {meta}</div>
-      <NotificationCheckbox targetId={qid} notifyList={notifyList} type='question' />
-    </div>
+  // <div id='questionBody' className='questionBody right_padding'>
+  //   <div className='bold_title answer_question_view'>{views} views</div>
+  //   <div className='answer_question_text'>{handleHyperlink(text)}</div>
+  //   <div className='answer_question_right'>
+  //     <div className='question_author'>{askby}</div>
+  //     <div className='answer_question_meta'>asked {meta}</div>
+  //     <NotificationCheckbox targetId={qid} notifyList={notifyList} type='question' />
+  //   </div>
+  // </div>
+  <div style={{ padding: '16px', background: '#1f1f1f', borderRadius: '8px', color: '#f5f5f5' }}>
+    <Row gutter={[16, 16]} align='middle'>
+      <Col span={4}>
+        <Space>
+          <Text style={{ color: '#f5f5f5', fontWeight: 600 }}>{views} views</Text>
+        </Space>
+      </Col>
+
+      <Col span={14}>
+        <Paragraph
+          style={{
+            color: '#f5f5f5',
+            fontSize: '16px',
+            lineHeight: '1.5',
+          }}>
+          {handleHyperlink(text)}
+        </Paragraph>
+      </Col>
+
+      <Col span={6}>
+        <Space direction='vertical' size='small' style={{ width: '100%' }}>
+          <Text style={{ color: '#08c', fontSize: '14px' }}>
+            <FiUser /> {askby}
+          </Text>
+          <Text style={{ color: '#888', fontSize: '14px' }}>
+            <CiCalendar /> asked {meta}
+          </Text>
+          <NotificationCheckbox targetId={qid} notifyList={notifyList} type='question' />
+        </Space>
+      </Col>
+    </Row>
+    <Divider style={{ borderColor: '#444' }} />
   </div>
 );
 

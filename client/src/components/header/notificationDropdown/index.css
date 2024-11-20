@@ -108,5 +108,59 @@
 }
 
 .trash-icon {
+}
+
+/* --------------------------------------------------------- */
+
+.notification-container {
+  position: relative;
+}
+
+.notification-icon {
+  font-size: 25px;
+  color: #fff;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 5px;
+}
+
+.notification-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notification-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.notification-item:hover {
+  background-color: #f0f0f0;
+}
+
+.notification-time {
+  color: #999;
+  font-size: 12px;
+}
+
+.notification-clear-button {
+  display: block;
+  width: 100%;
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 10px 0;
+  margin-bottom: 10px;
+  border-radius: 3px;
   cursor: pointer;
 }

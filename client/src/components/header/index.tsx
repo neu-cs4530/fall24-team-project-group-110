@@ -1,9 +1,13 @@
 import React from 'react';
+import { Button, Input, Typography } from 'antd';
+import { CiLogin } from 'react-icons/ci';
 import { useNavigate } from 'react-router-dom';
 import useHeader from '../../hooks/useHeader';
 import './index.css';
 import useUserContext from '../../hooks/useUserContext';
 import NotificationDropdown from './notificationDropdown';
+
+const { Title } = Typography;
 
 /**
  * Header component that renders the main title and a search bar.
@@ -16,26 +20,50 @@ const Header = () => {
   const navigate = useNavigate();
 
   return (
-    <div id='header' className='header'>
-      <div></div>
-      <div onClick={() => navigate('/home')} className='title'>
-        Fake Stack Overflow
+    // <div id='header' className='header'>
+    //   <div></div>
+    //   <div onClick={() => navigate('/home')} className='title'>
+    //     Fake Stack Overflow
+    //   </div>
+    //   <Input
+    //     id='searchBar'
+    //     placeholder='Search ...'
+    //     type='text'
+    //     value={val}
+    //     onChange={handleInputChange}
+    //     onKeyDown={handleKeyDown}
+    //   />
+    //   <Button className='username-button' onClick={() => navigate(`/profile/${user._id}`)}>
+    //     {user.username}
+    //   </Button>
+    //   <NotificationDropdown />
+    //   <Button className='logout-button' onClick={handleLogout}>
+    //     Logout
+    //   </Button>
+    // </div>
+    <div className='custom-header'>
+      <div onClick={() => navigate('/home')}>
+        <Title level={2} className='logo-text'>
+          Fake Stack Overflow
+        </Title>
       </div>
-      <input
+      <Input
         id='searchBar'
         placeholder='Search ...'
         type='text'
         value={val}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
+        className='search-bar'
+        style={{ maxWidth: 300 }}
       />
-      <button className='username-button' onClick={() => navigate(`/profile/${user._id}`)}>
-        {user.username}
-      </button>
-      <NotificationDropdown />
-      <button className='logout-button' onClick={handleLogout}>
-        Logout
-      </button>
+      <div className='header-actions'>
+        <NotificationDropdown />
+        <Button className='username-button' onClick={() => navigate(`/profile/${user._id}`)}>
+          {user.username}
+        </Button>
+        <Button className='logout-button' icon={<CiLogin />} onClick={handleLogout} />
+      </div>
     </div>
   );
 };

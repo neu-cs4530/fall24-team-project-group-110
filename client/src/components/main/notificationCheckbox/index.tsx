@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Space, Switch, Typography } from 'antd';
 import useUserContext from '../../../hooks/useUserContext';
 import {
   addUserToNotifyListQuestion,
@@ -8,6 +9,8 @@ import {
   removeUserToNotifyListConversation,
   addUserToNotifyListConversation,
 } from '../../../services/conversationService';
+
+const { Text } = Typography;
 
 interface NotificationCheckboxProps {
   targetId: string;
@@ -53,10 +56,19 @@ const NotificationCheckbox: React.FC<NotificationCheckboxProps> = ({
   };
 
   return (
-    <div>
-      <label htmlFor='notificationCheckbox'>Get Notifications</label>
-      <input type='checkbox' checked={checked} onChange={handleChange} id='notificationCheckbox' />
-    </div>
+    // <div>
+    //   <label htmlFor='notificationCheckbox'>Get Notifications</label>
+    //   <input type='checkbox' checked={checked} onChange={handleChange} id='notificationCheckbox' />
+    // </div>
+    <Space direction='horizontal' align='center'>
+      <Text>Get Notifications:</Text>
+      <Switch
+        checked={checked}
+        onChange={handleChange}
+        checkedChildren='On'
+        unCheckedChildren='Off'
+      />
+    </Space>
   );
 };
 

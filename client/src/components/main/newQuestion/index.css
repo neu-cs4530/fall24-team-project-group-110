@@ -1,0 +1,55 @@
+/* General Form Styling */
+.form-footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.form-post-btn {
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  display: block;
+  font-weight: bold;
+  background-color: #1890ff;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.form-post-btn:hover {
+  background-color: #40a9ff;
+}
+
+.mandatory-indicator {
+  margin-top: 10px;
+  display: block;
+  font-size: 12px;
+  color: #888;
+}
+
+/* Additional Enhancements for Ant Design Inputs */
+.ant-form-item-label > label {
+  font-weight: bold;
+}
+
+.ant-input, .ant-input-textarea {
+  font-size: 14px;
+}
+
+.ant-input::placeholder, .ant-input-textarea::placeholder {
+  font-style: italic;
+  color: #aaa;
+}
+
+/* Hint Styling */
+.ant-form-item-extra {
+  font-size: 12px;
+  font-style: italic;
+  color: #6c757d;
+}
+
+/* Error Message Styling */
+.ant-form-item-explain-error {
+  font-size: 12px;
+  color: #f5222d;
+}

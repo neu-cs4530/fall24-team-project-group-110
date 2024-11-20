@@ -1,5 +1,6 @@
 import React from 'react';
 import './index.css';
+import { Form, Input as AntdInput } from 'antd';
 
 /**
  * Interface representing the props for the Input component.
@@ -35,23 +36,36 @@ interface InputProps {
  * @param err Optional error message to display below the input field.
  */
 const Input = ({ title, hint, id, mandatory = true, val, setState, err }: InputProps) => (
-  <>
-    <div className='input_title'>
-      {title}
-      {mandatory ? '*' : ''}
-    </div>
-    {hint && <div className='input_hint'>{hint}</div>}
-    <input
+  // <>
+  //   <div className='input_title'>
+  //     {title}
+  //     {mandatory ? '*' : ''}
+  //   </div>
+  //   {hint && <div className='input_hint'>{hint}</div>}
+  //   <input
+  //     id={id}
+  //     className='input_input'
+  //     type='text'
+  //     value={val}
+  //     onInput={e => {
+  //       setState(e.currentTarget.value);
+  //     }}
+  //   />
+  //   {err && <div className='input_error'>{err}</div>}
+  // </>
+  <Form.Item
+    label={title}
+    extra={hint}
+    required={mandatory}
+    validateStatus={err ? 'error' : ''}
+    help={err}>
+    <AntdInput
       id={id}
-      className='input_input'
-      type='text'
       value={val}
-      onInput={e => {
-        setState(e.currentTarget.value);
-      }}
+      onChange={e => setState(e.target.value)}
+      placeholder={`Enter ${title.toLowerCase()}`}
     />
-    {err && <div className='input_error'>{err}</div>}
-  </>
+  </Form.Item>
 );
 
 export default Input;

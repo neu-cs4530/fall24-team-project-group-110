@@ -1,8 +1,11 @@
 import React from 'react';
+import { Divider, Space, Typography } from 'antd';
 import { handleHyperlink } from '../../../../tool';
 import CommentSection from '../../commentSection';
 import './index.css';
 import { Comment } from '../../../../types';
+
+const { Text } = Typography;
 
 /**
  * Interface representing the props for the AnswerView component.
@@ -32,15 +35,30 @@ interface AnswerProps {
  * @param handleAddComment Function to handle adding a new comment.
  */
 const AnswerView = ({ text, ansBy, meta, comments, handleAddComment }: AnswerProps) => (
-  <div className='answer right_padding'>
-    <div id='answerText' className='answerText'>
-      {handleHyperlink(text)}
-    </div>
-    <div className='answerAuthor'>
-      <div className='answer_author'>{ansBy}</div>
-      <div className='answer_question_meta'>{meta}</div>
-    </div>
-    <CommentSection comments={comments} handleAddComment={handleAddComment} />
+  // <div className='answer right_padding'>
+  //   <div id='answerText' className='answerText'>
+  //     {handleHyperlink(text)}
+  //   </div>
+  //   <div className='answerAuthor'>
+  //     <div className='answer_author'>{ansBy}</div>
+  //     <div className='answer_question_meta'>{meta}</div>
+  //   </div>
+  //   <CommentSection comments={comments} handleAddComment={handleAddComment} />
+  // </div>
+  <div style={{ padding: '16px 0', borderBottom: '1px dashed #d9d9d9' }}>
+    <Space direction='vertical' style={{ width: '100%' }}>
+      <div style={{ marginBottom: '8px' }}>
+        <Text>{handleHyperlink(text)}</Text>
+      </div>
+      <Space direction='horizontal' style={{ justifyContent: 'space-between', width: '100%' }}>
+        <Text strong>
+          Answered by: <Text style={{ color: '#52c41a' }}>{ansBy}</Text>
+        </Text>
+        <Text type='secondary'>{meta}</Text>
+      </Space>
+      <Divider style={{ margin: '12px 0' }} />
+      <CommentSection comments={comments} handleAddComment={handleAddComment} />
+    </Space>
   </div>
 );
 

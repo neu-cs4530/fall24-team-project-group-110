@@ -1,11 +1,12 @@
 import React from 'react';
+import { Button, Col, Divider, Row } from 'antd';
 import { getMetaData } from '../../../tool';
 import AnswerView from './answer';
 import AnswerHeader from './header';
 import { Comment } from '../../../types';
 import './index.css';
 import QuestionBody from './questionBody';
-import VoteComponent from '../voteComponent';
+import VoteComponent from '../../voteComponent';
 import CommentSection from '../commentSection';
 import useAnswerPage from '../../../hooks/useAnswerPage';
 
@@ -21,39 +22,83 @@ const AnswerPage = () => {
   }
 
   return (
-    <>
-      <VoteComponent question={question} />
+    // <>
+    //   <AnswerHeader ansCount={question.answers.length} title={question.title} />
+    //   <Space direction='horizontal'>
+    //     <VoteComponent question={question} />
+    //     <QuestionBody
+    //       views={question.views.length}
+    //       text={question.text}
+    //       askby={question.askedBy}
+    //       meta={getMetaData(new Date(question.askDateTime))}
+    //       qid={questionID}
+    //       notifyList={question.notifyList}
+    //     />
+    //   </Space>
+    //   <CommentSection
+    //     comments={question.comments}
+    //     handleAddComment={(comment: Comment) => handleNewComment(comment, 'question', questionID)}
+    //   />
+    //   {question.answers.map((a, idx) => (
+    //     <AnswerView
+    //       key={idx}
+    //       text={a.text}
+    //       ansBy={a.ansBy}
+    //       meta={getMetaData(new Date(a.ansDateTime))}
+    //       comments={a.comments}
+    //       handleAddComment={(comment: Comment) => handleNewComment(comment, 'answer', a._id)}
+    //     />
+    //   ))}
+    //   <Button
+    //     // className='bluebtn ansButton'
+    //     onClick={() => {
+    //       handleNewAnswer();
+    //     }}>
+    //     Answer Question
+    //   </Button>
+    // </>
+    <div className='answer-page'>
       <AnswerHeader ansCount={question.answers.length} title={question.title} />
-      <QuestionBody
-        views={question.views.length}
-        text={question.text}
-        askby={question.askedBy}
-        meta={getMetaData(new Date(question.askDateTime))}
-        qid={questionID}
-        notifyList={question.notifyList}
-      />
+      <Row gutter={[16, 16]} className='question-section'>
+        <Col flex='50px'>
+          <VoteComponent question={question} />
+        </Col>
+        <Col flex='auto'>
+          <QuestionBody
+            views={question.views.length}
+            text={question.text}
+            askby={question.askedBy}
+            meta={getMetaData(new Date(question.askDateTime))}
+            qid={questionID}
+            notifyList={question.notifyList}
+          />
+        </Col>
+      </Row>
+      <Divider />
       <CommentSection
         comments={question.comments}
         handleAddComment={(comment: Comment) => handleNewComment(comment, 'question', questionID)}
       />
-      {question.answers.map((a, idx) => (
-        <AnswerView
-          key={idx}
-          text={a.text}
-          ansBy={a.ansBy}
-          meta={getMetaData(new Date(a.ansDateTime))}
-          comments={a.comments}
-          handleAddComment={(comment: Comment) => handleNewComment(comment, 'answer', a._id)}
-        />
-      ))}
-      <button
-        className='bluebtn ansButton'
-        onClick={() => {
-          handleNewAnswer();
-        }}>
-        Answer Question
-      </button>
-    </>
+      <Divider />
+      <div className='answers-section'>
+        {question.answers.map((a, idx) => (
+          <AnswerView
+            key={idx}
+            text={a.text}
+            ansBy={a.ansBy}
+            meta={getMetaData(new Date(a.ansDateTime))}
+            comments={a.comments}
+            handleAddComment={(comment: Comment) => handleNewComment(comment, 'answer', a._id)}
+          />
+        ))}
+      </div>
+      <Divider />
+      <div className='answer-button-container'>
+        <Button type='primary' size='large' className='answer-button' onClick={handleNewAnswer}>
+          Answer Question
+        </Button>
+      </div>
+    </div>
   );
 };
 

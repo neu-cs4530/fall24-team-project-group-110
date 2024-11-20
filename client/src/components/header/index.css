@@ -1,4 +1,4 @@
-.header {
+/* .header {
   position: relative;
   display: flex;
   align-items: center;
@@ -26,5 +26,44 @@
   background: none;
   border: none;
   text-decoration: underline;
+  cursor: pointer;
+} */
+
+.custom-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #001529;
+  padding: 0 20px;
+  height: 10%;
+}
+
+.logo-text {
+  font-size: 24px;
+  color: #ffffff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.search-bar {
+  width: 300px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+}
+
+.username-button {
+  color: #fff;
+  background-color: transparent;
+  border: 1px solid #fff;
+  margin-right: 10px;
+}
+
+.logout-button {
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
   cursor: pointer;
 }

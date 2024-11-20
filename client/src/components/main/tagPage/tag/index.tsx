@@ -1,7 +1,10 @@
 import React from 'react';
+import { Badge, Card, Typography } from 'antd';
 import './index.css';
 import { TagData } from '../../../../types';
 import useTagSelected from '../../../../hooks/useTagSelected';
+
+const { Title, Text } = Typography;
 
 /**
  * Props for the Tag component.
@@ -26,15 +29,30 @@ const TagView = ({ t, clickTag }: TagProps) => {
   const { tag } = useTagSelected(t);
 
   return (
-    <div
-      className='tagNode'
-      onClick={() => {
-        clickTag(t.name);
+    // <div
+    //   className='tagNode'
+    //   onClick={() => {
+    //     clickTag(t.name);
+    //   }}>
+    //   <div className='tagName'>{tag.name}</div>
+    //   <div className='tagDescription'>{tag.description}</div>
+    //   <div>{t.qcnt} questions</div>
+    // </div>
+    <Card
+      hoverable
+      onClick={() => clickTag(t.name)}
+      style={{
+        textAlign: 'center',
+        borderRadius: '8px',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
       }}>
-      <div className='tagName'>{tag.name}</div>
-      <div className='tagDescription'>{tag.description}</div>
-      <div>{t.qcnt} questions</div>
-    </div>
+      <Badge.Ribbon text={`${t.qcnt} Questions`} color='blue'>
+        <Title level={5} style={{ color: '#1890ff', marginBottom: '8px' }}>
+          {tag.name}
+        </Title>
+        <Text type='secondary'>{tag.description}</Text>
+      </Badge.Ribbon>
+    </Card>
   );
 };
 

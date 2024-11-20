@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from 'antd';
 import { User } from '../../../types';
 import useFollowStatus from '../../../hooks/useFollowStatus';
 
@@ -16,11 +17,12 @@ const FollowComponent = ({ profile }: FollowComponentProps) => {
 
   return (
     <div className='follow-container'>
-      <button
+      <Button
+        type={isFollowed ? 'primary' : 'default'}
         className={`follow-button ${isFollowed ? 'followed' : 'not-followed'}`}
         onClick={() => handleFollowUser()}>
         {isFollowed ? 'Following' : 'Follow'}
-      </button>
+      </Button>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-.comment-section {
+/* .comment-section {
   margin: 0.5em;
   padding: 0.5em;
   border-radius: 6px;
@@ -113,4 +113,43 @@
   font-size: 0.75rem;
   display: block;
   margin-top: -0.5em;
+} */
+
+.comment-section {
+  margin: 16px 0;
+  padding: 16px;
+  background-color: #fdfdfd;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+}
+
+.comment-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.comment-item:last-child {
+  border-bottom: none;
+}
+
+.comment-text {
+  font-size: 14px;
+  margin: 0;
+}
+
+.comment-meta {
+  font-size: 12px;
+  color: #888;
+}
+
+.add-comment {
+  margin-top: 16px;
+}
+
+.comment-textarea {
+  margin-bottom: 8px;
+}
+
+.add-comment-button {
+  width: 100%;
 }

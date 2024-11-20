@@ -1,5 +1,6 @@
 import React from 'react';
 import '../input/index.css';
+import { Form, Input } from 'antd';
 
 /**
  * Interface representing the props for the Textarea component.
@@ -35,22 +36,36 @@ interface TextAreaProps {
  * @param err - Optional error message displayed when there's an issue with input.
  */
 const TextArea = ({ title, mandatory = true, hint, id, val, setState, err }: TextAreaProps) => (
-  <>
-    <div className='input_title'>
-      {title}
-      {mandatory ? '*' : ''}
-    </div>
-    {hint && <div className='input_hint'>{hint}</div>}
-    <textarea
+  // <>
+  //   <div className='input_title'>
+  //     {title}
+  //     {mandatory ? '*' : ''}
+  //   </div>
+  //   {hint && <div className='input_hint'>{hint}</div>}
+  //   <textarea
+  //     id={id}
+  //     className='input_input'
+  //     value={val}
+  //     onChange={e => {
+  //       setState(e.currentTarget.value);
+  //     }}
+  //   />
+  //   {err && <div className='input_error'>{err}</div>}
+  // </>
+  <Form.Item
+    label={title}
+    extra={hint}
+    required={mandatory}
+    validateStatus={err ? 'error' : ''}
+    help={err}>
+    <Input.TextArea
       id={id}
-      className='input_input'
       value={val}
-      onChange={e => {
-        setState(e.currentTarget.value);
-      }}
+      onChange={e => setState(e.target.value)}
+      placeholder={`Enter ${title.toLowerCase()}`}
+      rows={4}
     />
-    {err && <div className='input_error'>{err}</div>}
-  </>
+  </Form.Item>
 );
 
 export default TextArea;

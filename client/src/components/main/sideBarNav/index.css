@@ -1,4 +1,4 @@
-.sideBarNav {
+/* .sideBarNav {
   display: flex;
   flex-direction: column;
   width: 15%;
@@ -23,4 +23,58 @@
 
 .menu_selected {
   background: #cccccc;
+} */
+
+.sideBarNav {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 15%;
+  background: #001529; 
+  transition: width 0.3s ease;
+  overflow: hidden;
+  align-items: center;
+}
+
+.sideBarNav.collapsed {
+  width: 5%;
+}
+
+.toggleButton {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #001529;
+}
+
+.toggleButton button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.toggleButton button:hover {
+  color: #1890ff;
+}
+
+.ant-menu {
+  height: calc(100% - 50px);
+  border-right: none;
+  background: #001529;
+}
+
+.ant-menu-item {
+  display: flex;
+  align-items: center;
+}
+
+.ant-menu-item:hover {
+  background: #1890ff;
+}
+
+.ant-menu-dark .ant-menu-item-selected {
+  background: #1890ff;
 }

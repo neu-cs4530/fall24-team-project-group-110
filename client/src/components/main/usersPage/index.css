@@ -1,4 +1,4 @@
-.users-container {
+/* .users-container {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -47,4 +47,19 @@
   font-size: 0.75rem;
   color: #666;
   margin-top: 0.2em;
+} */
+
+.users-container {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  background-color: #f0f2f5; /* Light gray background for the page */
+  min-height: 100vh;
+}
+
+.users-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* Responsive grid layout */
+  gap: 16px;
+  padding: 16px 0;
 }
