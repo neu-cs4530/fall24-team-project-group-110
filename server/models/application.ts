@@ -992,13 +992,13 @@ export const addFollowToUser = async (
 };
 
 /**
- * Gets users based on search filter.
+ * Finds users based on search filter.
  *
  * @returns {User[]} - The list of users.
  */
-export const getUsers = async (): Promise<User[]> => {
+export const findUsers = async (search: string): Promise<User[]> => {
   try {
-    const ulist = await UserModel.find();
+    const ulist = await UserModel.find({ username: { $regex: `^${search}`, $options: 'i' } });
     return ulist;
   } catch (error) {
     return [];

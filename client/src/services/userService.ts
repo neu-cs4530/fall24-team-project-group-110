@@ -20,8 +20,8 @@ const addUser = async (username: string, email: string, password: string): Promi
   return res.data;
 };
 
-const getAllUsers = async (): Promise<User[]> => {
-  const res = await api.get(`${USER_API_URL}/getAllUsers`);
+const getUsers = async (search: string): Promise<User[]> => {
+  const res = await api.get(`${USER_API_URL}/getUsers?search=${search}`);
   if (res.status !== 200) {
     throw new Error('Error while fetching all users');
   }
@@ -55,4 +55,4 @@ const followUser = async (currentUserId: string, targetUserId: string): Promise<
   return res.data;
 };
 
-export { addUser, getAllUsers, getUser, updateUser, followUser };
+export { addUser, getUsers, getUser, updateUser, followUser };

@@ -1,33 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FaUser } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { User } from '../../../types';
-import { getAllUsers } from '../../../services/userService';
+import { getUsers } from '../../../services/userService';
 
 const UsersPage = () => {
   const navigate = useNavigate();
   const [ulist, setUlist] = useState<User[]>();
+  const [search, setSearch] = useState<string>('');
 
   const navigateProfile = (u: User) => {
     navigate(`/profile/${u._id}`);
   };
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const users = await getAllUsers();
-        setUlist(users);
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log(`Error fetching all users: ${error}`);
-      }
-    };
-
-    fetchUsers();
-  }, []);
+  const handleSearch = async () => {
+    try {
+      const users = await getUsers(search);
+      setUlist(users);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(`Error fetching all users: ${error}`);
+    }
+  };
 
   return (
     <div className='users-container'>
+      <input
+        type='text'
+        placeholder='Search for users'
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+      />
+      <button onClick={handleSearch}>Search</button>
       <ul className='users-list'>
         {ulist?.map((u, idx) => (
           <li key={idx} className='user-item' onClick={() => navigateProfile(u)}>
