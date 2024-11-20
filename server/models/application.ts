@@ -388,6 +388,7 @@ export const populateDocument = async (
           populate: { path: 'comments', model: CommentModel },
         },
         { path: 'comments', model: CommentModel },
+        { path: 'notifyList', model: UserModel },
       ]);
     } else if (type === 'answer') {
       result = await AnswerModel.findOne({ _id: id }).populate([
@@ -1100,26 +1101,6 @@ export const getUsersByUsernames = async (usernames: string[]): Promise<UserList
     return users.map(user => user.toObject());
   } catch (error) {
     return { error: 'Error when fetching users' };
-  }
-};
-
-/**
- * Gets a Notification by their ID.
- *
- * @param id The ID of the Notification to fetch.
- *
- * @returns {Promise<NotificationResponse>} - The user, or an error message if the fetch failed
- */
-export const getNotificationById = async (id: string): Promise<NotificationResponse> => {
-  try {
-    const result = await NotificationModel.findOne({ _id: id });
-    if (!result) {
-      throw new Error('Notification not found');
-    }
-
-    return result.toObject();
-  } catch (error) {
-    return { error: 'Error when fetching notification' };
   }
 };
 

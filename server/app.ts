@@ -150,7 +150,7 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/auth', authController(emailService));
 app.use('/question', questionController(socket));
 app.use('/tag', tagController());
-app.use('/answer', answerController(socket));
+app.use('/answer', answerController(socket, notificationService));
 app.use('/comment', commentController(socket));
 app.use('/user', userController(socket, emailService));
 app.use('/conversation', conversationController(socket));

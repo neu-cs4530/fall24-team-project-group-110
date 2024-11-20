@@ -215,27 +215,6 @@ export interface Notification {
 }
 
 /**
- * Interface for the request body when adding a new notification.
- * - body - The notification being added.
- */
-export interface AddNotificationRequest extends Request {
-  body: {
-    uid: string;
-    notif: Notification;
-  };
-}
-
-/**
- * Interface for the request parameters when finding a notification by its ID.
- * - nid - The unique identifier of the notification.
- */
-export interface FindNotificationByIdRequest extends Request {
-  params: {
-    nid: string;
-  };
-}
-
-/**
  * Interface for the request parameters when finding a notification by its ID and the user it belongs to.
  * - nid - The unique identifier of the notification.
  * - uid - The unique identifier of the user.

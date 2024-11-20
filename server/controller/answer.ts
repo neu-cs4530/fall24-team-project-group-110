@@ -1,8 +1,16 @@
 import express, { Response } from 'express';
-import { Answer, AnswerRequest, AnswerResponse, FakeSOSocket } from '../types';
+import {
+  Answer,
+  AnswerRequest,
+  AnswerResponse,
+  FakeSOSocket,
+  QuestionResponse,
+  User,
+} from '../types';
 import { addAnswerToQuestion, populateDocument, saveAnswer } from '../models/application';
+import NotificationService from '../services/notification';
 
-const answerController = (socket: FakeSOSocket) => {
+const answerController = (socket: FakeSOSocket, notificationService: NotificationService) => {
   const router = express.Router();
 
   /**
@@ -56,9 +64,30 @@ const answerController = (socket: FakeSOSocket) => {
         throw new Error(ansFromDb.error as string);
       }
 
-      const status = await addAnswerToQuestion(qid, ansFromDb);
-      if (status && 'error' in status) {
-        throw new Error(status.error as string);
+      const updatedQuestion = await addAnswerToQuestion(qid, ansFromDb);
+      if (updatedQuestion && 'error' in updatedQuestion) {
+        throw new Error(updatedQuestion.error as string);
+      }
+
+      // id is guaranteed to exist because an error would have been thrown before otherwise
+      const populatedUpdatedQuestion = (await populateDocument(
+        updatedQuestion._id!.toString(),
+        'question',
+      )) as QuestionResponse;
+      if (populatedUpdatedQuestion && 'error' in populatedUpdatedQuestion) {
+        throw new Error(populatedUpdatedQuestion.error as string);
+      }
+
+      const recipients = populatedUpdatedQuestion.notifyList.filter(
+        user => user._id && user._id.toString() !== ansInfo.ansBy,
+      ) as User[];
+      if (process.env.MODE === 'production' || process.env.MODE === 'development') {
+        notificationService.sendNotifications(
+          recipients,
+          'question',
+          `A new answer has been posted by ${ansInfo.ansBy}`,
+          populatedUpdatedQuestion._id!.toString(),
+        );
       }
 
       const populatedAns = await populateDocument(ansFromDb._id?.toString(), 'answer');

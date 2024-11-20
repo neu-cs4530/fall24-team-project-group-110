@@ -2,13 +2,17 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useUserContext from './useUserContext';
 import { Notification } from '../types';
-import { deleteNotification } from '../services/notificationService';
+import deleteNotification from '../services/notificationService';
 
 const useNotification = () => {
   const navigate = useNavigate();
   const { user, socket } = useUserContext();
   const [isNotifOpen, setIsNotifOpen] = useState<boolean>(false);
-  const [nlist, setNlist] = useState<Notification[]>([]);
+  const [nlist, setNlist] = useState<Notification[]>(
+    user.notifications.sort(
+      (a, b) => new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime(),
+    ),
+  );
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const handleToggle = () => {
