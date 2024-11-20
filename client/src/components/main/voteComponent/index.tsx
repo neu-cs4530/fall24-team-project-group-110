@@ -1,10 +1,10 @@
 import { Button, Space, Tooltip, Typography } from 'antd';
 import { AiOutlineLike, AiOutlineDislike, AiFillLike, AiFillDislike } from 'react-icons/ai';
-import { downvoteQuestion, upvoteQuestion } from '../../services/questionService';
+import { downvoteQuestion, upvoteQuestion } from '../../../services/questionService';
 import './index.css';
-import useUserContext from '../../hooks/useUserContext';
-import { Question } from '../../types';
-import useVoteStatus from '../../hooks/useVoteStatus';
+import useUserContext from '../../../hooks/useUserContext';
+import { Question } from '../../../types';
+import useVoteStatus from '../../../hooks/useVoteStatus';
 
 const { Text } = Typography;
 

@@ -29,15 +29,6 @@ const TagView = ({ t, clickTag }: TagProps) => {
   const { tag } = useTagSelected(t);
 
   return (
-    // <div
-    //   className='tagNode'
-    //   onClick={() => {
-    //     clickTag(t.name);
-    //   }}>
-    //   <div className='tagName'>{tag.name}</div>
-    //   <div className='tagDescription'>{tag.description}</div>
-    //   <div>{t.qcnt} questions</div>
-    // </div>
     <Card
       hoverable
       onClick={() => clickTag(t.name)}
