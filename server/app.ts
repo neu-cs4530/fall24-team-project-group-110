@@ -114,7 +114,7 @@ app.use(
 app.use(express.json());
 app.use(sessionMiddleware);
 
-const notificationService = new NotificationService(socket);
+const notificationService = new NotificationService(socket, emailService);
 
 // authentication middleware that excludes unprotected routes
 // only include in development and production modes so that tests can run

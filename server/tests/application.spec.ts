@@ -167,6 +167,7 @@ const user1: User = {
   following: [],
   notifications: [],
   verified: false,
+  emailNotifications: false,
 };
 
 const user2: User = {
@@ -185,6 +186,7 @@ const user2: User = {
   following: [],
   notifications: [],
   verified: false,
+  emailNotifications: false,
 };
 
 const conv1: Conversation = {

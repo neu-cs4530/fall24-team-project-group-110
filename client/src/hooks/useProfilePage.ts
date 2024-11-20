@@ -46,6 +46,7 @@ const useProfilePage = () => {
           email: profile.email,
           bio: profile.bio,
           picture: profile.picture,
+          emailNotifications: profile.emailNotifications,
         };
 
         const updatedUser = await updateUser(profile._id, updatedFields);

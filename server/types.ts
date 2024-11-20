@@ -197,6 +197,7 @@ export interface User {
   following: User[] | ObjectId[];
   notifications: Notification[] | ObjectId[];
   verified: boolean;
+  emailNotifications: boolean;
 }
 
 /**
