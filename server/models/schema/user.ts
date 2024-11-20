@@ -55,6 +55,10 @@ const userSchema: Schema = new Schema(
       type: Boolean,
       default: false,
     },
+    emailNotifications: {
+      type: Boolean,
+      default: false,
+    },
   },
   { collection: 'User' },
 );

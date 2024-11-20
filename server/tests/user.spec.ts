@@ -34,6 +34,7 @@ describe('POST /addUser', () => {
     following: [],
     notifications: [],
     verified: false,
+    emailNotifications: false,
   });
 
   const setupMockReqBody = () => ({
@@ -51,6 +52,7 @@ describe('POST /addUser', () => {
     following: [],
     notifications: [],
     verified: false,
+    emailNotifications: false,
   });
 
   const assertErrorResponse = async (
@@ -88,6 +90,7 @@ describe('POST /addUser', () => {
         following: [],
         notifications: [],
         verified: false,
+        emailNotifications: false,
       });
     });
 
@@ -152,6 +155,7 @@ describe('POST /addUser', () => {
         following: [],
         notifications: [],
         verified: false,
+        emailNotifications: false,
       });
     });
 

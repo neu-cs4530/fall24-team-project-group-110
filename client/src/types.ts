@@ -194,6 +194,7 @@ export interface User {
   following: User[];
   notifications: Notification[];
   verified: boolean;
+  emailNotifications: boolean;
 }
 
 export interface EditableUserFields {
@@ -202,6 +203,7 @@ export interface EditableUserFields {
   email: string;
   bio: string;
   picture: string;
+  emailNotifications: boolean;
 }
 
 /**

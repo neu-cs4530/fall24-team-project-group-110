@@ -35,6 +35,7 @@ describe('Notification API Tests', () => {
         following: [],
         notifications: [],
         verified: false,
+        emailNotifications: false,
       };
 
       jest.spyOn(util, 'deleteNotificationById').mockResolvedValue({
@@ -68,6 +69,7 @@ describe('Notification API Tests', () => {
         questions: [],
         username: 'testUser',
         verified: false,
+        emailNotifications: false,
       });
     });
 

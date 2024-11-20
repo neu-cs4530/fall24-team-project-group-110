@@ -1,5 +1,6 @@
 import { createNotification } from '../models/application';
 import { FakeSOSocket, User } from '../types';
+import { EmailContent, EmailService } from './email';
 
 /**
  * Send notifications to users from sender.
@@ -11,9 +12,11 @@ import { FakeSOSocket, User } from '../types';
  */
 class NotificationService {
   private _socket: FakeSOSocket;
+  private _emailService: EmailService;
 
-  constructor(socket: FakeSOSocket) {
+  constructor(socket: FakeSOSocket, emailService: EmailService) {
     this._socket = socket;
+    this._emailService = emailService;
   }
 
   async sendNotifications(
@@ -41,6 +44,16 @@ class NotificationService {
               uid: user._id.toString(),
               notification,
             });
+
+            const content: EmailContent = {
+              to: user.email,
+              subject: 'New Notification',
+              text: `You have a new notification: ${text}`,
+            };
+
+            if (user.emailNotifications) {
+              this._emailService.sendEmail(content);
+            }
           }
         }),
       );

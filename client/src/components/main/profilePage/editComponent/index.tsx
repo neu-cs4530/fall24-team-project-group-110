@@ -43,6 +43,14 @@ const EditProfile = ({ profile, setProfile, onCancel, onSave }: EditProfileProps
       <div className='image-container'>
         <img className='profile-picture' src={profile.picture} alt='could not find image' />
       </div>
+      <div className='edit-basic-field-container'>
+        <label>Email Notifications:</label>
+        <input
+          type='checkbox'
+          checked={profile.emailNotifications}
+          onChange={e => setProfile({ ...profile, emailNotifications: e.target.checked })}
+        />
+      </div>
     </div>
 
     <div className='edit-bio-container'>

@@ -21,6 +21,7 @@ const testUser: User = {
   following: [],
   notifications: [],
   verified: false,
+  emailNotifications: false,
 };
 
 describe('POST /addMessage', () => {
@@ -92,6 +93,7 @@ describe('POST /addMessage', () => {
           following: [],
           notifications: [],
           verified: false,
+          emailNotifications: false,
         },
         {
           _id: new ObjectId('65e9b716ff0e892116b2de12'),
@@ -109,6 +111,7 @@ describe('POST /addMessage', () => {
           following: [],
           notifications: [],
           verified: false,
+          emailNotifications: false,
         },
       ],
       lastMessage: '',
