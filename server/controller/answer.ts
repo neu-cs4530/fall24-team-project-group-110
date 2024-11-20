@@ -1,12 +1,5 @@
 import express, { Response } from 'express';
-import {
-  Answer,
-  AnswerRequest,
-  AnswerResponse,
-  FakeSOSocket,
-  QuestionResponse,
-  User,
-} from '../types';
+import { Answer, AnswerRequest, AnswerResponse, FakeSOSocket, User } from '../types';
 import {
   addAnswerToQuestion,
   populateDocument,
@@ -77,16 +70,8 @@ const answerController = (socket: FakeSOSocket, notificationService: Notificatio
       // notification handling
       if (process.env.MODE === 'production' || process.env.MODE === 'development') {
         // id is guaranteed to exist because an error would have been thrown before otherwise
-        const populatedUpdatedQuestion = (await populateDocument(
-          updatedQuestion._id!.toString(),
-          'question',
-        )) as QuestionResponse;
-        if (populatedUpdatedQuestion && 'error' in populatedUpdatedQuestion) {
-          throw new Error(populatedUpdatedQuestion.error as string);
-        }
-
         const populatedUpdatedQuestionWithNotifyList = await populateNotifyList(
-          populatedUpdatedQuestion._id!.toString(),
+          updatedQuestion._id!.toString(),
           'question',
         );
         if (
@@ -96,14 +81,15 @@ const answerController = (socket: FakeSOSocket, notificationService: Notificatio
           throw new Error(populatedUpdatedQuestionWithNotifyList.error as string);
         }
 
-        const recipients = populatedUpdatedQuestionWithNotifyList.notifyList.filter(
-          user => user._id && user._id.toString() !== ansInfo.ansBy,
+        const notifyListUsers = populatedUpdatedQuestionWithNotifyList.notifyList as User[];
+        const recipients = notifyListUsers.filter(
+          user => user.username !== ansInfo.ansBy,
         ) as User[];
         notificationService.sendNotifications(
           recipients,
           'question',
           `A new answer has been posted by ${ansInfo.ansBy}`,
-          populatedUpdatedQuestion._id!.toString(),
+          updatedQuestion._id!.toString(),
         );
       }
 
