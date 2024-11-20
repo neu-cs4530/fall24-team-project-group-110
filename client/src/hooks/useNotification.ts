@@ -8,7 +8,11 @@ const useNotification = () => {
   const navigate = useNavigate();
   const { user, socket } = useUserContext();
   const [isNotifOpen, setIsNotifOpen] = useState<boolean>(false);
-  const [nlist, setNlist] = useState<Notification[]>(user.notifications);
+  const [nlist, setNlist] = useState<Notification[]>(
+    user.notifications.sort(
+      (a, b) => new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime(),
+    ),
+  );
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const handleToggle = () => {
