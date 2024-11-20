@@ -151,7 +151,7 @@ app.use('/auth', authController(emailService));
 app.use('/question', questionController(socket));
 app.use('/tag', tagController());
 app.use('/answer', answerController(socket, notificationService));
-app.use('/comment', commentController(socket));
+app.use('/comment', commentController(socket, notificationService));
 app.use('/user', userController(socket, emailService));
 app.use('/conversation', conversationController(socket));
 app.use('/message', messageController(socket, notificationService));

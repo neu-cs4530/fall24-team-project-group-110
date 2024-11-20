@@ -54,21 +54,6 @@ describe('POST /addAnswer', () => {
     });
 
     popDocSpy.mockResolvedValueOnce({
-      _id: validQid,
-      title: 'This is a test question',
-      text: 'This is a test question',
-      tags: [],
-      askedBy: 'dummyUserId',
-      askDateTime: new Date('2024-06-03'),
-      views: [],
-      upVotes: [],
-      downVotes: [],
-      answers: [mockAnswer],
-      comments: [],
-      notifyList: [],
-    });
-
-    popDocSpy.mockResolvedValueOnce({
       _id: validAid,
       text: 'This is a test answer',
       ansBy: 'dummyUserId',

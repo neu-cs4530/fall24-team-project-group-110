@@ -1,9 +1,24 @@
 import express, { Response } from 'express';
 import { ObjectId } from 'mongodb';
-import { Comment, AddCommentRequest, FakeSOSocket } from '../types';
-import { addComment, populateDocument, saveComment } from '../models/application';
+import {
+  Comment,
+  AddCommentRequest,
+  FakeSOSocket,
+  Question,
+  User,
+  Answer,
+  QuestionResponse,
+} from '../types';
+import {
+  addComment,
+  getQuestionByAnswerId,
+  populateDocument,
+  populateNotifyList,
+  saveComment,
+} from '../models/application';
+import NotificationService from '../services/notification';
 
-const commentController = (socket: FakeSOSocket) => {
+const commentController = (socket: FakeSOSocket, notificationService: NotificationService) => {
   const router = express.Router();
 
   /**
@@ -75,7 +90,6 @@ const commentController = (socket: FakeSOSocket) => {
       }
 
       const status = await addComment(id, type, comFromDb);
-
       if (status && 'error' in status) {
         throw new Error(status.error);
       }
@@ -83,9 +97,53 @@ const commentController = (socket: FakeSOSocket) => {
       // Populates the fields of the question or answer that this comment
       // was added to, and emits the updated object
       const populatedDoc = await populateDocument(id, type);
-
       if (populatedDoc && 'error' in populatedDoc) {
         throw new Error(populatedDoc.error);
+      }
+
+      if (process.env.MODE === 'production' || process.env.MODE === 'development') {
+        if (type === 'question') {
+          const populatedQuestion = populatedDoc as Question;
+          const populatedQuestionWithNotifyList = (await populateNotifyList(
+            populatedQuestion._id!.toString(),
+            'question',
+          )) as QuestionResponse;
+          if (populatedQuestionWithNotifyList && 'error' in populatedQuestionWithNotifyList) {
+            throw new Error(populatedQuestionWithNotifyList.error);
+          }
+
+          const notifyListUsers = populatedQuestionWithNotifyList.notifyList as User[];
+          const recipients = notifyListUsers.filter(user => user.username !== comment.commentBy);
+          notificationService.sendNotifications(
+            recipients,
+            'question',
+            `A new comment has been sent by ${comment.commentBy}`,
+            populatedQuestion._id!.toString(),
+          );
+        } else {
+          const populatedAnswer = populatedDoc as Answer;
+          const question = await getQuestionByAnswerId(populatedAnswer._id!.toString());
+          if (question && 'error' in question) {
+            throw new Error(question.error);
+          }
+
+          const populatedQuestionWithNotifyList = (await populateNotifyList(
+            question._id!.toString(),
+            'question',
+          )) as QuestionResponse;
+          if (populatedQuestionWithNotifyList && 'error' in populatedQuestionWithNotifyList) {
+            throw new Error(populatedQuestionWithNotifyList.error);
+          }
+
+          const notifyListUsers = populatedQuestionWithNotifyList.notifyList as User[];
+          const recipients = notifyListUsers.filter(user => user.username !== comment.commentBy);
+          notificationService.sendNotifications(
+            recipients,
+            'question',
+            `A new comment has been sent by ${comment.commentBy}`,
+            question._id!.toString(),
+          );
+        }
       }
 
       socket.emit('commentUpdate', {

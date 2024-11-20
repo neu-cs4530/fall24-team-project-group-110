@@ -356,6 +356,40 @@ export const filterQuestionsBySearch = (qlist: Question[], search: string): Ques
   });
 };
 
+export const populateNotifyList = async (
+  id: string,
+  type: 'question' | 'conversation',
+): Promise<QuestionResponse | ConversationResponse> => {
+  try {
+    if (type === 'question') {
+      const result = await QuestionModel.findOne({ _id: id }).populate([
+        {
+          path: 'notifyList',
+          model: UserModel,
+        },
+      ]);
+      if (!result) {
+        throw new Error('Error when fetching and populating notify list');
+      }
+
+      return result;
+    }
+    const result = await ConversationModel.findOne({ _id: id }).populate([
+      {
+        path: 'notifyList',
+        model: UserModel,
+      },
+    ]);
+    if (!result) {
+      throw new Error('Error when fetching and populating notify list');
+    }
+
+    return result;
+  } catch (error) {
+    return { error: 'Error when fetching and populating notify list' };
+  }
+};
+
 /**
  * Fetches and populates a question or answer document based on the provided ID and type.
  *
@@ -388,7 +422,6 @@ export const populateDocument = async (
           populate: { path: 'comments', model: CommentModel },
         },
         { path: 'comments', model: CommentModel },
-        { path: 'notifyList', model: UserModel },
       ]);
     } else if (type === 'answer') {
       result = await AnswerModel.findOne({ _id: id }).populate([
@@ -1291,5 +1324,18 @@ export const populateMessage = async (mid: string): Promise<MessageResponse> => 
     return result;
   } catch (error) {
     return { error: `Error when fetching and populating a message: ${(error as Error).message}` };
+  }
+};
+
+export const getQuestionByAnswerId = async (aid: string): Promise<QuestionResponse> => {
+  try {
+    const result = await QuestionModel.findOne({ answers: aid });
+    if (!result) {
+      throw new Error('Question not found');
+    }
+
+    return result.toObject();
+  } catch (error) {
+    return { error: 'Error when fetching question' };
   }
 };

@@ -7,7 +7,12 @@ import {
   QuestionResponse,
   User,
 } from '../types';
-import { addAnswerToQuestion, populateDocument, saveAnswer } from '../models/application';
+import {
+  addAnswerToQuestion,
+  populateDocument,
+  populateNotifyList,
+  saveAnswer,
+} from '../models/application';
 import NotificationService from '../services/notification';
 
 const answerController = (socket: FakeSOSocket, notificationService: NotificationService) => {
@@ -69,19 +74,31 @@ const answerController = (socket: FakeSOSocket, notificationService: Notificatio
         throw new Error(updatedQuestion.error as string);
       }
 
-      // id is guaranteed to exist because an error would have been thrown before otherwise
-      const populatedUpdatedQuestion = (await populateDocument(
-        updatedQuestion._id!.toString(),
-        'question',
-      )) as QuestionResponse;
-      if (populatedUpdatedQuestion && 'error' in populatedUpdatedQuestion) {
-        throw new Error(populatedUpdatedQuestion.error as string);
-      }
-
-      const recipients = populatedUpdatedQuestion.notifyList.filter(
-        user => user._id && user._id.toString() !== ansInfo.ansBy,
-      ) as User[];
+      // notification handling
       if (process.env.MODE === 'production' || process.env.MODE === 'development') {
+        // id is guaranteed to exist because an error would have been thrown before otherwise
+        const populatedUpdatedQuestion = (await populateDocument(
+          updatedQuestion._id!.toString(),
+          'question',
+        )) as QuestionResponse;
+        if (populatedUpdatedQuestion && 'error' in populatedUpdatedQuestion) {
+          throw new Error(populatedUpdatedQuestion.error as string);
+        }
+
+        const populatedUpdatedQuestionWithNotifyList = await populateNotifyList(
+          populatedUpdatedQuestion._id!.toString(),
+          'question',
+        );
+        if (
+          populatedUpdatedQuestionWithNotifyList &&
+          'error' in populatedUpdatedQuestionWithNotifyList
+        ) {
+          throw new Error(populatedUpdatedQuestionWithNotifyList.error as string);
+        }
+
+        const recipients = populatedUpdatedQuestionWithNotifyList.notifyList.filter(
+          user => user._id && user._id.toString() !== ansInfo.ansBy,
+        ) as User[];
         notificationService.sendNotifications(
           recipients,
           'question',
