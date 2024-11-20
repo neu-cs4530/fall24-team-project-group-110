@@ -1,92 +1,75 @@
 .conversation-page {
-	display: flex;
-	width: 100%;
-	height: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  background-color: #1e1e2f;
+  color: #ffffff;
 }
 
 .chat-section {
-	flex: 1;
+  flex: 1;
   display: flex;
   flex-direction: column;
-	overflow-y: auto;
-	position: relative;
+  background-color: #1e1e2f;
+  padding: 16px;
+  overflow-y: auto;
+  position: relative;
 }
 
-.rightSideBar {
-	display: flex;
+.empty-chat {
+  display: flex;
   flex-direction: column;
-  width: 20%;
-  border-left: dashed;
-  padding: 4%;
+  justify-content: center;
   align-items: center;
-	background-color: #f5f5f5;
-	margin-left: auto; 
-	margin-right: 0;
-	overflow-y: auto;
-}
-
-.conversation-list {
-	list-style: none;
-  padding: 0;
-  margin: 0;
-	overflow-y: auto;
-	width: 100%
-}
-
-.conversation {
-	padding: 1em;
-  border-bottom: 1px solid #ddd;
-  cursor: pointer;
-}
-
-.conversation:hover {
-  background-color: #f0f8ff;
-}
-
-.convo-participants {
-	font-weight: bold;
-}
-
-.convo-meta {
-	font-size: 0.85rem;
+  height: 100%;
+  text-align: center;
   color: #888;
-  margin-top: 0.25em;
+}
+
+.sidebar {
+  background-color: #2a2a40;
+  padding: 16px;
+  border-left: 1px solid #444;
+}
+
+.sidebar-content {
+  height: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
 }
 
-.new-conversation {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5em;
-  padding: 1em;
-  width: 100%;
+.new-conversation .conversation-input {
+  border-radius: 8px;
 }
 
-.conversation-input {
-  padding: 0.5em;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 100%;
+.new-conversation .ant-btn {
+  border-radius: 8px;
 }
 
-.create-conversation-button {
-	padding: 0.5em 1em;
-	background-color: #007bff;
-	color: white;
-	border: none;
-	border-radius: 4px;
-	cursor: pointer;
+.conversation-item {
+  background-color: #3a3a50;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.create-conversation-button:hover {
-	background-color: #0056b3;
+.conversation-item:hover {
+  background-color: #4a4a60;
 }
 
-.error {
-  color: red;
-  font-size: 0.75rem;
-  display: block;
-  margin-top: -0.5em;
+.conversation-title {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.conversation-meta {
+  color: #b0b0b0;
+  font-size: 0.9em;
+}
+
+.ant-typography-danger {
+  font-size: 0.85rem;
+  text-align: center;
 }

@@ -1,11 +1,11 @@
 .main {
   display: flex;
   flex-direction: row;
-  height: 90%;
+  height: 91%;
 }
 
 .right_main {
-  width: 85%;
+  width: 100%;
   overflow: auto;
 }
 

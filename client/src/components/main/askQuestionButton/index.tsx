@@ -1,4 +1,6 @@
 import React from 'react';
+import { Button } from 'antd';
+import { CiCirclePlus } from 'react-icons/ci';
 import { useNavigate } from 'react-router-dom';
 
 /**
@@ -17,13 +19,15 @@ const AskQuestionButton = () => {
   };
 
   return (
-    <button
-      className='bluebtn'
+    <Button
+      type='primary'
+      className='ask-question-btn'
+      icon={<CiCirclePlus />}
       onClick={() => {
         handleNewQuestion();
       }}>
-      Ask a Question
-    </button>
+      Ask Question
+    </Button>
   );
 };
 

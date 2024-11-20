@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { ConfigProvider } from 'antd';
 import Layout from './layout';
 import Login from './login';
 import { FakeSOSocket, User } from '../types';
@@ -62,35 +63,37 @@ const FakeStackOverflow = ({ socket }: { socket: FakeSOSocket | null }) => {
   }, [navigate, loading]);
 
   return !loading ? (
-    <LoginContext.Provider value={{ setUser }}>
-      <PreLoginContext.Provider value={{ user: preLoginUser, setUser: setPreLoginUser }}>
-        <Routes>
-          {/* Public Route */}
-          <Route path='/' element={<Login />} />
-          <Route path='/register' element={<Register />} />
-          <Route path='/verify' element={<Verify />} />
+    <ConfigProvider>
+      <LoginContext.Provider value={{ setUser }}>
+        <PreLoginContext.Provider value={{ user: preLoginUser, setUser: setPreLoginUser }}>
+          <Routes>
+            {/* Public Route */}
+            <Route path='/' element={<Login />} />
+            <Route path='/register' element={<Register />} />
+            <Route path='/verify' element={<Verify />} />
 
-          {/* Protected Routes */}
-          {
-            <Route
-              element={
-                <ProtectedRoute user={user} socket={socket}>
-                  <Layout />
-                </ProtectedRoute>
-              }>
-              <Route path='/home' element={<QuestionPage />} />
-              <Route path='tags' element={<TagPage />} />
-              <Route path='/question/:qid' element={<AnswerPage />} />
-              <Route path='/new/question' element={<NewQuestionPage />} />
-              <Route path='/new/answer/:qid' element={<NewAnswerPage />} />
-              <Route path='/conversation/:cid?' element={<ConversationPage />} />
-              <Route path='/profile/:uid' element={<ProfilePage />} />
-              <Route path='/users' element={<UsersPage />} />
-            </Route>
-          }
-        </Routes>
-      </PreLoginContext.Provider>
-    </LoginContext.Provider>
+            {/* Protected Routes */}
+            {
+              <Route
+                element={
+                  <ProtectedRoute user={user} socket={socket}>
+                    <Layout />
+                  </ProtectedRoute>
+                }>
+                <Route path='/home' element={<QuestionPage />} />
+                <Route path='tags' element={<TagPage />} />
+                <Route path='/question/:qid' element={<AnswerPage />} />
+                <Route path='/new/question' element={<NewQuestionPage />} />
+                <Route path='/new/answer/:qid' element={<NewAnswerPage />} />
+                <Route path='/conversation/:cid?' element={<ConversationPage />} />
+                <Route path='/profile/:uid' element={<ProfilePage />} />
+                <Route path='/users' element={<UsersPage />} />
+              </Route>
+            }
+          </Routes>
+        </PreLoginContext.Provider>
+      </LoginContext.Provider>
+    </ConfigProvider>
   ) : null;
 };
 

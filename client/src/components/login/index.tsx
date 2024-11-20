@@ -1,4 +1,5 @@
 import './index.css';
+import { Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import useLogin from '../../hooks/useLogin';
 
@@ -20,7 +21,7 @@ const Login = () => {
       <h4>Please enter your username.</h4>
       <form onSubmit={handleSubmit}>
         <div className='form-fields-container'>
-          <input
+          <Input
             type='text'
             value={username}
             onChange={handleUsernameChange}
@@ -29,7 +30,7 @@ const Login = () => {
             className='input-text'
             id={'usernameInput'}
           />
-          <input
+          <Input
             type='text'
             value={password}
             onChange={handlePasswordChange}

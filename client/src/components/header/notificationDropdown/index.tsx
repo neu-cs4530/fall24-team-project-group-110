@@ -1,3 +1,5 @@
+import React from 'react';
+import { Badge, Button, Dropdown, Menu, Space } from 'antd';
 import { FaBell, FaTrash } from 'react-icons/fa';
 import { getMetaData } from '../../../tool';
 import useNotification from '../../../hooks/useNotification';
@@ -13,6 +15,28 @@ const NotificationDropdown = () => {
     handleDeleteAllNotifications,
     handleDeleteNotification,
   } = useNotification();
+
+  const menu = (
+    <Menu>
+      {nlist.length > 0 ? (
+        <>
+          <Menu.Item key='clear' onClick={handleDeleteAllNotifications}>
+            Clear All
+          </Menu.Item>
+          {nlist.map((n, idx) => (
+            <Menu.Item key={idx} onClick={() => navigateNotification(n)}>
+              <Space>
+                {n.text}
+                <span className='notification-time'>{getMetaData(new Date(n.dateTime))}</span>
+              </Space>
+            </Menu.Item>
+          ))}
+        </>
+      ) : (
+        <Menu.Item disabled>No notifications</Menu.Item>
+      )}
+    </Menu>
+  );
 
   return (
     <div className='notification-container' ref={dropdownRef}>
@@ -50,6 +74,11 @@ const NotificationDropdown = () => {
           )}
         </div>
       )}
+      <Dropdown overlay={menu} trigger={['click']}>
+        <Button icon={<FaBell />} className='notification-icon' shape='circle' size='large'>
+          {nlist.length > 0 && <Badge count={nlist.length} />}
+        </Button>
+      </Dropdown>
     </div>
   );
 };

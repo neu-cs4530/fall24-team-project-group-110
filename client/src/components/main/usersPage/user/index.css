@@ -1,0 +1,36 @@
+.ant-card {
+  border-radius: 12px; 
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: #ffffff; 
+}
+
+.ant-card:hover {
+  transform: translateY(-4px); 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+.ant-card-body {
+  text-align: center; 
+  padding: 16px;
+}
+
+.ant-avatar {
+  margin-bottom: 8px;
+  border: 2px solid #e0e0e0;
+}
+
+.ant-avatar img {
+  object-fit: cover; 
+}
+
+.user-meta-name {
+  font-size: 14px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.ant-empty {
+  margin-top: 40px;
+  font-size: 16px;
+  color: #888; 
+}

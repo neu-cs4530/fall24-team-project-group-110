@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { Button, List, Space, Typography } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
+import { IoSendOutline } from 'react-icons/io5';
 import { getMetaData } from '../../../tool';
 import useMessagePage from '../../../hooks/useMessagePage';
 import './index.css';
 import NotificationCheckbox from '../notificationCheckbox';
 import { getConversationById } from '../../../services/conversationService';
+
+const { Text } = Typography;
 
 /**
  * Interface representing the props for the Chat Section component.
@@ -42,45 +47,58 @@ const ChatSection = ({ conversationId }: ChatSectionProps) => {
   }, [conversationId]);
 
   return (
-    <div className='chat-body'>
-      <div className='message-list'>
-        {messages.map((m, idx) => (
-          <li
+    <div className='chat-section'>
+      <List
+        className='message-list'
+        dataSource={messages}
+        renderItem={(m, idx) => (
+          <List.Item
             key={idx}
-            className={`message-block ${
-              user.username === m.sender.username
-                ? 'message-sent-by-sender'
-                : 'message-sent-by-receiver'
+            className={`message-item ${
+              user.username === m.sender.username ? 'sender' : 'receiver'
             }`}>
-            <p className='message-text'>{m.text}</p>
-            <small
-              className={`${user.username === m.sender.username ? 'message-meta-by-sender' : 'message-meta-by-receiver'}`}>
-              {m.sender.username}, {getMetaData(new Date(m.sentAt))}
-            </small>
-          </li>
-        ))}
+            <Space
+              direction='vertical'
+              className={`message-bubble ${
+                user.username === m.sender.username ? 'bubble-sender' : 'bubble-receiver'
+              }`}>
+              <Text>{m.text}</Text>
+              <Text className='meta-text'>
+                {m.sender.username}, {getMetaData(new Date(m.sentAt))}
+              </Text>
+            </Space>
+          </List.Item>
+        )}>
         <div ref={messagesEndRef} />
-      </div>
+      </List>
 
-      <div className='send-message'>
-        <div className='input-row'>
-          <textarea
-            placeholder='Message'
-            value={message}
-            onChange={e => setMessage(e.target.value)}
-            className='message-textarea'
-          />
-          <button className='send-message-button' onClick={handleNewMessage}>
-            Send
-          </button>
-          <NotificationCheckbox
-            targetId={conversationId}
-            notifyList={notifyList}
-            type='conversation'
-          />
-        </div>
-        {textErr && <small className='error'>{textErr}</small>}
+      <div className='send-message-container'>
+        <TextArea
+          placeholder='Message...'
+          value={message}
+          onChange={e => setMessage(e.target.value)}
+          autoSize={{ minRows: 1, maxRows: 4 }}
+          className='message-input'
+        />
+        <Button
+          type='primary'
+          icon={<IoSendOutline />}
+          onClick={handleNewMessage}
+          disabled={!message.trim()}
+          className='send-button'>
+          Send
+        </Button>
+        <NotificationCheckbox
+          targetId={conversationId}
+          notifyList={notifyList}
+          type='conversation'
+        />
       </div>
+      {textErr && (
+        <Text type='danger' className='error-text'>
+          {textErr}
+        </Text>
+      )}
     </div>
   );
 };

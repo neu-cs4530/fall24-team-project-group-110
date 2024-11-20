@@ -1,7 +1,30 @@
-.answer_question_meta {
-  color: #bbbbbb;
+.answer-page {
+  padding: 16px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
 }
 
-.ansButton {
-  margin: 2% 0 2% 2%;
+.question-section {
+  margin-bottom: 16px;
+}
+
+.answers-section {
+  margin-top: 16px;
+}
+
+.answer-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.answer-button {
+  background-color: #1890ff;
+  color: white;
+  border: none;
+}
+
+.answer-button:hover {
+  background-color: #40a9ff;
+  color: white;
 }

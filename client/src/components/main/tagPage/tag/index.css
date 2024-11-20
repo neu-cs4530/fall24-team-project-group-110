@@ -1,14 +1,11 @@
-.tagNode {
-  place-self: center;
-  border: #000000 1px dashed;
-  padding: 5%;
-  width: 30%;
-  display: flex;
-  flex-direction: column;
-  justify-items: center;
-  align-items: center;
+.ant-card {
+  transition: transform 0.2s ease-in-out;
 }
 
-.tagName {
-  color: cornflowerblue;
+.ant-card:hover {
+  transform: translateY(-5px);
+}
+
+.ant-badge-ribbon {
+  top: -10px !important;
 }

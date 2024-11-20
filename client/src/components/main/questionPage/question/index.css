@@ -1,50 +1,35 @@
-.question {
-  display: flex;
-  flex-direction: row;
-  border-top: #000000 1px dashed;
-}
-
-.postStats {
-  color: #bbbbbb;
-  text-align: center;
-  width: 10%;
-}
-
-.question_mid {
-  width: 60%;
-}
-
-.postTitle {
-  color: cornflowerblue;
-}
-
-.question_tags {
-  margin-top: 1%;
-}
-
-.question_tag_button {
-  color: #ffffff;
-  background: gray;
-  border-width: 0;
-  border-radius: 8px;
-  margin-left: 2%;
-  padding: 1% 3% 1% 3%;
-}
-
-.question_tag_button:first-child {
-  margin-left: 0;
-}
-
-.lastActivity {
-  width: 30%;
-  display: flex;
-  flex-direction: row;
+.question_meta {
+  color: #888888;
+  font-size: 12px;
 }
 
 .question_author {
-  color: red;
+  color: #f56a00;
+  font-weight: bold;
+  font-size: 14px;
 }
 
-.question_meta {
-  color: #bbbbbb;
+.postTitle {
+  font-size: 16px;
+  font-weight: bold;
+  color: #0050b3;
+  cursor: pointer;
+  margin: 0;
+}
+
+.question_tags {
+  margin-top: 8px;
+}
+
+.ant-tag {
+  font-size: 12px;
+  border-radius: 4px;
+}
+
+.ant-card {
+  transition: box-shadow 0.3s ease;
+}
+
+.ant-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }

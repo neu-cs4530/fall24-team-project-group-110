@@ -8,7 +8,7 @@ import { FakeSOSocket } from './types';
 
 const container = document.getElementById('root');
 
-const App = () => {
+const App: React.FC = () => {
   const [socket, setSocket] = useState<FakeSOSocket | null>(null);
 
   const serverURL = process.env.REACT_APP_SERVER_URL;

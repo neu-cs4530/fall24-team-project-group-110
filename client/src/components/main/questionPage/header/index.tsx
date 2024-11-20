@@ -1,8 +1,10 @@
 import React from 'react';
 import './index.css';
-import OrderButton from './orderButton';
+import { Col, Row, Segmented, Typography } from 'antd';
 import { OrderType, orderTypeDisplayName } from '../../../../types';
 import AskQuestionButton from '../../askQuestionButton';
+
+const { Title, Text } = Typography;
 
 /**
  * Interface representing the props for the QuestionHeader component.
@@ -27,23 +29,32 @@ interface QuestionHeaderProps {
  * @param setQuestionOrder - Function to set the order of questions based on input message.
  */
 const QuestionHeader = ({ titleText, qcnt, setQuestionOrder }: QuestionHeaderProps) => (
-  <div>
-    <div className='space_between right_padding'>
-      <div className='bold_title'>{titleText}</div>
-      <AskQuestionButton />
-    </div>
-    <div className='space_between right_padding'>
-      <div id='question_count'>{qcnt} questions</div>
-      <div className='btns'>
-        {Object.keys(orderTypeDisplayName).map((order, idx) => (
-          <OrderButton
-            key={idx}
-            orderType={order as OrderType}
-            setQuestionOrder={setQuestionOrder}
+  <div className='question-header'>
+    <Row gutter={16} align='middle'>
+      <Col flex='auto'>
+        <Title level={3}>{titleText}</Title>
+      </Col>
+      <Col>
+        <AskQuestionButton />
+      </Col>
+    </Row>
+    <Row gutter={16} align='middle' justify='space-between'>
+      <Col>
+        <Text>{qcnt} questions</Text>
+      </Col>
+      <Col>
+        <div className='segmented-container'>
+          <Segmented
+            options={Object.keys(orderTypeDisplayName).map(order => ({
+              label: orderTypeDisplayName[order as OrderType],
+              value: order as OrderType,
+            }))}
+            onChange={setQuestionOrder}
+            defaultValue={Object.keys(orderTypeDisplayName)[0] as OrderType}
           />
-        ))}
-      </div>
-    </div>
+        </div>
+      </Col>
+    </Row>
   </div>
 );
 

@@ -1,26 +1,53 @@
 .sideBarNav {
   display: flex;
   flex-direction: column;
+  height: 100%;
   width: 15%;
-  border-right: dashed;
-  padding: 4% 0 4% 0;
+  background: #001529; 
+  transition: width 0.3s ease;
+  overflow: hidden;
   align-items: center;
 }
 
-.menu_button:first-child {
-  margin-top: 0;
+.sideBarNav.collapsed {
+  width: 5%;
 }
 
-.menu_button {
-  height: 40px;
-  width: 80%;
-  margin-top: 20px;
-  border-radius: 5px;
-  text-align: center;
-  line-height: 40px;
-  color: cornflowerblue;
+.toggleButton {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #001529;
 }
 
-.menu_selected {
-  background: #cccccc;
+.toggleButton button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.toggleButton button:hover {
+  color: #1890ff;
+}
+
+.ant-menu {
+  height: calc(100% - 50px);
+  border-right: none;
+  background: #001529;
+}
+
+.ant-menu-item {
+  display: flex;
+  align-items: center;
+}
+
+.ant-menu-item:hover {
+  background: #1890ff;
+}
+
+.ant-menu-dark .ant-menu-item-selected {
+  background: #1890ff;
 }
