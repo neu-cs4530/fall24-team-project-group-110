@@ -52,7 +52,6 @@ const NewQuestionPage = () => {
         setState={setTagNames}
         err={tagErr}
       />
-      {/* btn_indicator_container */}
       <div className='form-footer'>
         <Button
           className='form_postBtn'

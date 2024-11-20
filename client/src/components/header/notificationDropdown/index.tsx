@@ -39,36 +39,6 @@ const NotificationDropdown = () => {
   );
 
   return (
-    // <div className='notification-container' ref={dropdownRef}>
-    //   <div className='notification-icon' onClick={handleToggle}>
-    //     <FaBell />
-    //     {notificationCount > 0 && <span className='notification-badge'>{notificationCount}</span>}
-    //   </div>
-    //   {isNotifOpen && (
-    //     <div className='dropdown active'>
-    //       {nlist.length > 0 ? (
-    //         <>
-    //           <Button className='notification-clear-button' onClick={handleDeleteAllNotifications}>
-    //             Clear All
-    //           </Button>
-    //           <ul className='notification-list'>
-    //             {nlist.map((n, idx) => (
-    //               <li
-    //                 key={idx}
-    //                 className='notification-item'
-    //                 onClick={() => navigateNotification(n)}>
-    //                 {n.text}{' '}
-    //                 <span className='notification-time'>{getMetaData(new Date(n.dateTime))}</span>
-    //               </li>
-    //             ))}
-    //           </ul>
-    //         </>
-    //       ) : (
-    //         <div className='notification-none'>No notifications</div>
-    //       )}
-    //     </div>
-    //   )}
-    // </div>
     <div className='notification-container' ref={dropdownRef}>
       <div className='notification-icon' onClick={handleToggle}>
         <FaBell />

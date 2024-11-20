@@ -47,19 +47,6 @@ const VoteComponent = ({ question }: VoteComponentProps) => {
   };
 
   return (
-    // <div className='vote-container'>
-    //   <button
-    //     className={`vote-button ${voted === 1 ? 'vote-button-upvoted' : ''}`}
-    //     onClick={() => handleVote('upvote')}>
-    //     Upvote
-    //   </button>
-    //   <button
-    //     className={`vote-button ${voted === -1 ? 'vote-button-downvoted' : ''}`}
-    //     onClick={() => handleVote('downvote')}>
-    //     Downvote
-    //   </button>
-    //   <span className='vote-count'>{count}</span>
-    // </div>
     <Space direction='vertical' align='center'>
       <Tooltip title={voted === 1 ? 'You upvoted this question' : 'Upvote'}>
         <Button

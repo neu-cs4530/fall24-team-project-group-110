@@ -54,55 +54,6 @@ const SideBarNav = () => {
         onClick={handleClick}
       />
     </div>
-
-    // <div id='sideBarNav' className='sideBarNav'>
-    //   <Menu>
-    //     <Menu.Item>
-    //       <NavLink to='/home' id='menu_questions'>
-    //         Questions
-    //       </NavLink>
-    //     </Menu.Item>
-    //     <Menu.Item>
-    //       <NavLink to='/tags' id='menu_tag'>
-    //         Tags
-    //       </NavLink>
-    //     </Menu.Item>
-    //     <Menu.Item>
-    //       <NavLink to='/conversation' id='menu_chat'>
-    //         Chat
-    //       </NavLink>
-    //     </Menu.Item>
-    //     <Menu.Item>
-    //       <NavLink to='/users' id='menu_users'>
-    //         Users
-    //       </NavLink>
-    //     </Menu.Item>
-    //   </Menu>
-    //   <NavLink
-    //     to='/home'
-    //     id='menu_questions'
-    //     className={({ isActive }) => `menu_button ${isActive ? 'menu_selected' : ''}`}>
-    //     Questions
-    //   </NavLink>
-    //   <NavLink
-    //     to='/tags'
-    //     id='menu_tag'
-    //     className={({ isActive }) => `menu_button ${isActive ? 'menu_selected' : ''}`}>
-    //     Tags
-    //   </NavLink>
-    //   <NavLink
-    //     to='/conversation'
-    //     id='menu_chat'
-    //     className={({ isActive }) => `menu_button ${isActive ? 'menu_selected' : ''}`}>
-    //     Chat
-    //   </NavLink>
-    //   <NavLink
-    //     to='/users'
-    //     id='menu_users'
-    //     className={({ isActive }) => `menu_button ${isActive ? 'menu_selected' : ''}`}>
-    //     Users
-    //   </NavLink>
-    // </div>
   );
 };
 

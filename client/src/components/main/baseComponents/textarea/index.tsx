@@ -36,22 +36,6 @@ interface TextAreaProps {
  * @param err - Optional error message displayed when there's an issue with input.
  */
 const TextArea = ({ title, mandatory = true, hint, id, val, setState, err }: TextAreaProps) => (
-  // <>
-  //   <div className='input_title'>
-  //     {title}
-  //     {mandatory ? '*' : ''}
-  //   </div>
-  //   {hint && <div className='input_hint'>{hint}</div>}
-  //   <textarea
-  //     id={id}
-  //     className='input_input'
-  //     value={val}
-  //     onChange={e => {
-  //       setState(e.currentTarget.value);
-  //     }}
-  //   />
-  //   {err && <div className='input_error'>{err}</div>}
-  // </>
   <Form.Item
     label={title}
     extra={hint}

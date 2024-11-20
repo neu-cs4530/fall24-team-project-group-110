@@ -35,16 +35,6 @@ interface AnswerProps {
  * @param handleAddComment Function to handle adding a new comment.
  */
 const AnswerView = ({ text, ansBy, meta, comments, handleAddComment }: AnswerProps) => (
-  // <div className='answer right_padding'>
-  //   <div id='answerText' className='answerText'>
-  //     {handleHyperlink(text)}
-  //   </div>
-  //   <div className='answerAuthor'>
-  //     <div className='answer_author'>{ansBy}</div>
-  //     <div className='answer_question_meta'>{meta}</div>
-  //   </div>
-  //   <CommentSection comments={comments} handleAddComment={handleAddComment} />
-  // </div>
   <div style={{ padding: '16px 0', borderBottom: '1px dashed #d9d9d9' }}>
     <Space direction='vertical' style={{ width: '100%' }}>
       <div style={{ marginBottom: '8px' }}>

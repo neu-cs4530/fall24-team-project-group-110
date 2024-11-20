@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Avatar, Card, List, Typography } from 'antd';
-import { FaUser } from 'react-icons/fa';
+import { List } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { User } from '../../../types';
 import { getUsers } from '../../../services/userService';
@@ -27,33 +26,6 @@ const UsersPage = () => {
   };
 
   return (
-    // <div className='users-container'>
-    //   <input
-    //     type='text'
-    //     placeholder='Search for users'
-    //     value={search}
-    //     onChange={e => setSearch(e.target.value)}
-    //   />
-    //   <button onClick={handleSearch}>Search</button>
-    //   <ul className='users-list'>
-    //     {ulist?.map((u, idx) => (
-    //       <li key={idx} className='user-item' onClick={() => navigateProfile(u)}>
-    //         <div className='user-info'>
-    //           <div className='user-picture'>
-    //             <FaUser />
-    //             <img className='user-picture' src={u.picture} alt='profile picture' />
-    //           </div>
-    //           <div>
-    //             {u.username}
-    //             <small className='user-meta-name'>
-    //               {u.firstName} {u.lastName}
-    //             </small>
-    //           </div>
-    //         </div>
-    //       </li>
-    //     ))}
-    //   </ul>
-    // </div>
     <div className='users-container'>
       <UserHeader search={search} setSearch={setSearch} onSearch={handleSearch} />
       <List

@@ -36,15 +36,6 @@ interface QuestionBodyProps {
  * @param meta Additional metadata related to the question.
  */
 const QuestionBody = ({ views, text, askby, meta, qid, notifyList }: QuestionBodyProps) => (
-  // <div id='questionBody' className='questionBody right_padding'>
-  //   <div className='bold_title answer_question_view'>{views} views</div>
-  //   <div className='answer_question_text'>{handleHyperlink(text)}</div>
-  //   <div className='answer_question_right'>
-  //     <div className='question_author'>{askby}</div>
-  //     <div className='answer_question_meta'>asked {meta}</div>
-  //     <NotificationCheckbox targetId={qid} notifyList={notifyList} type='question' />
-  //   </div>
-  // </div>
   <div style={{ padding: '16px', background: '#1f1f1f', borderRadius: '8px', color: '#f5f5f5' }}>
     <Row gutter={[16, 16]} align='middle'>
       <Col span={4}>

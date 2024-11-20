@@ -30,7 +30,6 @@ const CommentSection = ({ comments, handleAddComment }: CommentSectionProps) => 
   const { user } = useUserContext();
   const [text, setText] = useState<string>('');
   const [textErr, setTextErr] = useState<string>('');
-  const [showComments, setShowComments] = useState<boolean>(false);
 
   /**
    * Function to handle the addition of a new comment.
@@ -53,45 +52,6 @@ const CommentSection = ({ comments, handleAddComment }: CommentSectionProps) => 
   };
 
   return (
-    // <div className='comment-section'>
-    //   <button className='toggle-button' onClick={() => setShowComments(!showComments)}>
-    //     {showComments ? 'Hide Comments' : 'Show Comments'}
-    //   </button>
-
-    //   {showComments && (
-    //     <div className='comments-container'>
-    //       <ul className='comments-list'>
-    //         {comments.length > 0 ? (
-    //           comments.map((comment, index) => (
-    //             <li key={index} className='comment-item'>
-    //               <p className='comment-text'>{comment.text}</p>
-    //               <small className='comment-meta'>
-    //                 {comment.commentBy}, {getMetaData(new Date(comment.commentDateTime))}
-    //               </small>
-    //             </li>
-    //           ))
-    //         ) : (
-    //           <p className='no-comments'>No comments yet.</p>
-    //         )}
-    //       </ul>
-
-    //       <div className='add-comment'>
-    //         <div className='input-row'>
-    //           <textarea
-    //             placeholder='Comment'
-    //             value={text}
-    //             onChange={e => setText(e.target.value)}
-    //             className='comment-textarea'
-    //           />
-    //           <button className='add-comment-button' onClick={handleAddCommentClick}>
-    //             Add Comment
-    //           </button>
-    //         </div>
-    //         {textErr && <small className='error'>{textErr}</small>}
-    //       </div>
-    //     </div>
-    //   )}
-    // </div>
     <div className='comment-section'>
       <Collapse>
         <Panel header={`${comments.length} Comment(s)`} key='1'>

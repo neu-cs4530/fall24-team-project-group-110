@@ -1,9 +1,11 @@
 import React from 'react';
-import { Button, Card, Space, Tag } from 'antd';
+import { Card, Tag, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import './index.css';
 import { getMetaData } from '../../../../tool';
 import { Question } from '../../../../types';
+
+const { Text, Paragraph } = Typography;
 
 /**
  * Interface representing the props for the Question component.
@@ -46,81 +48,60 @@ const QuestionView = ({ q }: QuestionProps) => {
   };
 
   return (
-    // <div
-    //   className='question right_padding'
-    //   onClick={() => {
-    //     if (q._id) {
-    //       handleAnswer(q._id);
-    //     }
-    //   }}>
-    //   <div className='postStats'>
-    //     <div>{q.answers.length || 0} answers</div>
-    //     <div>{q.views.length} views</div>
-    //   </div>
-    //   <div className='question_mid'>
-    //     <div className='postTitle'>{q.title}</div>
-    //     <div className='question_tags'>
-    //       {q.tags.map((tag, idx) => (
-    //         <button
-    //           key={idx}
-    //           className='question_tag_button'
-    //           onClick={e => {
-    //             e.stopPropagation();
-    //             clickTag(tag.name);
-    //           }}>
-    //           {tag.name}
-    //         </button>
-    //       ))}
-    //     </div>
-    //   </div>
-    //   <div className='lastActivity'>
-    //     <div className='question_author'>{q.askedBy}</div>
-    //     <div>&nbsp;</div>
-    //     <div className='question_meta'>asked {getMetaData(new Date(q.askDateTime))}</div>
-    //   </div>
-    // </div>
     <Card
       hoverable
       onClick={() => q._id && handleAnswer(q._id)}
-      style={{ marginBottom: '16px', borderRadius: '8px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div>
-          <Space size='middle'>
-            <Button type='text' style={{ color: '#1890ff' }}>
-              {q.answers.length} answers
-            </Button>
-            <Button type='text' style={{ color: '#1890ff' }}>
-              {q.views.length} views
-            </Button>
-          </Space>
+      style={{
+        marginBottom: '16px',
+        borderRadius: '8px',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+      }}>
+      <div style={{ display: 'flex', flexDirection: 'row', gap: '16px' }}>
+        <div style={{ textAlign: 'center', width: '100px' }}>
+          <Text strong>{q.answers.length || 0}</Text> answers
+          <br />
+          <Text>{q.views.length || 0} views</Text>
         </div>
-        <div className='question_meta'>
-          <div className='question_author'>{q.askedBy}</div>
-          <div>{getMetaData(new Date(q.askDateTime))}</div>
-        </div>
-      </div>
 
-      <div style={{ marginTop: '16px', marginBottom: '8px' }}>
-        <div
-          className='postTitle'
-          style={{ fontWeight: 'bold', fontSize: '18px', color: '#0050b3' }}>
-          {q.title}
-        </div>
-      </div>
+        <div style={{ flex: 1 }}>
+          <Typography.Title
+            level={5}
+            style={{ margin: 0, color: '#0050b3', cursor: 'pointer' }}
+            onClick={() => q._id && handleAnswer(q._id)}>
+            {q.title}
+          </Typography.Title>
 
-      <div className='question_tags'>
-        {q.tags.map((tag, idx) => (
-          <Tag
-            key={idx}
-            color='geekblue'
-            style={{ cursor: 'pointer', margin: '2px' }}
-            onClick={e => {
-              e.stopPropagation();
-              clickTag(tag.name);
-            }}>
-            {tag.name}
-          </Tag>
-        ))}
+          <Paragraph
+            ellipsis={{ rows: 2, expandable: false }}
+            style={{ marginTop: '8px', color: '#595959' }}>
+            {q.text}
+          </Paragraph>
+
+          <div className='question_tags'>
+            {q.tags.map((tag, idx) => (
+              <Tag
+                key={idx}
+                color='geekblue'
+                style={{ cursor: 'pointer', marginRight: '4px' }}
+                onClick={e => {
+                  e.stopPropagation();
+                  clickTag(tag.name);
+                }}>
+                {tag.name}
+              </Tag>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ textAlign: 'right', minWidth: '120px' }}>
+          <Text strong className='question_author'>
+            {q.askedBy}
+          </Text>
+          <br />
+          <Text type='secondary' className='question_meta'>
+            asked {getMetaData(new Date(q.askDateTime))}
+          </Text>
+        </div>
       </div>
     </Card>
   );

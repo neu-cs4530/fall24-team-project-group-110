@@ -18,7 +18,6 @@ interface FormProps {
  * @param children The React nodes to be displayed inside the form container.
  */
 const Form: React.FC<FormProps> = ({ children }) => (
-  // <div className='form'>{children}</div>
   <Card className='form-card' bordered={true}>
     {children}
   </Card>

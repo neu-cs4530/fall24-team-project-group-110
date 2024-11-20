@@ -22,41 +22,6 @@ const AnswerPage = () => {
   }
 
   return (
-    // <>
-    //   <AnswerHeader ansCount={question.answers.length} title={question.title} />
-    //   <Space direction='horizontal'>
-    //     <VoteComponent question={question} />
-    //     <QuestionBody
-    //       views={question.views.length}
-    //       text={question.text}
-    //       askby={question.askedBy}
-    //       meta={getMetaData(new Date(question.askDateTime))}
-    //       qid={questionID}
-    //       notifyList={question.notifyList}
-    //     />
-    //   </Space>
-    //   <CommentSection
-    //     comments={question.comments}
-    //     handleAddComment={(comment: Comment) => handleNewComment(comment, 'question', questionID)}
-    //   />
-    //   {question.answers.map((a, idx) => (
-    //     <AnswerView
-    //       key={idx}
-    //       text={a.text}
-    //       ansBy={a.ansBy}
-    //       meta={getMetaData(new Date(a.ansDateTime))}
-    //       comments={a.comments}
-    //       handleAddComment={(comment: Comment) => handleNewComment(comment, 'answer', a._id)}
-    //     />
-    //   ))}
-    //   <Button
-    //     // className='bluebtn ansButton'
-    //     onClick={() => {
-    //       handleNewAnswer();
-    //     }}>
-    //     Answer Question
-    //   </Button>
-    // </>
     <div className='answer-page'>
       <AnswerHeader ansCount={question.answers.length} title={question.title} />
       <Row gutter={[16, 16]} className='question-section'>

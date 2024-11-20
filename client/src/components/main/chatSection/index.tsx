@@ -47,46 +47,6 @@ const ChatSection = ({ conversationId }: ChatSectionProps) => {
   }, [conversationId]);
 
   return (
-    // <div className='chat-body'>
-    //   <div className='message-list'>
-    //     {messages.map((m, idx) => (
-    //       <li
-    //         key={idx}
-    //         className={`message-block ${
-    //           user.username === m.sender.username
-    //             ? 'message-sent-by-sender'
-    //             : 'message-sent-by-receiver'
-    //         }`}>
-    //         <p className='message-text'>{m.text}</p>
-    //         <small
-    //           className={`${user.username === m.sender.username ? 'message-meta-by-sender' : 'message-meta-by-receiver'}`}>
-    //           {m.sender.username}, {getMetaData(new Date(m.sentAt))}
-    //         </small>
-    //       </li>
-    //     ))}
-    //     <div ref={messagesEndRef} />
-    //   </div>
-
-    //   <div className='send-message'>
-    //     <div className='input-row'>
-    //       <textarea
-    //         placeholder='Message'
-    //         value={message}
-    //         onChange={e => setMessage(e.target.value)}
-    //         className='message-textarea'
-    //       />
-    //       <button className='send-message-button' onClick={handleNewMessage}>
-    //         Send
-    //       </button>
-    //       <NotificationCheckbox
-    //         targetId={conversationId}
-    //         notifyList={notifyList}
-    //         type='conversation'
-    //       />
-    //     </div>
-    //     {textErr && <small className='error'>{textErr}</small>}
-    //   </div>
-    // </div>
     <div className='chat-section'>
       <List
         className='message-list'

@@ -5,3 +5,24 @@
 .question_list:last-child {
   border-bottom: #000000 1px dashed;
 }
+
+.question-page {
+  background-color: #f9f9f9;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.question-list {
+  margin-bottom: 24px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.no-questions {
+  text-align: center;
+  margin: 20px 0;
+}

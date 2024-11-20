@@ -25,51 +25,6 @@ const ConversationPage = () => {
   } = useConversationPage();
 
   return (
-    // <div className='conversation-page'>
-    //   {selectedConversation && (
-    //     <div className='chat-section'>
-    //       <ChatSection conversationId={selectedConversation} />
-    //     </div>
-    //   )}
-
-    //   <div className='rightSideBar'>
-    //     <h2>Conversations</h2>
-    //     <div className='new-conversation'>
-    //       <input
-    //         type='text'
-    //         placeholder='Enter usernames separated by commas'
-    //         value={participants}
-    //         onChange={e => setParticipants(e.target.value)}
-    //         className='conversation-input'
-    //       />
-    //       <button onClick={handleCreateConversation} className='create-conversation-button'>
-    //         Create Conversation
-    //       </button>
-    //     </div>
-
-    //     {textErr && <div className='error'>{textErr}</div>}
-
-    //     {clist?.map((c, idx) => (
-    //       <li key={idx} className='conversation-list'>
-    //         <div
-    //           className='conversation'
-    //           onClick={() => {
-    //             navigateChat(c);
-    //           }}>
-    //           <div className='convo-participants'>
-    //             {c.participants
-    //               .map(participant => participant.username)
-    //               .filter(username => username !== user.username)
-    //               .join(', ')}
-    //           </div>
-    //           <div className='convo-meta'>
-    //             {c.lastMessage} {getMetaData(new Date(c.updatedAt))}
-    //           </div>
-    //         </div>
-    //       </li>
-    //     ))}
-    //   </div>
-    // </div>
     <Layout className='conversation-page'>
       <Content className='chat-section'>
         {selectedConversation ? (
@@ -78,7 +33,7 @@ const ConversationPage = () => {
           <div className='empty-chat'>
             {/* <MessageOutlined style={{ fontSize: '48px', color: '#888' }} /> */}
             <Text style={{ color: '#888', marginTop: '16px' }}>
-              Select a conversation to start chatting
+              Select or create a conversation to start chatting
             </Text>
           </div>
         )}
@@ -86,7 +41,7 @@ const ConversationPage = () => {
       <Sider className='sidebar' width={300} theme='dark'>
         <Space direction='vertical' size='large' className='sidebar-content'>
           <Title level={3} style={{ color: '#ffffff', textAlign: 'center' }}>
-            Conversations
+            Chats
           </Title>
           <Space direction='vertical' className='new-conversation'>
             <Input

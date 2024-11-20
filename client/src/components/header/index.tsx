@@ -20,27 +20,6 @@ const Header = () => {
   const navigate = useNavigate();
 
   return (
-    // <div id='header' className='header'>
-    //   <div></div>
-    //   <div onClick={() => navigate('/home')} className='title'>
-    //     Fake Stack Overflow
-    //   </div>
-    //   <Input
-    //     id='searchBar'
-    //     placeholder='Search ...'
-    //     type='text'
-    //     value={val}
-    //     onChange={handleInputChange}
-    //     onKeyDown={handleKeyDown}
-    //   />
-    //   <Button className='username-button' onClick={() => navigate(`/profile/${user._id}`)}>
-    //     {user.username}
-    //   </Button>
-    //   <NotificationDropdown />
-    //   <Button className='logout-button' onClick={handleLogout}>
-    //     Logout
-    //   </Button>
-    // </div>
     <div className='custom-header'>
       <div onClick={() => navigate('/home')}>
         <Title level={2} className='logo-text'>

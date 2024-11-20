@@ -7,12 +7,12 @@
 }
 
 .ant-input {
-  border-radius: 8px; /* Rounded input */
+  border-radius: 8px; 
   height: 40px;
 }
 
 .ant-btn-primary {
-  border-radius: 8px; /* Rounded button */
+  border-radius: 8px;
   height: 40px;
   font-size: 14px;
 }

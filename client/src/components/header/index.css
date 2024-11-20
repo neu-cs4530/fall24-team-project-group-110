@@ -1,34 +1,3 @@
-/* .header {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  height: 10%;
-  width: 100%;
-  background: #dddddd;
-}
-
-.title {
-  font-size: 32px;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.logout-button {
-  background: #ff0000;
-  color: #ffffff;
-  padding: 5px;
-  cursor: pointer;
-  border: 1px solid #000000;
-}
-
-.username-button {
-  background: none;
-  border: none;
-  text-decoration: underline;
-  cursor: pointer;
-} */
-
 .custom-header {
   display: flex;
   justify-content: space-between;

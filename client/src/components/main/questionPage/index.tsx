@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, Layout, Row, Col, Spin, Pagination } from 'antd';
+import { Typography, Layout, Spin, Pagination } from 'antd';
 import './index.css';
 import QuestionHeader from './header';
 import QuestionView from './question';
 import useQuestionPage from '../../../hooks/useQuestionPage';
 import useUserContext from '../../../hooks/useUserContext';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 const { Content } = Layout;
 
 /**
@@ -34,21 +34,6 @@ const QuestionPage = () => {
   };
 
   return (
-    // <>
-    //   <QuestionHeader
-    //     titleText={titleText}
-    //     qcnt={qlist.length}
-    //     setQuestionOrder={setQuestionOrder}
-    //   />
-    //   <div id='question_list' className='question_list'>
-    //     {qlist.map((q, idx) => (
-    //       <QuestionView q={q} key={idx} />
-    //     ))}
-    //   </div>
-    //   {titleText === 'Search Results' && !qlist.length && (
-    //     <div className='bold_title right_padding'>No Questions Found</div>
-    //   )}
-    // </>
     <Layout className='question-page'>
       <Content style={{ padding: '20px' }}>
         <QuestionHeader
@@ -56,15 +41,9 @@ const QuestionPage = () => {
           qcnt={qlist.length}
           setQuestionOrder={setQuestionOrder}
         />
-        <div id='question_list' className='question_list'>
+        <div className='question-list'>
           {currentQuestions.length > 0 ? (
-            <Row gutter={[16, 16]}>
-              {currentQuestions.map((q, idx) => (
-                <Col xs={24} sm={12} md={8} lg={6} key={idx}>
-                  <QuestionView q={q} />
-                </Col>
-              ))}
-            </Row>
+            currentQuestions.map((q, idx) => <QuestionView q={q} key={idx} />)
           ) : (
             <div className='no-questions'>
               {titleText === 'Search Results' ? (
