@@ -388,6 +388,7 @@ export const populateDocument = async (
           populate: { path: 'comments', model: CommentModel },
         },
         { path: 'comments', model: CommentModel },
+        { path: 'notifyList', model: UserModel },
       ]);
     } else if (type === 'answer') {
       result = await AnswerModel.findOne({ _id: id }).populate([

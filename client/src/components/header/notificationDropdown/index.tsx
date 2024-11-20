@@ -1,4 +1,3 @@
-import React from 'react';
 import { FaBell, FaTrash } from 'react-icons/fa';
 import { getMetaData } from '../../../tool';
 import useNotification from '../../../hooks/useNotification';

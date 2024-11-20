@@ -135,6 +135,7 @@ const messageController = (socket: FakeSOSocket, notificationService: Notificati
         throw new Error(populatedUpdatedConversation.error);
       }
 
+      const sender = populatedMessage.sender as User;
       const recipients = populatedUpdatedConversation.notifyList.filter(
         user => user._id && user._id.toString() !== result.sender._id!.toString(),
       ) as User[];
@@ -142,7 +143,7 @@ const messageController = (socket: FakeSOSocket, notificationService: Notificati
         notificationService.sendNotifications(
           recipients,
           'conversation',
-          'You have received a message.',
+          `A new message has been sent by ${sender.username}`,
           populatedUpdatedConversation._id!.toString(),
         );
       }

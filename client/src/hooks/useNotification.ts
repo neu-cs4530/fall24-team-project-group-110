@@ -8,7 +8,7 @@ const useNotification = () => {
   const navigate = useNavigate();
   const { user, socket } = useUserContext();
   const [isNotifOpen, setIsNotifOpen] = useState<boolean>(false);
-  const [nlist, setNlist] = useState<Notification[]>([]);
+  const [nlist, setNlist] = useState<Notification[]>(user.notifications);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const handleToggle = () => {
