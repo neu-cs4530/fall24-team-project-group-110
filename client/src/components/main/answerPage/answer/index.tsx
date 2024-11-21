@@ -35,9 +35,9 @@ interface AnswerProps {
  * @param handleAddComment Function to handle adding a new comment.
  */
 const AnswerView = ({ text, ansBy, meta, comments, handleAddComment }: AnswerProps) => (
-  <div style={{ padding: '16px 0', borderBottom: '1px dashed #d9d9d9' }}>
+  <div className='answer'>
     <Space direction='vertical' style={{ width: '100%' }}>
-      <div style={{ marginBottom: '8px' }}>
+      <div className='answer-text'>
         <Text>{handleHyperlink(text)}</Text>
       </div>
       <Space direction='horizontal' style={{ justifyContent: 'space-between', width: '100%' }}>
@@ -46,8 +46,9 @@ const AnswerView = ({ text, ansBy, meta, comments, handleAddComment }: AnswerPro
         </Text>
         <Text type='secondary'>{meta}</Text>
       </Space>
-      <Divider style={{ margin: '12px 0' }} />
+      <Divider style={{ margin: '0 0' }} />
       <CommentSection comments={comments} handleAddComment={handleAddComment} />
+      <Divider style={{ margin: '0 0' }} />
     </Space>
   </div>
 );

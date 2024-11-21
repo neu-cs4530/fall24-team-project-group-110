@@ -29,10 +29,19 @@
   margin-top: 16px;
 }
 
+.add-comment-button {
+  background-color: #1890ff;
+  width: 100%;
+}
+
 .comment-textarea {
   margin-bottom: 8px;
 }
 
 .add-comment-button {
   width: 100%;
+}
+
+.add-comment-error {
+  margin-bottom: 8px;
 }

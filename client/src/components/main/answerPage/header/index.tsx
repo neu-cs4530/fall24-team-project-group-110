@@ -2,6 +2,7 @@ import React from 'react';
 import { Col, Row, Typography } from 'antd';
 import './index.css';
 import AskQuestionButton from '../../askQuestionButton';
+import NotificationCheckbox from '../../notificationCheckbox';
 
 const { Title, Text } = Typography;
 
@@ -12,8 +13,11 @@ const { Title, Text } = Typography;
  * - title - The title of the question or discussion thread.
  */
 interface AnswerHeaderProps {
-  ansCount: number;
+  meta: string;
+  views: number;
   title: string;
+  qid: string;
+  notifyList: string[];
 }
 
 /**
@@ -23,26 +27,16 @@ interface AnswerHeaderProps {
  * @param ansCount The number of answers to display.
  * @param title The title of the question or discussion thread.
  */
-const AnswerHeader = ({ ansCount, title }: AnswerHeaderProps) => (
-  <div style={{ padding: '16px', background: '#fafafa', borderRadius: '8px' }}>
-    <Row align='middle' justify='space-between' gutter={[16, 16]}>
-      <Col>
-        <Title level={4} style={{ margin: 0 }}>
-          {ansCount} {ansCount === 1 ? 'Answer' : 'Answers'}
-        </Title>
-      </Col>
-
+const AnswerHeader = ({ meta, views, title, qid, notifyList }: AnswerHeaderProps) => (
+  <div className='answer-header-container'>
+    <Row gutter={16} align='middle'>
       <Col flex='auto'>
-        <Text
-          strong
-          ellipsis={{
-            tooltip: title,
-          }}
-          style={{ fontSize: '18px', display: 'block', color: '#595959' }}>
-          {title}
+        <Title level={3}>{title}</Title>
+        <Text>
+          Asked {meta} &emsp; {views} views &emsp;{' '}
+          <NotificationCheckbox targetId={qid} notifyList={notifyList} type='question' />
         </Text>
       </Col>
-
       <Col>
         <AskQuestionButton />
       </Col>
