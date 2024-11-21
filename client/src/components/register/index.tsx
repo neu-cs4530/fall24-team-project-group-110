@@ -1,6 +1,9 @@
 import './index.css';
 import { useNavigate } from 'react-router-dom';
+import { Button, Input, Typography, Form, Space } from 'antd';
 import useRegister from '../../hooks/useRegister';
+
+const { Text } = Typography;
 
 /**
  * Register Component contains a form that allows the user to input their username and password,
@@ -26,46 +29,41 @@ const Register = () => {
     <div className='container'>
       <h2>Register Here!</h2>
       <h4>Please fill out the following fields.</h4>
-      <form onSubmit={handleSubmit}>
-        <div className='form-fields-container'>
-          <input
-            type='text'
-            value={username}
-            onChange={handleUsernameChange}
-            placeholder='Enter your username'
-            required
-            className='input-text'
-            id={'usernameInput'}
-          />
-          <input
-            type='text'
-            value={email}
-            onChange={handleEmailChange}
-            placeholder='Enter your email'
-            required
-            className='input-text'
-            id={'emailInput'}
-          />
-          <input
-            type='text'
-            value={password}
-            onChange={handlePasswordChange}
-            placeholder='Enter your password'
-            required
-            className='input-text'
-            id={'passwordInput'}
-          />
-          <p className='error-text'>{error}</p>
-          <div className='form-buttons-container'>
-            <button type='button' onClick={() => navigate('/')} className='cancel-button'>
-              Cancel
-            </button>
-            <button type='submit' className='login-button'>
+      <Form
+        layout='vertical'
+        labelCol={{ span: 8 }}
+        style={{ maxWidth: '30%' }}
+        onFinish={handleSubmit}>
+        <Form.Item
+          label='Username'
+          name={'username'}
+          rules={[{ required: true, message: 'Please input your username!' }]}>
+          <Input value={username} onChange={handleUsernameChange} />
+        </Form.Item>
+        <Form.Item
+          label='Email'
+          name={'email'}
+          rules={[{ required: true, message: 'Please input your email!' }]}>
+          <Input value={email} onChange={handleEmailChange} />
+        </Form.Item>
+        <Form.Item
+          label='Password'
+          name={'password'}
+          rules={[{ required: true, message: 'Please input your password!' }]}>
+          <Input.Password value={password} onChange={handlePasswordChange} />
+        </Form.Item>
+        <Text type='danger'>{error}</Text>
+        <Form.Item>
+          <Space>
+            <Button type='primary' htmlType='submit'>
               Submit
-            </button>
-          </div>
-        </div>
-      </form>
+            </Button>
+            <Button type='default' onClick={() => navigate('/')}>
+              Cancel
+            </Button>
+          </Space>
+        </Form.Item>
+      </Form>
     </div>
   );
 };

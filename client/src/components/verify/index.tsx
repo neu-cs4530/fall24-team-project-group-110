@@ -1,6 +1,9 @@
 import './index.css';
 import { useNavigate } from 'react-router-dom';
+import { Button, Form, Input, Typography, Space } from 'antd';
 import useVerify from '../../hooks/useVerify';
+
+const { Text } = Typography;
 
 /**
  * Verify Component contains a form that allows the user to input the code they received from their email,
@@ -16,30 +19,26 @@ const Verify = () => {
     <div className='container'>
       <h2>Verify Here!</h2>
       <h4>Please submit the code you received from your email.</h4>
-      <form onSubmit={handleSubmit}>
-        <div className='form-fields-container'>
-          <input
-            type='text'
-            value={code}
-            onChange={handleCodeChange}
-            placeholder='Enter your verification code'
-            required
-            className='input-text'
-            id={'codeInput'}
-          />
-          <p className='error-text'>{error}</p>
-          <div className='form-buttons-container'>
-            <button type='button' onClick={() => navigate('/register')} className='cancel-button'>
+      <Form layout='vertical' onFinish={handleSubmit} style={{ maxWidth: '30%' }}>
+        <Form.Item rules={[{ required: true, message: 'Please input the code!' }]}>
+          <Input.OTP length={4} value={code} onChange={handleCodeChange} />
+        </Form.Item>
+        <Text type='danger'>{error}</Text>
+        <Form.Item>
+          <Space>
+            <Button type='default' onClick={() => navigate('/register')}>
               Cancel
-            </button>
-            <button type='submit' className='login-button'>
+            </Button>
+            <Button type='primary' htmlType='submit'>
               Submit
-            </button>
-          </div>
-        </div>
-      </form>
+            </Button>
+          </Space>
+        </Form.Item>
+      </Form>
       <div>
-        <button onClick={() => handleResendCode()}>Click here to resend code</button>
+        <button className='resend-button' onClick={() => handleResendCode()}>
+          Click here to resend code
+        </button>
         <p>{resendText}</p>
       </div>
     </div>

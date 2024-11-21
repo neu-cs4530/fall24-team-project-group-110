@@ -28,11 +28,6 @@
   box-sizing: border-box;
 }
 
-.input-text:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
 .submit-button {
   padding: 10px 20px;
   font-size: 16px;
@@ -60,6 +55,8 @@
 
 .form-buttons-container {
   display: flex;
+  justify-content: space-evenly;
+  width: 15%;
 }
 
 .cancel-button {
@@ -83,4 +80,12 @@
 
 .error-text {
   color: red;
+}
+
+#register-container {
+  position: relative;
+  background-color: #f7f7f7;
+  background-size: cover;
+  background-image: linear-gradient(135deg, #ffffff, #1e1e2f);
+  height: 100vh;
 }

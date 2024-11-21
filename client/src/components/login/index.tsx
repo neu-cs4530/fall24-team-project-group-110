@@ -1,7 +1,9 @@
 import './index.css';
-import { Input } from 'antd';
+import { Button, Input, Typography, Form, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import useLogin from '../../hooks/useLogin';
+
+const { Text } = Typography;
 
 /**
  * Login Component contains a form that allows the user to input their username and password,
@@ -18,33 +20,30 @@ const Login = () => {
   return (
     <div className='container'>
       <h2>Welcome to FakeStackOverflow!</h2>
-      <h4>Please enter your username.</h4>
-      <form onSubmit={handleSubmit}>
-        <div className='form-fields-container'>
-          <Input
-            type='text'
-            value={username}
-            onChange={handleUsernameChange}
-            placeholder='Enter your username'
-            required
-            className='input-text'
-            id={'usernameInput'}
-          />
-          <Input
-            type='text'
-            value={password}
-            onChange={handlePasswordChange}
-            placeholder='Enter your password'
-            required
-            className='input-text'
-            id={'passwordInput'}
-          />
-          <p className='error-text'>{error}</p>
-          <button type='submit' className='login-button'>
+      <Form
+        layout='vertical'
+        labelCol={{ span: 8 }}
+        style={{ maxWidth: '30%' }}
+        onFinish={handleSubmit}>
+        <Form.Item
+          label='Username'
+          name={'username'}
+          rules={[{ required: true, message: 'Please input your username!' }]}>
+          <Input value={username} onChange={handleUsernameChange} />
+        </Form.Item>
+        <Form.Item
+          label='Password'
+          name='password'
+          rules={[{ required: true, message: 'Please input your password!' }]}>
+          <Input.Password value={password} onChange={handlePasswordChange} />
+        </Form.Item>
+        <Text type='danger'>{error}</Text>
+        <Form.Item>
+          <Button type='primary' htmlType='submit'>
             Submit
-          </button>
-        </div>
-      </form>
+          </Button>
+        </Form.Item>
+      </Form>
       <button className='register-button' onClick={() => navigate('/register')}>
         Don&apos;t have an account? Register here!
       </button>
