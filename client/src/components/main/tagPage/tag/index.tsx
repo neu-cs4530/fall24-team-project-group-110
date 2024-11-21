@@ -4,7 +4,7 @@ import './index.css';
 import { TagData } from '../../../../types';
 import useTagSelected from '../../../../hooks/useTagSelected';
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 /**
  * Props for the Tag component.
