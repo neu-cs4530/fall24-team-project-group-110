@@ -12,7 +12,7 @@ const Layout = () => (
     <Header />
     <div id='main' className='main'>
       <SideBarNav />
-      <div id='right_main' className='right_main'>
+      <div id='right_main' className='right_main' style={{ backgroundColor: 'whitesmoke' }}>
         <Outlet />
       </div>
     </div>

@@ -55,8 +55,8 @@ const TagView = ({ t, clickTag }: TagProps) => {
           overflow: 'hidden',
           textOverflow: 'ellipsis',
         }}>
-          {tag.name}
-        </Title>
+        {tag.name}
+      </Title>
       <span
         style={{
           display: '-webkit-box',
