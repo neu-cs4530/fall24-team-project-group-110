@@ -19,6 +19,11 @@ const useQuestionPage = () => {
   const [search, setSearch] = useState<string>('');
   const [questionOrder, setQuestionOrder] = useState<OrderType>('newest');
   const [qlist, setQlist] = useState<Question[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   useEffect(() => {
     let pageTitle = 'All Questions';
@@ -105,7 +110,7 @@ const useQuestionPage = () => {
     };
   }, [questionOrder, search, socket]);
 
-  return { titleText, qlist, setQuestionOrder };
+  return { titleText, qlist, currentPage, setQuestionOrder, handlePageChange };
 };
 
 export default useQuestionPage;
