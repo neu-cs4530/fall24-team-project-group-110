@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import useLoginContext from './useLoginContext';
 import { verify, resendCode } from '../services/authService';
 import usePreLoginContext from './usePreLoginContext';
@@ -25,15 +25,16 @@ const useVerify = () => {
    *
    * @param e - the event object.
    */
-  const handleCodeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setCode(e.target.value);
+  const handleCodeChange = (value: string) => {
+    setCode(value);
   };
 
   /**
    * Function to handle the form submission event.
+   *
+   * NOTE: WHEN SUBMIT ACTION HAPPENS VALUES PARAMETER WILL BE PASSED CONTAINING THE FORM DATA
    */
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = async () => {
     try {
       const verifiedUser = await verify(code);
       setUser(verifiedUser);

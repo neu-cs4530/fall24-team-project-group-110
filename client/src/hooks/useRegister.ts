@@ -55,10 +55,9 @@ const useRegister = () => {
    * and navigated to the home page.
    * If the registration fails, an error message will be displayed.
    *
-   * @param event - the form event object.
+   * NOTE: WHEN SUBMIT ACTION HAPPENS VALUES PARAMETER WILL BE PASSED CONTAINING THE FORM DATA
    */
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = async () => {
     try {
       const user = await addUser(username, email, password);
       setUser(user);
