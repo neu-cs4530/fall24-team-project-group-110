@@ -58,12 +58,12 @@ const QuestionView = ({ q }: QuestionProps) => {
       }}>
       <div style={{ display: 'flex', flexDirection: 'row', gap: '16px' }}>
         <div style={{ textAlign: 'center', width: '100px' }}>
-          <Text strong>{q.answers.length || 0}</Text> answers
+          <Text>{q.answers.length || 0} answers</Text>
           <br />
           <Text>{q.views.length || 0} views</Text>
         </div>
 
-        <div style={{ flex: 1 }}>
+        <div className='question-body-content'>
           <Typography.Title
             level={5}
             style={{ margin: 0, color: '#0050b3', cursor: 'pointer' }}
@@ -77,11 +77,12 @@ const QuestionView = ({ q }: QuestionProps) => {
             {q.text}
           </Paragraph>
 
-          <div className='question_tags'>
+          <div className='question-tags'>
             {q.tags.map((tag, idx) => (
               <Tag
                 key={idx}
                 color='geekblue'
+                bordered={false}
                 style={{ cursor: 'pointer', marginRight: '4px' }}
                 onClick={e => {
                   e.stopPropagation();
@@ -93,12 +94,12 @@ const QuestionView = ({ q }: QuestionProps) => {
           </div>
         </div>
 
-        <div style={{ textAlign: 'right', minWidth: '120px' }}>
-          <Text strong className='question_author'>
+        <div className='question-meta-container'>
+          <Text strong className='question-author'>
             {q.askedBy}
           </Text>
           <br />
-          <Text type='secondary' className='question_meta'>
+          <Text type='secondary' className='question-meta'>
             asked {getMetaData(new Date(q.askDateTime))}
           </Text>
         </div>

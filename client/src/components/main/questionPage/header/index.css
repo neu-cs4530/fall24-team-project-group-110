@@ -1,11 +1,7 @@
 .question-header {
-  padding: 20px;
-  background-color: #f7f7f7;
+  background-color: #f9f9f9;
   border-radius: 8px;
-}
-
-.ant-row {
-  margin-bottom: 20px;
+  padding: 0px 20px 20px 20px;
 }
 
 .ant-typography {
@@ -13,8 +9,8 @@
 }
 
 .segmented-container {
-  border: 1px solid #d9d9d9; 
+  border: 1px solid #bbbbbb; 
   border-radius: 8px; 
   padding: 4px; 
-  width: 97%;
+  width: 100%;
 }

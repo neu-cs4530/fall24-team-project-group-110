@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Typography, Layout, Spin, Pagination } from 'antd';
 import './index.css';
 import QuestionHeader from './header';
@@ -15,27 +15,21 @@ const { Content } = Layout;
  * It includes a header with order buttons and a button to ask a new question.
  */
 const QuestionPage = () => {
-  const { titleText, qlist, setQuestionOrder } = useQuestionPage();
+  const { titleText, qlist, currentPage, setQuestionOrder, handlePageChange } = useQuestionPage();
   const { socket } = useUserContext();
 
-  const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 15;
+  const startIdx = (currentPage - 1) * pageSize;
+  const currentQuestions = qlist.slice(startIdx, startIdx + pageSize);
 
   useEffect(() => {
     socket.disconnect();
     socket.connect();
   }, [socket]);
 
-  const startIdx = (currentPage - 1) * pageSize;
-  const currentQuestions = qlist.slice(startIdx, startIdx + pageSize);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
   return (
     <Layout className='question-page'>
-      <Content style={{ padding: '20px' }}>
+      <Content className='question-content'>
         <QuestionHeader
           titleText={titleText}
           qcnt={qlist.length}
@@ -54,14 +48,16 @@ const QuestionPage = () => {
             </div>
           )}
         </div>
-        <Pagination
-          current={currentPage}
-          pageSize={pageSize}
-          total={qlist.length}
-          showQuickJumper
-          onChange={handlePageChange}
-          className='pagination'
-        />
+        <div className='pagination'>
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={qlist.length}
+            showQuickJumper
+            showSizeChanger={false}
+            onChange={handlePageChange}
+          />
+        </div>
       </Content>
     </Layout>
   );
