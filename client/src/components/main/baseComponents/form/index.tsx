@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import './index.css';
-import { Card } from 'antd';
+import { Form as AntdForm } from 'antd';
 
 /**
  * Interface representing the props for the Form component.
@@ -18,9 +18,9 @@ interface FormProps {
  * @param children The React nodes to be displayed inside the form container.
  */
 const Form: React.FC<FormProps> = ({ children }) => (
-  <Card className='form-card' bordered={true}>
+  <AntdForm className='form-card' layout='vertical'>
     {children}
-  </Card>
+  </AntdForm>
 );
 
 export default Form;
