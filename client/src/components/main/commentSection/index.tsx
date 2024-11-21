@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button, Input, List, Typography, Collapse, Space } from 'antd';
-import { getMetaData } from '../../../tool';
+import { Button, Input, List, Typography, Collapse, Alert } from 'antd';
+import { getMetaData, handleHyperlink } from '../../../tool';
 import { Comment } from '../../../types';
 import './index.css';
 import useUserContext from '../../../hooks/useUserContext';
@@ -54,17 +54,19 @@ const CommentSection = ({ comments, handleAddComment }: CommentSectionProps) => 
   return (
     <div className='comment-section'>
       <Collapse>
-        <Panel header={`${comments.length} Comment(s)`} key='1'>
+        <Panel
+          header={`${comments.length} ${comments.length === 1 ? 'Comment' : 'Comments'}`}
+          key='1'>
           <List
             dataSource={comments}
             renderItem={comment => (
               <List.Item className='comment-item'>
-                <Space direction='vertical'>
-                  <Paragraph className='comment-text'>{comment.text}</Paragraph>
+                <Paragraph className='comment-text'>
+                  {handleHyperlink(comment.text)}
                   <Text type='secondary' className='comment-meta'>
-                    {comment.commentBy}, {getMetaData(new Date(comment.commentDateTime))}
+                    - {comment.commentBy}, {getMetaData(new Date(comment.commentDateTime))}
                   </Text>
-                </Space>
+                </Paragraph>
               </List.Item>
             )}
             locale={{ emptyText: <Text italic>No comments yet.</Text> }}
@@ -78,7 +80,9 @@ const CommentSection = ({ comments, handleAddComment }: CommentSectionProps) => 
               rows={3}
               className='comment-textarea'
             />
-            {textErr && <Text type='danger'>{textErr}</Text>}
+            {textErr && (
+              <Alert message={textErr} type='error' showIcon={true} className='add-comment-error' />
+            )}
             <Button type='primary' onClick={handleAddCommentClick} className='add-comment-button'>
               Add Comment
             </Button>
