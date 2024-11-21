@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge, Button, Dropdown, Menu, Space } from 'antd';
+import { Badge, Button, Dropdown, List, Space } from 'antd';
 import { FaBell, FaTrash } from 'react-icons/fa';
 import { getMetaData } from '../../../tool';
 import useNotification from '../../../hooks/useNotification';
@@ -9,75 +9,68 @@ const NotificationDropdown = () => {
   const {
     isNotifOpen,
     nlist,
-    dropdownRef,
     handleToggle,
     navigateNotification,
     handleDeleteAllNotifications,
     handleDeleteNotification,
   } = useNotification();
 
-  const menu = (
-    <Menu>
+  const menuContent = (
+    <div className='notification-dropdown'>
       {nlist.length > 0 ? (
         <>
-          <Menu.Item key='clear' onClick={handleDeleteAllNotifications}>
-            Clear All
-          </Menu.Item>
-          {nlist.map((n, idx) => (
-            <Menu.Item key={idx} onClick={() => navigateNotification(n)}>
-              <Space>
-                {n.text}
-                <span className='notification-time'>{getMetaData(new Date(n.dateTime))}</span>
-              </Space>
-            </Menu.Item>
-          ))}
+          <div className='notification-header'>
+            <Button
+              type='link'
+              danger
+              onClick={handleDeleteAllNotifications}
+              className='clear-all-button'>
+              Clear All
+            </Button>
+          </div>
+          <List
+            className='notification-list'
+            dataSource={nlist}
+            renderItem={n => (
+              <List.Item className='notification-item' onClick={() => navigateNotification(n)}>
+                <Space>
+                  {n.text}
+                  <span className='notification-time'>{getMetaData(new Date(n.dateTime))}</span>
+                </Space>
+                <Button
+                  className='trash-button'
+                  shape='circle'
+                  onClick={e => {
+                    e.stopPropagation();
+                    if (n._id) {
+                      handleDeleteNotification(n._id);
+                    }
+                  }}>
+                  <FaTrash className='trash-icon' />
+                </Button>
+              </List.Item>
+            )}
+          />
         </>
       ) : (
-        <Menu.Item disabled>No notifications</Menu.Item>
+        <div className='notification-none'>No notifications</div>
       )}
-    </Menu>
+    </div>
   );
 
   return (
-    <div className='notification-container' ref={dropdownRef}>
-      <div className='notification-icon' onClick={handleToggle}>
-        <FaBell />
-        {nlist.length > 0 && <span className='notification-badge'>{nlist.length}</span>}
-      </div>
-      {isNotifOpen && (
-        <div className='dropdown active'>
-          {nlist.length > 0 ? (
-            <>
-              <button className='notification-clear-button' onClick={handleDeleteAllNotifications}>
-                Clear All
-              </button>
-              <ul className='notification-list'>
-                {nlist.map((n, idx) => (
-                  <li className='notification-item-container' key={idx}>
-                    <div
-                      key={idx}
-                      className='notification-item'
-                      onClick={() => navigateNotification(n)}>
-                      {n.text}{' '}
-                      <span className='notification-time'>{getMetaData(new Date(n.dateTime))}</span>
-                    </div>
-                    <FaTrash
-                      className='trash-icon'
-                      onClick={() => n._id && handleDeleteNotification(n._id)}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </>
-          ) : (
-            <div className='notification-none'>No notifications</div>
-          )}
+    <div className='notification-container'>
+      <Dropdown
+        className='custom-dropdown-trigger'
+        dropdownRender={() => menuContent}
+        trigger={['click']}
+        open={isNotifOpen}
+        onOpenChange={handleToggle}>
+        <div>
+          <Badge count={nlist.length} offset={[-2, 2]} overflowCount={99} size='small' color='red'>
+            <FaBell className='notification-icon' />
+          </Badge>
         </div>
-      )}
-      <Dropdown overlay={menu} trigger={['click']}>
-        <Button icon={<FaBell />} className='notification-icon' shape='circle' size='large'>
-          {nlist.length > 0 && <Badge count={nlist.length} />}
-        </Button>
       </Dropdown>
     </div>
   );
