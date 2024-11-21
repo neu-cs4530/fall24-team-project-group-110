@@ -15,7 +15,9 @@ const TagPage = () => {
   const { tlist, clickTag } = useTagPage();
 
   return (
-    <div style={{ padding: '24px' }} className='tag-container'>
+    <div
+      style={{ padding: '24px', maxWidth: '1200px', margin: '0 auto' }}
+      className='tag-container'>
       <Row justify='space-between' align='middle' style={{ marginBottom: '16px' }}>
         <Title level={4} style={{ margin: 0 }}>
           {tlist.length} Tags
