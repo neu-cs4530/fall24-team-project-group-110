@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Typography, Layout, Spin, Pagination } from 'antd';
+import { Typography, Layout, Pagination } from 'antd';
 import './index.css';
 import QuestionHeader from './header';
 import QuestionView from './question';
@@ -40,11 +40,7 @@ const QuestionPage = () => {
             currentQuestions.map((q, idx) => <QuestionView q={q} key={idx} />)
           ) : (
             <div className='no-questions'>
-              {titleText === 'Search Results' ? (
-                <Text className='bold_title'>No Questions Found</Text>
-              ) : (
-                <Spin size='large' />
-              )}
+              <Text className='bold_title'>No Questions Found</Text>
             </div>
           )}
         </div>
