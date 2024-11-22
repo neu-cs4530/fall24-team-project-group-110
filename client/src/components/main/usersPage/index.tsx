@@ -35,6 +35,10 @@ const UsersPage = () => {
     if (e.key === 'Enter') {
       e.preventDefault();
 
+      if (!search) {
+        return;
+      }
+
       const searchParams = new URLSearchParams();
       searchParams.set('search', e.currentTarget.value);
 
