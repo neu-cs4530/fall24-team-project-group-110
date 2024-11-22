@@ -53,7 +53,7 @@ const ConversationPage = () => {
           <Space direction='vertical' className='new-conversation'>
             <Space>
               <Input
-                placeholder='Enter usernames separated by commas'
+                placeholder='Enter a username'
                 value={newParticipant}
                 onChange={e => setNewParticipant(e.target.value)}
                 className='conversation-input'
