@@ -62,7 +62,7 @@ const ConversationPage = () => {
                 Add User
               </Button>
             </Space>
-            <Space direction='vertical'>
+            <Space direction='vertical' className='added-participants-list'>
               {participants.map((p, idx) => (
                 <Space key={idx}>
                   <Input className='added-participant' value={p} disabled />
