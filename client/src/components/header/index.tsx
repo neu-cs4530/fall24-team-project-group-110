@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Dropdown, Input, MenuProps, Typography } from 'antd';
+import { Avatar, Dropdown, Input, MenuProps, Typography, Modal } from 'antd';
 import { FaConnectdevelop } from 'react-icons/fa';
 import { CiSearch } from 'react-icons/ci';
 import { IoLogOutOutline } from 'react-icons/io5';
@@ -12,6 +12,7 @@ import useUserContext from '../../hooks/useUserContext';
 import NotificationDropdown from './notificationDropdown';
 
 const { Title } = Typography;
+const { confirm } = Modal;
 
 /**
  * Header component that renders the main title and a search bar.
@@ -22,6 +23,22 @@ const Header = () => {
   const { val, handleInputChange, handleKeyDown, handleLogout } = useHeader();
   const { user } = useUserContext();
   const navigate = useNavigate();
+
+  const showLogoutConfirm = () => {
+    confirm({
+      title: 'Are you sure you want to logout?',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        handleLogout();
+      },
+      onCancel() {
+        // eslint-disable-next-line no-console
+        console.log('OK');
+      },
+    });
+  };
 
   const menuItems: MenuProps['items'] = [
     {
@@ -48,7 +65,7 @@ const Header = () => {
     {
       key: 'logout',
       label: (
-        <div onClick={handleLogout} className='dropdown-item'>
+        <div onClick={showLogoutConfirm} className='dropdown-item'>
           <span className='dropdown-align'>
             <IoLogOutOutline className='dropdown-icon' />
             <span>Logout</span>
@@ -72,7 +89,7 @@ const Header = () => {
       <Input
         id='searchBar'
         addonBefore={<CiSearch />}
-        placeholder='Search ...'
+        placeholder='Search for questions...'
         type='text'
         value={val}
         onChange={handleInputChange}
@@ -87,10 +104,10 @@ const Header = () => {
           placement='bottomRight'
           arrow={{ pointAtCenter: true }}>
           <Avatar
-            size={48}
-            shape='square'
+            size={36}
+            shape='circle'
             src={user.picture}
-            icon={!user.picture && <FaCircleUser />}
+            icon={!user.picture && <FaCircleUser size={'10x'} color='#1e1e2f' />}
             alt={`${user.username} profile`}
             className='profile-avatar'
           />

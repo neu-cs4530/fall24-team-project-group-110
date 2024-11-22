@@ -1,18 +1,14 @@
 .user-header {
-  margin-bottom: 16px;
   display: flex;
+  flex-direction: column;
   gap: 8px;
   justify-content: space-between;
-  align-items: center;
 }
 
-.ant-input {
-  border-radius: 8px; 
-  height: 40px;
+.subheading {
+  margin-top: 8px;
 }
 
-.ant-btn-primary {
-  border-radius: 8px;
-  height: 40px;
-  font-size: 14px;
+.search-input {
+  width: 400px;
 }

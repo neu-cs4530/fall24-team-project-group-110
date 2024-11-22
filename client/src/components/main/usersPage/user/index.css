@@ -1,36 +1,28 @@
-.ant-card {
-  border-radius: 12px; 
+.user-card-style {
+  text-align: center;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  background: #ffffff; 
+  padding: 0px 16px 0px 16px;
+}
+
+.user-card-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-avator-style {
+  margin-right: 12px;
+  border: 2px solid #f0f2f5;
+  object-fit: cover;
+}
+
+.user-card-first-last-name {
+  text-align: left;
 }
 
 .ant-card:hover {
-  transform: translateY(-4px); 
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-}
-
-.ant-card-body {
-  text-align: center; 
-  padding: 16px;
-}
-
-.ant-avatar {
-  margin-bottom: 8px;
-  border: 2px solid #e0e0e0;
-}
-
-.ant-avatar img {
-  object-fit: cover; 
-}
-
-.user-meta-name {
-  font-size: 14px;
-  color: #888;
-  margin-top: 4px;
-}
-
-.ant-empty {
-  margin-top: 40px;
-  font-size: 16px;
-  color: #888; 
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }

@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { List } from 'antd';
+import React, { useState, KeyboardEvent, ChangeEvent } from 'react';
+import { Layout, List } from 'antd';
+import { Content } from 'antd/es/layout/layout';
+import './index.css';
 import { useNavigate } from 'react-router-dom';
 import { User } from '../../../types';
 import { getUsers } from '../../../services/userService';
@@ -25,21 +27,44 @@ const UsersPage = () => {
     }
   };
 
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+
+      if (!search) {
+        return;
+      }
+
+      const searchParams = new URLSearchParams();
+      searchParams.set('search', e.currentTarget.value);
+
+      navigate(`/users?${searchParams.toString()}`);
+
+      handleSearch();
+    }
+  };
+
   return (
-    <div className='users-container'>
-      <UserHeader search={search} setSearch={setSearch} onSearch={handleSearch} />
-      <List
-        className='users-list'
-        grid={{ gutter: 16, column: 3 }}
-        dataSource={ulist}
-        renderItem={user => (
-          <List.Item>
-            <UserView user={user} onClick={() => navigateProfile(user)} />
-          </List.Item>
-        )}
-        locale={{ emptyText: <div className='ant-empty'>Search for users</div> }}
-      />
-    </div>
+    <Layout className='users-layout'>
+      <Content className='users-content'>
+        <UserHeader search={search} onSearch={handleInputChange} onKeyDown={handleKeyDown} />
+        <List
+          className='users-list'
+          grid={{ gutter: 16, column: 4 }}
+          dataSource={ulist}
+          renderItem={user => (
+            <List.Item>
+              <UserView user={user} onClick={() => navigateProfile(user)} />
+            </List.Item>
+          )}
+          locale={{ emptyText: <div className='ant-empty'>Search for users</div> }}
+        />
+      </Content>
+    </Layout>
   );
 };
 
