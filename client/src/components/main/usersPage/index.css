@@ -1,14 +1,33 @@
-.users-container {
+.users-layout {
   display: flex;
   flex-direction: column;
-  padding: 16px;
-  background-color: #f0f2f5; /* Light gray background for the page */
-  min-height: 100vh;
+  background-color: #1e1e2f;
+  height: 100%;
+}
+
+.users-content {
+  flex-grow: 1;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 0px 20px;
 }
 
 .users-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* Responsive grid layout */
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
   gap: 16px;
   padding: 16px 0;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ant-empty {
+  text-align: center;
+  font-size: 16px;
+  color: #888; 
+  margin-top: 40px;
 }
