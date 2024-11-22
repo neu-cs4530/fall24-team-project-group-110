@@ -37,11 +37,13 @@
 .bubble-sender {
   background-color: #cce7ff;
   color: #003366;
+  border-bottom-right-radius: 0;
 }
 
 .bubble-receiver {
   background-color: #e8e8e8;
   color: #333;
+  border-bottom-left-radius: 0;
 }
 
 .meta-text {
