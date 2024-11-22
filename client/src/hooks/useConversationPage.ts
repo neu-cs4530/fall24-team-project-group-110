@@ -10,7 +10,8 @@ const useConversationPage = () => {
   const { user, socket } = useUserContext();
   const [clist, setClist] = useState<Conversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<string>('');
-  const [participants, setParticipants] = useState<string>('');
+  const [participants, setParticipants] = useState<string[]>([]);
+  const [newParticipant, setNewParticipant] = useState<string>('');
   const [notifyList, setNotifyList] = useState<string[]>([]);
   const [textErr, setTextErr] = useState<string>('');
 
@@ -21,20 +22,22 @@ const useConversationPage = () => {
     }
   };
 
+  const handleDeleteParticipant = (index: number) => {
+    setParticipants(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleAddParticipant = () => {
+    if (!newParticipant) return;
+
+    setParticipants(prev => [...prev, newParticipant]);
+    setNewParticipant('');
+  };
+
   /**
    * Function to handle creating a new conversation
    */
   const handleCreateConversation = async () => {
     if (!participants) return;
-
-    const participantsArray = Array.from(
-      new Set(
-        participants
-          .split(',')
-          .map(name => name.trim())
-          .filter(name => user.username !== name),
-      ),
-    );
 
     if (participants.length === 0) {
       setTextErr('Cannot create chat with no users');
@@ -42,15 +45,17 @@ const useConversationPage = () => {
     }
 
     const newConversation: NewConversationPayload = {
-      participants: [...participantsArray, user.username],
+      participants: [...participants, user.username],
     };
 
     try {
       await addConversation(newConversation);
-      setParticipants('');
+      setParticipants([]);
+      setTextErr('');
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error adding conversation:', error);
+      setTextErr('Error creating conversation');
     }
   };
 
@@ -114,12 +119,15 @@ const useConversationPage = () => {
     clist,
     selectedConversation,
     participants,
-    setParticipants,
     notifyList,
     setNotifyList,
     textErr,
     navigateChat,
     handleCreateConversation,
+    newParticipant,
+    handleAddParticipant,
+    setNewParticipant,
+    handleDeleteParticipant,
   };
 };
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Input, Layout, List, Space, Typography } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import Sider from 'antd/es/layout/Sider';
+import { FaTrash } from 'react-icons/fa';
 import './index.css';
 import useConversationPage from '../../../hooks/useConversationPage';
 import ChatSection from '../chatSection';
@@ -18,11 +19,17 @@ const ConversationPage = () => {
     clist,
     selectedConversation,
     participants,
-    setParticipants,
     textErr,
     navigateChat,
     handleCreateConversation,
+    newParticipant,
+    handleAddParticipant,
+    setNewParticipant,
+    handleDeleteParticipant,
   } = useConversationPage();
+
+  const getTruncatedMessage = (message: string) =>
+    message.length > 15 ? `${message.substring(0, 15)}...` : message;
 
   return (
     <Layout className='conversation-page'>
@@ -44,12 +51,30 @@ const ConversationPage = () => {
             Chats
           </Title>
           <Space direction='vertical' className='new-conversation'>
-            <Input
-              placeholder='Enter usernames separated by commas'
-              value={participants}
-              onChange={e => setParticipants(e.target.value)}
-              className='conversation-input'
-            />
+            <Space>
+              <Input
+                placeholder='Enter a username'
+                value={newParticipant}
+                onChange={e => setNewParticipant(e.target.value)}
+                className='conversation-input'
+              />
+              <Button onClick={handleAddParticipant} className='add-user-button' type='primary'>
+                Add User
+              </Button>
+            </Space>
+            <Space direction='vertical' className='added-participants-list'>
+              {participants.map((p, idx) => (
+                <Space key={idx}>
+                  <Input className='added-participant' value={p} disabled />
+                  <Button
+                    className='delete-participant-button'
+                    type='primary'
+                    onClick={() => handleDeleteParticipant(idx)}>
+                    <FaTrash />
+                  </Button>
+                </Space>
+              ))}
+            </Space>
             <Button type='primary' onClick={handleCreateConversation} block>
               Create Conversation
             </Button>
@@ -60,6 +85,7 @@ const ConversationPage = () => {
             renderItem={(c, idx) => (
               <List.Item key={idx} className='conversation-item' onClick={() => navigateChat(c)}>
                 <List.Item.Meta
+                  className='conversation-meta-container'
                   title={
                     <Text className='conversation-title'>
                       {c.participants
@@ -70,7 +96,8 @@ const ConversationPage = () => {
                   }
                   description={
                     <Text className='conversation-meta'>
-                      {c.lastMessage} • {getMetaData(new Date(c.updatedAt))}
+                      {c.lastMessage && `${getTruncatedMessage(c.lastMessage)} • `}
+                      {getMetaData(new Date(c.updatedAt))}
                     </Text>
                   }
                 />
