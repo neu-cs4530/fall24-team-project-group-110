@@ -36,7 +36,10 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+}
+
+.new-conversation {
+  width: 100%;
 }
 
 .new-conversation .conversation-input {
@@ -72,4 +75,30 @@
 .ant-typography-danger {
   font-size: 0.85rem;
   text-align: center;
+}
+
+.conversation-meta-container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.add-user-button {
+  background-color: #5cb85c;
+}
+
+.add-user-button:hover {
+  background-color: #84d384 !important;
+}
+
+.delete-participant-button {
+  background-color: #d9534f;
+}
+
+.delete-participant-button:hover {
+  background-color: #e08b8b !important;
+}
+
+.added-participant {
+  background-color: #ffffff !important;
+  color: #000000 !important;
 }
