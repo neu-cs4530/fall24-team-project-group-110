@@ -1,4 +1,5 @@
 import { User } from '../../../../types';
+import './index.css';
 
 interface EditProfileProps {
   profile: User;

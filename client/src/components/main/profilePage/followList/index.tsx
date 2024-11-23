@@ -1,26 +1,29 @@
 import React from 'react';
+import { List } from 'antd';
 import { User } from '../../../../types';
+import UserView from '../../usersPage/user';
+import './index.css';
 
 interface FollowListProps {
-  profile: User;
+  emptyTitle: string;
   follows: User[];
   navigateProfile: (uid: string) => void;
 }
 
-const FollowList = ({ profile, follows, navigateProfile }: FollowListProps) => (
-  <ul>
-    {follows.map((u, idx) => (
-      <li key={idx} className='short-user-profile' onClick={() => navigateProfile(u._id)}>
-        <div>
-          {u.picture}
-          <div>{u.username}</div>
-          <div>
-            {u.firstName} {u.lastName}
-          </div>
-        </div>
-      </li>
-    ))}
-  </ul>
+const FollowList = ({ emptyTitle, follows, navigateProfile }: FollowListProps) => (
+  <div className='follow-container'>
+    <List
+      className='users-list'
+      grid={{ gutter: 16, column: 4 }}
+      dataSource={follows}
+      renderItem={user => (
+        <List.Item>
+          <UserView user={user} onClick={() => navigateProfile(user._id)} />
+        </List.Item>
+      )}
+      locale={{ emptyText: <div className='follow-empty'> {emptyTitle} </div> }}
+    />
+  </div>
 );
 
 export default FollowList;
