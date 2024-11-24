@@ -32,6 +32,17 @@
   border-left: 1px solid #444;
 }
 
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-title {
+  color: #ffffff;
+  margin: 0;
+}
+
 .sidebar-content {
   height: 100%;
   display: flex;
@@ -39,67 +50,20 @@
   overflow-y: scroll;
 }
 
-.new-conversation {
-  width: 100%;
-}
-
-.new-conversation .conversation-input {
-  border-radius: 8px;
-}
-
-.new-conversation .ant-btn {
-  border-radius: 8px;
-}
-
-.conversation-item {
-  background-color: #3a3a50;
-  border-radius: 8px;
-  margin-bottom: 8px;
+.create-convo-button-icon {
+  font-size: 1.5rem;
+  color: #5cb85c;
   cursor: pointer;
-  transition: background-color 0.3s;
+  margin-left: 8px;
 }
 
-.conversation-item:hover {
-  background-color: #4a4a60;
-}
-
-.conversation-title {
-  color: #ffffff;
-  font-weight: bold;
-}
-
-.conversation-meta {
-  color: #b0b0b0;
-  font-size: 0.9em;
+.create-convo-button-icon:hover {
+  color: #84d384;
+  transform: scale(1.1);
+  transition: color 0.3s, transform 0.3s;
 }
 
 .ant-typography-danger {
   font-size: 0.85rem;
   text-align: center;
-}
-
-.conversation-meta-container {
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-.add-user-button {
-  background-color: #5cb85c;
-}
-
-.add-user-button:hover {
-  background-color: #84d384 !important;
-}
-
-.delete-participant-button {
-  background-color: #d9534f;
-}
-
-.delete-participant-button:hover {
-  background-color: #e08b8b !important;
-}
-
-.added-participant {
-  background-color: #ffffff !important;
-  color: #000000 !important;
 }

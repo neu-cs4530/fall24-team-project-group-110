@@ -119,6 +119,7 @@ const useConversationPage = () => {
     clist,
     selectedConversation,
     participants,
+    setParticipants,
     notifyList,
     setNotifyList,
     textErr,

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, List, Space, Typography } from 'antd';
-import TextArea from 'antd/es/input/TextArea';
-import { IoSendOutline } from 'react-icons/io5';
+import { List, Space, Typography } from 'antd';
 import { getMetaData } from '../../../tool';
 import useMessagePage from '../../../hooks/useMessagePage';
 import './index.css';
-import NotificationCheckbox from '../notificationCheckbox';
 import { getConversationById } from '../../../services/conversationService';
+import ChatHeader from './chatHeader';
+import ChatSend from './chatSendFooter';
 
 const { Text } = Typography;
 
@@ -48,23 +47,24 @@ const ChatSection = ({ conversationId }: ChatSectionProps) => {
 
   return (
     <div className='chat-section'>
+      <ChatHeader cid={conversationId} notifyList={notifyList} />
       <List
         className='message-list'
-        dataSource={messages}
+        dataSource={[...messages]}
         renderItem={(m, idx) => (
           <List.Item
             key={idx}
-            className={`message-item ${
-              user.username === m.sender.username ? 'sender' : 'receiver'
-            }`}>
+            style={{ border: 'none' }}
+            className={`message-item ${user._id === m.sender._id ? 'sender' : 'receiver'}`}>
             <Space
               direction='vertical'
               className={`message-bubble ${
-                user.username === m.sender.username ? 'bubble-sender' : 'bubble-receiver'
+                user._id === m.sender._id ? 'bubble-sender' : 'bubble-receiver'
               }`}>
               <Text>{m.text}</Text>
-              <Text className='meta-text'>
-                {m.sender.username}, {getMetaData(new Date(m.sentAt))}
+              <Text
+                className={`${user._id === m.sender._id ? 'meta-text-sender' : 'meta-text-receiver'}`}>
+                {m.sender.username} • {getMetaData(new Date(m.sentAt))}
               </Text>
             </Space>
           </List.Item>
@@ -72,33 +72,12 @@ const ChatSection = ({ conversationId }: ChatSectionProps) => {
         <div ref={messagesEndRef} />
       </List>
 
-      <div className='send-message-container'>
-        <TextArea
-          placeholder='Message...'
-          value={message}
-          onChange={e => setMessage(e.target.value)}
-          autoSize={{ minRows: 1, maxRows: 4 }}
-          className='message-input'
-        />
-        <Button
-          type='primary'
-          icon={<IoSendOutline />}
-          onClick={handleNewMessage}
-          disabled={!message.trim()}
-          className='send-button'>
-          Send
-        </Button>
-        <NotificationCheckbox
-          targetId={conversationId}
-          notifyList={notifyList}
-          type='conversation'
-        />
-      </div>
-      {textErr && (
-        <Text type='danger' className='error-text'>
-          {textErr}
-        </Text>
-      )}
+      <ChatSend
+        message={message}
+        setMessage={setMessage}
+        handleNewMessage={handleNewMessage}
+        textErr={textErr}
+      />
     </div>
   );
 };

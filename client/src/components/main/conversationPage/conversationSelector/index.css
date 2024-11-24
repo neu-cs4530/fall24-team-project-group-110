@@ -1,0 +1,25 @@
+.conversation-selector {
+  width: 100%
+}
+
+.convo-user-search-bar {
+  border-radius: 8px;
+}
+
+.convo-users-list {
+  border-radius: 8px;
+  max-height: 400px;
+  overflow-y: auto;
+  background-color: #f5f5f5;
+}
+
+.convo-users-list .user-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.3s ease;
+}
+
+.conversation-selector .user-item.selected {
+  background-color: #e6f7ff;
+}
