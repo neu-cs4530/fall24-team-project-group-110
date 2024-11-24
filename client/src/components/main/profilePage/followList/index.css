@@ -1,0 +1,17 @@
+.follow-container {
+  padding: 0px 20px;
+}
+
+.users-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.follow-empty {
+  text-align: center;
+  font-size: 16px;
+  color: #888; 
+  margin-top: 40px;
+}

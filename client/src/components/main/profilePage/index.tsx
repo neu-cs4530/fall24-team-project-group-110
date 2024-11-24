@@ -32,6 +32,17 @@ const ProfilePage = () => {
     setActiveTab(tab);
   };
 
+  const getEmptyTitle = (type: 'followers' | 'following') => {
+    if (type === 'followers') {
+      return canEdit
+        ? "You don't have any followers yet"
+        : `${profile.username} doesn't have any followers yet`;
+    }
+    return canEdit
+      ? "You're not following anyone yet"
+      : `${profile.username} isn't following anyone yet`;
+  };
+
   return (
     <div className='tab-container'>
       <div className='tablinks'>
@@ -69,14 +80,14 @@ const ProfilePage = () => {
         )}
         {activeTab === 'followers' && (
           <FollowList
-            profile={profile}
+            emptyTitle={getEmptyTitle('followers')}
             follows={profile.followers}
             navigateProfile={navigateProfile}
           />
         )}
         {activeTab === 'following' && (
           <FollowList
-            profile={profile}
+            emptyTitle={getEmptyTitle('following')}
             follows={profile.following}
             navigateProfile={navigateProfile}
           />

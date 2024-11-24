@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { User } from '../../../../types';
 import FollowComponent from '../../followComponent';
+import './index.css';
 
 interface ViewProfileProps {
   profile: User;
