@@ -37,6 +37,10 @@ const useProfilePage = () => {
     navigate(`/profile/${targetId}`);
   };
 
+  const handleCancelEdit = () => {
+    setProfile(user);
+  };
+
   const saveProfile = async () => {
     if (profile) {
       try {
@@ -88,6 +92,7 @@ const useProfilePage = () => {
     setActiveTab,
     navigateProfile,
     saveProfile,
+    handleCancelEdit,
   };
 };
 

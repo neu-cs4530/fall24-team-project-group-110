@@ -16,6 +16,7 @@ const ProfilePage = () => {
     setActiveTab,
     navigateProfile,
     saveProfile,
+    handleCancelEdit,
   } = useProfilePage();
   const [editing, setEditing] = useState<boolean>(false);
 
@@ -70,7 +71,10 @@ const ProfilePage = () => {
               <EditProfile
                 profile={profile}
                 setProfile={setProfile}
-                onCancel={() => setEditing(false)}
+                onCancel={() => {
+                  handleCancelEdit();
+                  setEditing(false);
+                }}
                 onSave={() => handleSave()}
               />
             ) : (
