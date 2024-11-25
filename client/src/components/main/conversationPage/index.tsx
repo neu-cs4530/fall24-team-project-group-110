@@ -6,7 +6,7 @@ import { IoCreateOutline } from 'react-icons/io5';
 import './index.css';
 import useConversationPage from '../../../hooks/useConversationPage';
 import ChatSection from '../chatSection';
-import ConversationView from './conversation';
+import ConversationView from './conversationView';
 import ConversationSelector from './conversationSelector';
 import { User } from '../../../types';
 

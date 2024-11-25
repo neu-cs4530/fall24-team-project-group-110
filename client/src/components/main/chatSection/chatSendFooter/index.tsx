@@ -4,14 +4,19 @@ import TextArea from 'antd/es/input/TextArea';
 import { IoSendOutline } from 'react-icons/io5';
 import './index.css';
 
-interface ChatSendProps {
+interface ChatSendFooterProps {
   message: string;
   setMessage: (value: string) => void;
   handleNewMessage: () => void;
   textErr?: string;
 }
 
-const ChatSend = ({ message, setMessage, handleNewMessage, textErr }: ChatSendProps) => (
+const ChatSendFooter = ({
+  message,
+  setMessage,
+  handleNewMessage,
+  textErr,
+}: ChatSendFooterProps) => (
   <div className='chat-footer-container'>
     <TextArea
       className='message-input'
@@ -34,4 +39,4 @@ const ChatSend = ({ message, setMessage, handleNewMessage, textErr }: ChatSendPr
   </div>
 );
 
-export default ChatSend;
+export default ChatSendFooter;

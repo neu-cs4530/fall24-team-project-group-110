@@ -5,7 +5,7 @@ import useMessagePage from '../../../hooks/useMessagePage';
 import './index.css';
 import { getConversationById } from '../../../services/conversationService';
 import ChatHeader from './chatHeader';
-import ChatSend from './chatSendFooter';
+import ChatSendFooter from './chatSendFooter';
 
 const { Text } = Typography;
 
@@ -50,7 +50,7 @@ const ChatSection = ({ conversationId }: ChatSectionProps) => {
       <ChatHeader cid={conversationId} notifyList={notifyList} />
       <List
         className='message-list'
-        dataSource={[...messages]}
+        dataSource={messages}
         renderItem={(m, idx) => (
           <List.Item
             key={idx}
@@ -72,7 +72,7 @@ const ChatSection = ({ conversationId }: ChatSectionProps) => {
         <div ref={messagesEndRef} />
       </List>
 
-      <ChatSend
+      <ChatSendFooter
         message={message}
         setMessage={setMessage}
         handleNewMessage={handleNewMessage}
