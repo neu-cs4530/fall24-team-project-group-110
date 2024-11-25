@@ -55,6 +55,7 @@ const ChatHeader = ({ cid, notifyList }: ChatHeaderProps) => {
             onClick={toggleSettingsClick}
             icon={
               <CiSettings
+                size={30}
                 style={{
                   transform: isSpinning ? 'rotate(360deg)' : 'rotate(0deg)',
                   transition: 'transform 0.5s ease',
