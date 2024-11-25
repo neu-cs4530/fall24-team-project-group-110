@@ -457,10 +457,6 @@ export const populateConversation = async (
         path: 'participants',
         model: UserModel,
       },
-      {
-        path: 'notifyList',
-        model: UserModel,
-      },
     ]);
     if (!result) {
       throw new Error('Failed to fetch and populate conversation');
