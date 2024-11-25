@@ -3,6 +3,7 @@ import { Avatar, List, Tooltip, Typography } from 'antd';
 import './index.css';
 import { Conversation, User } from '../../../../types';
 import { getMetaData } from '../../../../tool';
+import CustomAvatar from '../../../customAvatar';
 
 const { Text } = Typography;
 
@@ -22,9 +23,7 @@ const ConversationView = ({ clist, user, navigateChat }: ConversationViewProps) 
   const filterParticipants = (participants: User[]) => participants.filter(p => p._id !== user._id);
 
   const renderAvatar = (p: User, idx: number, size: number) => (
-    <Avatar key={idx} size={size} src={p.picture} alt={p.username}>
-      {!p.picture && p.username.charAt(0).toUpperCase()}
-    </Avatar>
+    <CustomAvatar key={idx} user={p} size={size} />
   );
 
   const renderAvatarGroup = (participants: User[]) => {
