@@ -2,20 +2,34 @@
   display: flex;
   flex-direction: column;
   padding: 1rem;
+  background: white; 
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 .basic-picture-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
   margin-top: 20px;
 }
 
 .basic-container {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  flex: 1;
 }
+
+.profile-picture {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 3px solid #007bff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+}
+
 
 .image-container {
   display: flex;
@@ -41,4 +55,40 @@
 .view-buttons-container {
   display: flex;
   justify-content: center;
+}
+
+
+.label {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #007bff;
+  margin-right: 0.5rem;
+  display: inline-block;
+}
+
+.value {
+  font-size: 1rem;
+  color: #333;
+}
+
+.bio-container h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 0.5rem;
+}
+
+.bio-container p {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.5;
+}
+
+.basic-container div {
+  margin-bottom: 1rem;
+}
+
+.label:hover {
+  text-decoration: underline;
+  cursor: default;
 }

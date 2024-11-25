@@ -1,3 +1,4 @@
+import { Switch } from 'antd';
 import { User } from '../../../../types';
 import './index.css';
 
@@ -40,17 +41,18 @@ const EditProfile = ({ profile, setProfile, onCancel, onSave }: EditProfileProps
             onChange={e => setProfile({ ...profile, picture: e.target.value })}
           />
         </div>
+        <div className='edit-basic-field-container-row'>
+          <label>Email Notifications: </label>
+          <Switch
+            checked={profile.emailNotifications}
+            onChange={e => setProfile({ ...profile, emailNotifications: e.valueOf() })}
+            checkedChildren='On'
+            unCheckedChildren='Off'
+          />
+        </div>
       </div>
       <div className='image-container'>
         <img className='profile-picture' src={profile.picture} alt='could not find image' />
-      </div>
-      <div className='edit-basic-field-container'>
-        <label>Email Notifications:</label>
-        <input
-          type='checkbox'
-          checked={profile.emailNotifications}
-          onChange={e => setProfile({ ...profile, emailNotifications: e.target.checked })}
-        />
       </div>
     </div>
 
