@@ -1,9 +1,12 @@
 import './index.css';
-import { useNavigate } from 'react-router-dom';
 import { Button, Form, Input, Typography, Space } from 'antd';
-import useVerify from '../../hooks/useVerify';
+import useVerify from '../../../hooks/useVerify';
 
 const { Text } = Typography;
+
+interface VerifyProps {
+  cancelToRegister: () => void;
+}
 
 /**
  * Verify Component contains a form that allows the user to input the code they received from their email,
@@ -11,12 +14,11 @@ const { Text } = Typography;
  * if verification response from the backend is successful, then the user is navigated to the home page.
  * otherwise, an error message is displayed.
  */
-const Verify = () => {
+const Verify = ({ cancelToRegister }: VerifyProps) => {
   const { code, error, resendText, handleCodeChange, handleSubmit, handleResendCode } = useVerify();
-  const navigate = useNavigate();
 
   return (
-    <div className='container'>
+    <div className='verify-container'>
       <h2>Verify Here!</h2>
       <h4>Please submit the code you received from your email.</h4>
       <Form layout='vertical' onFinish={handleSubmit} style={{ maxWidth: '30%' }}>
@@ -26,20 +28,20 @@ const Verify = () => {
         <Text type='danger'>{error}</Text>
         <Form.Item>
           <Space>
-            <Button type='default' onClick={() => navigate('/register')}>
+            <Button type='default' onClick={cancelToRegister}>
               Cancel
             </Button>
             <Button type='primary' htmlType='submit'>
-              Submit
+              Verify
             </Button>
           </Space>
         </Form.Item>
       </Form>
       <div>
         <button className='resend-button' onClick={() => handleResendCode()}>
-          Click here to resend code
+          Resend Code
         </button>
-        <p>{resendText}</p>
+        <p className='resend-text'>{resendText}</p>
       </div>
     </div>
   );

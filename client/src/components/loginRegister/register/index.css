@@ -1,4 +1,4 @@
-container {
+.register-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -7,33 +7,22 @@ container {
   background-color: #f7f7f7;
 }
 
-.container h2,
-.container p,
-.container h4,
-.container form {
+.register-container h2,
+.register-container p,
+.register-container h4,
+.register-container form {
   text-align: center;
   width: 100%;
   margin: 10px 0;
 }
 
-.input-text {
+.register-input-text {
   padding: 10px;
-  font-size: 16px;
+  font-size: 15px;
   width: 100%;
-  max-width: 300px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  outline: none;
-  box-sizing: border-box;
 }
 
-.input-text:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-.login-button {
+.submit-button {
   padding: 10px 20px;
   font-size: 16px;
   background-color: #007bff;
@@ -44,26 +33,50 @@ container {
   margin-left: 20px;
 }
 
-.login-button:hover {
+.submit-button:hover {
   background-color: #0056b3;
 }
 
-.login-button:active {
+.submit-button:active {
   background-color: #003f7f;
 }
 
-.register-button {
+.form-fields-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-buttons-container {
+  display: flex;
+  justify-content: space-evenly;
+  width: 15%;
+}
+
+.cancel-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #f44336;
+  color: white;
   border: none;
-  background-color: transparent;
-  text-decoration: underline;
+  border-radius: 5px;
   cursor: pointer;
+  margin-left: 20px;
+}
+
+.cancel-button:hover {
+  background-color: #d32f2f;
+}
+
+.cancel-button:active {
+  background-color: #b71c1c;
 }
 
 .error-text {
   color: red;
 }
 
-#login-container {
+#register-container {
   position: relative;
   background-color: #f7f7f7;
   background-size: cover;
