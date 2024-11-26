@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom';
 import { ChangeEvent, useState } from 'react';
 import { addUser } from '../services/userService';
 import usePreLoginContext from './usePreLoginContext';
@@ -19,7 +18,6 @@ const useRegister = () => {
   const [email, setEmail] = useState<string>('');
   const [error, setError] = useState<string>('');
   const { setUser } = usePreLoginContext();
-  const navigate = useNavigate();
 
   /**
    * Function to handle the input change event for the username field.
@@ -61,7 +59,6 @@ const useRegister = () => {
     try {
       const user = await addUser(username, email, password);
       setUser(user);
-      navigate('/verify');
     } catch (e) {
       setError('Error while registering user');
     }

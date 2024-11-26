@@ -1,9 +1,15 @@
 import './index.css';
-import { useNavigate } from 'react-router-dom';
 import { Button, Input, Typography, Form, Space } from 'antd';
-import useRegister from '../../hooks/useRegister';
+import { FiUser } from 'react-icons/fi';
+import { IoLockClosedOutline } from 'react-icons/io5';
+import { MdOutlineMailOutline } from 'react-icons/md';
+import useRegister from '../../../hooks/useRegister';
 
 const { Text } = Typography;
+
+interface RegisterProps {
+  switchToVerify: () => void;
+}
 
 /**
  * Register Component contains a form that allows the user to input their username and password,
@@ -12,8 +18,7 @@ const { Text } = Typography;
  * to the application's context through the useLoginContext hook.
  * otherwise, an error message is displayed.
  */
-const Register = () => {
-  const navigate = useNavigate();
+const Register = ({ switchToVerify }: RegisterProps) => {
   const {
     username,
     email,
@@ -25,41 +30,60 @@ const Register = () => {
     handleSubmit,
   } = useRegister();
 
+  const onSubmit = async () => {
+    await handleSubmit();
+    switchToVerify();
+  };
+
   return (
-    <div className='container'>
-      <h2>Register Here!</h2>
+    <div className='register-container'>
+      <h2>Register!</h2>
       <h4>Please fill out the following fields.</h4>
       <Form
         layout='vertical'
         labelCol={{ span: 8 }}
-        style={{ maxWidth: '30%' }}
-        onFinish={handleSubmit}>
+        style={{ maxWidth: '50%' }}
+        onFinish={onSubmit}>
         <Form.Item
           label='Username'
           name={'username'}
           rules={[{ required: true, message: 'Please input your username!' }]}>
-          <Input value={username} onChange={handleUsernameChange} />
+          <Input
+            className='register-input-text'
+            prefix={<FiUser />}
+            value={username}
+            onChange={handleUsernameChange}
+          />
         </Form.Item>
         <Form.Item
           label='Email'
           name={'email'}
           rules={[{ required: true, message: 'Please input your email!' }]}>
-          <Input value={email} onChange={handleEmailChange} />
+          <Input
+            className='register-input-text'
+            prefix={<MdOutlineMailOutline />}
+            value={email}
+            onChange={handleEmailChange}
+          />
         </Form.Item>
         <Form.Item
           label='Password'
           name={'password'}
-          rules={[{ required: true, message: 'Please input your password!' }]}>
-          <Input.Password value={password} onChange={handlePasswordChange} />
+          rules={[
+            { required: true, message: 'Please input your password and meet requirements!' },
+          ]}>
+          <Input.Password
+            className='register-input-text'
+            prefix={<IoLockClosedOutline />}
+            value={password}
+            onChange={handlePasswordChange}
+          />
         </Form.Item>
         <Text type='danger'>{error}</Text>
         <Form.Item>
           <Space>
             <Button type='primary' htmlType='submit'>
-              Submit
-            </Button>
-            <Button type='default' onClick={() => navigate('/')}>
-              Cancel
+              Register
             </Button>
           </Space>
         </Form.Item>
