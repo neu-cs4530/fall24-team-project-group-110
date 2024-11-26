@@ -11,7 +11,11 @@ const CustomAvatar = ({ user, size }: CustomAvatarProps) => {
   const [hasError, setHasError] = useState(false);
 
   if (hasError) {
-    return <Avatar size={size}>{user.username.charAt(0).toUpperCase()}</Avatar>;
+    return (
+      <Avatar style={{ backgroundColor: '#1e1e2f', fontSize: size / 3 }} size={size}>
+        {user.username.charAt(0).toUpperCase()}
+      </Avatar>
+    );
   }
 
   return (
