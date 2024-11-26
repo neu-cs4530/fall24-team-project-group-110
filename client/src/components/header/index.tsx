@@ -10,6 +10,7 @@ import useHeader from '../../hooks/useHeader';
 import './index.css';
 import useUserContext from '../../hooks/useUserContext';
 import NotificationDropdown from './notificationDropdown';
+import CustomAvatar from '../customAvatar';
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -107,7 +108,7 @@ const Header = () => {
             size={36}
             shape='circle'
             src={user.picture}
-            icon={!user.picture && <FaCircleUser size={'10x'} color='#1e1e2f' />}
+            icon={<CustomAvatar user={user} size={36} />}
             alt={`${user.username} profile`}
             className='profile-avatar'
           />

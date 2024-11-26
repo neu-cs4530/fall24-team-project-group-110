@@ -2,7 +2,9 @@
   text-align: center;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   padding: 0px 16px 0px 16px;
 }
 
@@ -20,6 +22,7 @@
 
 .user-card-first-last-name {
   text-align: left;
+  margin-left: 12px;
 }
 
 .ant-card:hover {
