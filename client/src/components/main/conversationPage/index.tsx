@@ -28,7 +28,7 @@ const ConversationPage = () => {
     handleCreateConversation,
   } = useConversationPage();
 
-  const userList: User[] = [...(user.followers || []), ...(user.following || [])];
+  const userList: User[] = [...new Set([...(user.followers || []), ...(user.following || [])])];
 
   const handleCreateConversationAndCloseModal = () => {
     handleCreateConversation();
